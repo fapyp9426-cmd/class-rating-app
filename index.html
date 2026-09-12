@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Рейтинг Класса 🏆</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Библиотека для генерации PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <!-- Блок сезонных эффектов на заднем плане -->
+  <div id="season-fx-container" class="no-print">
+    <div id="season-particles"></div>
+    <div id="winter-snowdrifts" class="snowdrift-container hidden">
+      <div class="snowdrift drift-1"></div>
+      <div class="snowdrift drift-2"></div>
+    </div>
+  </div>
+
+  <!-- Блок печати / экспорт PDF -->
+  <div id="print-area" class="print-only">
+    <h1 id="print-title" style="text-align: center; margin-bottom: 6px;">📊 Отчет: Рейтинг класса</h1>
+    <p id="print-date" style="text-align: center; color: #555; margin-bottom: 20px; font-size: 13px;"></p>
+    <table class="print-table">
+      <thead>
+        <tr id="print-table-head"></tr>
+      </thead>
+      <tbody id="print-table-body"></tbody>
+    </table>
+    <div id="print-footer-sign" class="print-footer">
+      <p>Подпись учителя: __________________ / __________________ /</p>
+    </div>
+  </div>
+
+  <!-- Основной интерфейс -->
+  <div class="app-container no-print">
+    
+    <!-- Шапка -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <div>
+          <h1>Рейтинг Класса</h1>
+          <p class="subtitle">Нажмите на ученика для истории</p>
+        </div>
+      </div>
+
+      <!-- Индикатор сезона -->
+      <div id="season-badge" class="season-badge"></div>
+
+      <button id="admin-btn" class="btn btn-primary glow-btn">
+        👩‍🏫 Панель учителя
+      </button>
+    </header>
+
+    <!-- Подиум ТОП-3 -->
+    <section class="podium-section">
+      <div id="podium" class="podium"></div>
+    </section>
+
+    <!-- Поиск и Статистика -->
+    <section class="controls">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Поиск ученика...">
+      </div>
+      <div class="stats-badge" id="total-students">
+        Учеников: 0
+      </div>
+    </section>
+
+    <!-- Список учеников -->
+    <main class="students-list" id="students-list"></main>
+
+  </div>
+
+  <!-- Модальное окно учителя -->
+  <div id="admin-modal" class="modal-overlay hidden no-print">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h2>Панель Учителя 🎓</h2>
+        <button id="close-admin-modal-btn" class="close-btn">&times;</button>
+      </div>
+
+      <!-- Вкладки -->
+      <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="tab-scores">⚡ Баллы</button>
+        <button class="tab-btn" data-tab="tab-add">➕ Добавить</button>
+        <button class="tab-btn" data-tab="tab-manage">⚙️ Редактировать</button>
+        <button class="tab-btn" data-tab="tab-backup">💾 Данные</button>
+        <button class="tab-btn" data-tab="tab-print">🖨️ PDF / Печать</button>
+      </div>
+
+      <!-- Вкладка 1: Баллы -->
+      <div id="tab-scores" class="tab-content active">
+        <form id="change-score-form" class="admin-form">
+          <div class="form-group">
+            <label>Выберите ученика:</label>
+            <select id="select-student" class="input-lg" required>
+              <option value="">-- Нажмите для выбора --</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Баллы (+ или -):</label>
+            <div class="score-input-wrapper">
+              <input type="number" id="score-delta" class="input-lg" placeholder="Например: 5 или -3" required>
+              <div class="quick-presets">
+                <button type="button" class="preset-btn pos" onclick="setScorePreset(1)">+1</button>
+                <button type="button" class="preset-btn pos" onclick="setScorePreset(5)">+5</button>
+                <button type="button" class="preset-btn neg" onclick="setScorePreset(-1)">-1</button>
+                <button type="button" class="preset-btn neg" onclick="setScorePreset(-2)">-2</button>
+                <button type="button" class="preset-btn neg" onclick="setScorePreset(-5)">-5</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Причина / За что:</label>
+            <input type="text" id="score-reason" class="input-lg" placeholder="Например: Ответ у доски" required>
+          </div>
+
+          <button type="submit" class="btn btn-accent btn-block btn-lg glow-btn">Применить изменение</button>
+        </form>
+
+        <div class="history-header">
+          <h3>Последние действия</h3>
+          <button id="undo-last-btn" class="btn btn-danger btn-sm">
+            ↩️ Отменить последнее
+          </button>
+        </div>
+        <div id="global-history-list" class="history-list"></div>
+      </div>
+
+      <!-- Вкладка 2: Добавление ученика -->
+      <div id="tab-add" class="tab-content">
+        <form id="add-student-form" class="admin-form">
+          <div class="form-group">
+            <label>Имя и Фамилия ученика:</label>
+            <input type="text" id="new-name" class="input-lg" placeholder="Иван Петров" required>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Эмодзи:</label>
+              <input type="text" id="new-avatar" class="input-lg text-center" placeholder="😎" maxlength="2" value="😎">
+            </div>
+            <div class="form-group flex-2">
+              <label>Стартовый балл:</label>
+              <input type="number" id="new-score" class="input-lg" value="0">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-accent btn-block btn-lg glow-btn">+ Сохранить ученика</button>
+        </form>
+      </div>
+
+      <!-- Вкладка 3: Управление учениками -->
+      <div id="tab-manage" class="tab-content">
+        <div id="manage-students-list" class="manage-list"></div>
+      </div>
+
+      <!-- Вкладка 4: Данные и Резервное копирование -->
+      <div id="tab-backup" class="tab-content">
+        <div class="backup-actions">
+          <h3>Управление базой данных</h3>
+          <p class="subtitle" style="margin-bottom: 16px;">Экспортируйте данные для переноса или сохраните копию.</p>
+          
+          <div class="form-group">
+            <button id="export-json-btn" class="btn btn-primary btn-block">📥 Скачать бэкап (.json)</button>
+          </div>
+          
+          <div class="form-group">
+            <label>Восстановить из файла:</label>
+            <input type="file" id="import-json-file" accept=".json" class="input-lg">
+          </div>
+
+          <hr style="border-color: var(--card-border); margin: 20px 0;">
+
+          <button id="reset-all-btn" class="btn btn-danger btn-block">
+            ⚠️ Полный сброс всех данных
+          </button>
+        </div>
+      </div>
+
+      <!-- Вкладка 5: Настройки Печати / PDF -->
+      <div id="tab-print" class="tab-content">
+        <div class="print-settings-grid">
+          
+          <div class="print-options">
+            <div class="form-group">
+              <label>Заголовок документа:</label>
+              <input type="text" id="print-opt-title" class="input-lg" value="Отчет: Рейтинг класса">
+            </div>
+
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="print-opt-date" checked>
+                <span>Показывать дату формирования</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" id="print-opt-emoji" checked>
+                <span>Показывать эмодзи</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" id="print-opt-last" checked>
+                <span>Колонка «Последнее действие»</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" id="print-opt-history">
+                <span>Колонка «Вся история событий»</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" id="print-opt-sign" checked>
+                <span>Блок для подписи учителя</span>
+              </label>
+            </div>
+
+            <button id="trigger-print-btn" class="btn btn-accent btn-block btn-lg glow-btn" style="margin-top: 16px;">
+              🖨️ Скачать PDF / Распечатать
+            </button>
+          </div>
+
+          <div class="preview-container">
+            <div class="preview-header">Предпросмотр документа 📄</div>
+            <div class="preview-paper" id="pdf-preview-box"></div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Модальное окно истории ученика -->
+  <div id="student-modal" class="modal-overlay hidden no-print">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="student-profile-title">
+          <span id="student-modal-avatar" class="avatar-lg">🐱</span>
+          <div>
+            <h2 id="student-modal-name">Имя Ученика</h2>
+            <div id="student-modal-score" class="modal-score-tag">0 очков</div>
+          </div>
+        </div>
+        <button id="close-student-modal-btn" class="close-btn">&times;</button>
+      </div>
+
+      <h3>История событий 📜</h3>
+      <div id="student-history-list" class="history-list modal-history-scroll"></div>
+    </div>
+  </div>
+
+  <!-- Модальное окно выбора действия печати -->
+  <div id="print-choice-modal" class="modal-overlay hidden no-print">
+    <div class="modal" style="max-width: 400px; text-align: center;">
+      <h3>🖨️ Вариант экспорта</h3>
+      <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">
+        Выберите вариант сохранения:
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button id="download-pdf-btn" class="btn btn-primary glow-btn">
+          📥 Скачать как PDF
+        </button>
+        <button id="open-print-btn" class="btn" style="background: rgba(255,255,255,0.1);">
+          🖨️ Открыть окно печати
+        </button>
+        <button id="close-print-choice-btn" class="btn" style="background: transparent; color: var(--text-secondary);">
+          Отмена
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
