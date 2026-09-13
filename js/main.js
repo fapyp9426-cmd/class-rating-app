@@ -1,22 +1,23 @@
 // ===================== ТОЧКА ВХОДА =====================
-import { onSnapshot, studentsCol, historyCol } from './firebase.js?v=2';
-import { setStudents, setGlobalHistory } from './state.js?v=2';
+import { onSnapshot, studentsCol, historyCol } from './firebase.js?v=3';
+import { setStudents, setGlobalHistory } from './state.js?v=3';
 
 import {
   renderPodium, renderStudentsList, renderSelectOptions,
   renderGlobalHistory, renderManageStudentsList, updateTotalStudents
-} from './render.js?v=2';
-import { initSort } from './sort.js?v=2';
-import { initAutoSeason } from './seasons.js?v=2';
-import { updatePrintPreview, initPrint } from './print.js?v=2';
-import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './students.js?v=2';
-import { initBackup } from './backup.js?v=2';
-import { initAuth } from './auth.js?v=2';
-import { initUI } from './ui.js?v=2';
-import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js?v=2';
-import { initLoading, markDataReady } from './loading.js?v=2';
+} from './render.js?v=3';
+import { initSort } from './sort.js?v=3';
+import { initAutoSeason } from './seasons.js?v=3';
+import { updatePrintPreview, initPrint } from './print.js?v=3';
+import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './students.js?v=3';
+import { initBackup } from './backup.js?v=3';
+import { initAuth } from './auth.js?v=3';
+import { initUI } from './ui.js?v=3';
+import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js?v=3';
+import { initLoading, markDataReady } from './loading.js?v=3';
 
 initMaintenance();
+console.log('[DEBUG] main.js запустился, MAINTENANCE_MODE =', MAINTENANCE_MODE);
 
 // Пока идёт технический перерыв — не грузим Firestore и не запускаем остальной сайт,
 // чтобы не тратить трафик/батарею на слабых устройствах впустую.
@@ -38,7 +39,9 @@ function renderAll() {
 
 // Подписки на realtime-обновления Firestore — работают для всех устройств одновременно
 onSnapshot(studentsCol, (snapshot) => {
+  console.log('[DEBUG] students onSnapshot сработал, документов:', snapshot.docs.length, 'empty:', snapshot.empty, 'metadata:', snapshot.metadata);
   const students = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  console.log('[DEBUG] students массив после map:', students);
   students.sort((a, b) => b.score - a.score);
   setStudents(students);
   renderAll();
