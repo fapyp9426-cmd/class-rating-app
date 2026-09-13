@@ -315,8 +315,8 @@ function renderManageStudentsList() {
         <span style="color: var(--accent-blue); font-weight: 700;">(${student.score} б.)</span>
       </div>
       <div style="display: flex; gap: 6px;">
-        <button class="btn btn-secondary btn-sm" onclick="editStudent(${student.id})">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteStudent(${student.id})">🗑️</button>
+        <button class="btn btn-secondary btn-sm" onclick="editStudent('${student.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent('${student.id}')">🗑️</button>
       </div>
     `;
     manageStudentsListEl.appendChild(item);
@@ -886,3 +886,10 @@ if (studentModal) studentModal.onclick = (e) => { if (e.target === studentModal)
 
 // Инициализация (данные придут через onSnapshot, здесь просто сезонные эффекты)
 initAutoSeason();
+
+// app.js подключён как type="module" — функции, вызываемые из inline onclick="..."
+// в HTML (renderManageStudentsList, setScorePreset), нужно явно повесить на window,
+// иначе браузер их не найдёт.
+window.editStudent = editStudent;
+window.deleteStudent = deleteStudent;
+window.setScorePreset = setScorePreset;
