@@ -1,20 +1,20 @@
 // ===================== ТОЧКА ВХОДА =====================
-import { onSnapshot, studentsCol, historyCol } from './firebase.js?v=3';
-import { setStudents, setGlobalHistory } from './state.js?v=3';
+import { onSnapshot, studentsCol, historyCol } from './firebase.js?v=4';
+import { setStudents, setGlobalHistory } from './state.js?v=4';
 
 import {
   renderPodium, renderStudentsList, renderSelectOptions,
   renderGlobalHistory, renderManageStudentsList, updateTotalStudents
-} from './render.js?v=3';
-import { initSort } from './sort.js?v=3';
-import { initAutoSeason } from './seasons.js?v=3';
-import { updatePrintPreview, initPrint } from './print.js?v=3';
-import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './students.js?v=3';
-import { initBackup } from './backup.js?v=3';
-import { initAuth } from './auth.js?v=3';
-import { initUI } from './ui.js?v=3';
-import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js?v=3';
-import { initLoading, markDataReady } from './loading.js?v=3';
+} from './render.js?v=4';
+import { initSort } from './sort.js?v=4';
+import { initAutoSeason } from './seasons.js?v=4';
+import { updatePrintPreview, initPrint } from './print.js?v=4';
+import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './students.js?v=4';
+import { initBackup } from './backup.js?v=4';
+import { initAuth } from './auth.js?v=4';
+import { initUI } from './ui.js?v=4';
+import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js?v=4';
+import { initLoading, markDataReady } from './loading.js?v=4';
 
 initMaintenance();
 console.log('[DEBUG] main.js запустился, MAINTENANCE_MODE =', MAINTENANCE_MODE);
@@ -28,13 +28,18 @@ initLoading();
 // Рендер вызывается автоматически при любом изменении данных в Firestore
 // (см. onSnapshot ниже), поэтому здесь только отрисовка — без сохранения.
 function renderAll() {
-  renderPodium();
-  renderStudentsList();
-  renderSelectOptions();
-  renderGlobalHistory();
-  renderManageStudentsList();
-  updatePrintPreview();
-  updateTotalStudents();
+  try {
+    renderPodium();
+    renderStudentsList();
+    renderSelectOptions();
+    renderGlobalHistory();
+    renderManageStudentsList();
+    updatePrintPreview();
+    updateTotalStudents();
+    console.log('[DEBUG] renderAll выполнился без ошибок');
+  } catch (err) {
+    console.error('[DEBUG] ОШИБКА внутри renderAll:', err);
+  }
 }
 
 // Подписки на realtime-обновления Firestore — работают для всех устройств одновременно
