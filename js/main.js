@@ -1,20 +1,20 @@
 // ===================== ТОЧКА ВХОДА =====================
-import { onSnapshot, studentsCol, historyCol } from './firebase.js?v=6';
-import { setStudents, setGlobalHistory } from './state.js?v=6';
+import { onSnapshot, studentsCol, historyCol } from './firebase.js?v=7';
+import { setStudents, setGlobalHistory } from './state.js?v=7';
 
 import {
   renderPodium, renderStudentsList, renderSelectOptions,
   renderGlobalHistory, renderManageStudentsList, updateTotalStudents
-} from './render.js?v=6';
-import { initSort } from './sort.js?v=6';
-import { initAutoSeason } from './seasons.js?v=6';
-import { updatePrintPreview, initPrint } from './print.js?v=6';
-import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './students.js?v=6';
-import { initBackup } from './backup.js?v=6';
-import { initAuth } from './auth.js?v=6';
-import { initUI } from './ui.js?v=6';
-import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js?v=6';
-import { initLoading } from './loading.js?v=6';
+} from './render.js?v=7';
+import { initSort } from './sort.js?v=7';
+import { initAutoSeason } from './seasons.js?v=7';
+import { updatePrintPreview, initPrint } from './print.js?v=7';
+import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './students.js?v=7';
+import { initBackup } from './backup.js?v=7';
+import { initAuth } from './auth.js?v=7';
+import { initUI } from './ui.js?v=7';
+import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js?v=7';
+import { initLoading } from './loading.js?v=7';
 
 initMaintenance();
 console.log('[DEBUG] main.js запустился, MAINTENANCE_MODE =', MAINTENANCE_MODE);
