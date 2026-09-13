@@ -13,6 +13,13 @@ import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './
 import { initBackup } from './backup.js';
 import { initAuth } from './auth.js';
 import { initUI } from './ui.js';
+import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js';
+
+initMaintenance();
+
+// Пока идёт технический перерыв — не грузим Firestore и не запускаем остальной сайт,
+// чтобы не тратить трафик/батарею на слабых устройствах впустую.
+if (!MAINTENANCE_MODE) {
 
 // Рендер вызывается автоматически при любом изменении данных в Firestore
 // (см. onSnapshot ниже), поэтому здесь только отрисовка — без сохранения.
@@ -56,4 +63,6 @@ initAutoSeason();
 window.editStudent = editStudent;
 window.deleteStudent = deleteStudent;
 window.setScorePreset = setScorePreset;
+
+}
 // ===================== /ТОЧКА ВХОДА =====================
