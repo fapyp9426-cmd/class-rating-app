@@ -296,7 +296,9 @@ async function deleteStudent(id) {
   if (confirm(`Удалить ученика "${student.name}" из базы?`)) {
     try {
       await deleteDoc(doc(db, "students", id));
+      playSound('remove');
     } catch (err) {
+      playSound('error');
       alert('Ошибка удаления: ' + err.message);
     }
   }
@@ -702,8 +704,10 @@ changeScoreForm.addEventListener('submit', async (e) => {
     document.getElementById('score-reason').value = '';
     selectStudent.value = '';
 
+    playSound(delta >= 0 ? 'success' : 'remove');
     alert(`Успешно! ${student.name}: ${delta > 0 ? '+' : ''}${delta} б.`);
   } catch (err) {
+    playSound('error');
     alert('Ошибка сохранения: ' + err.message);
   }
 });
@@ -727,8 +731,10 @@ undoLastBtn.addEventListener('click', async () => {
 
     await deleteDoc(doc(db, "history", lastAction.id));
 
+    playSound('remove');
     alert('❌ Изменение отменено!');
   } catch (err) {
+    playSound('error');
     alert('Ошибка отмены: ' + err.message);
   }
 });
@@ -756,8 +762,10 @@ addStudentForm.addEventListener('submit', async (e) => {
     nameInput.value = '';
     avatarInput.value = '😎';
     scoreInput.value = '0';
+    playSound('add');
     alert('Ученик добавлен!');
   } catch (err) {
+    playSound('error');
     alert('Ошибка добавления: ' + err.message);
   }
 });
@@ -773,6 +781,7 @@ const logoutBtn = document.getElementById('logout-btn');
 
 adminBtn.addEventListener('click', () => {
   if (isTeacher) {
+    playSound('click');
     adminModal.classList.remove('hidden');
     updatePrintPreview();
   } else {
@@ -792,7 +801,9 @@ teacherLoginForm.addEventListener('submit', async (e) => {
     teacherLoginForm.reset();
     adminModal.classList.remove('hidden');
     updatePrintPreview();
+    playSound('success');
   } catch (err) {
+    playSound('error');
     loginError.textContent = '❌ Неверный email или пароль';
     loginError.style.display = 'block';
   }
@@ -816,8 +827,120 @@ if (closeStudentModalBtn) closeStudentModalBtn.onclick = () => studentModal.clas
 if (adminModal) adminModal.onclick = (e) => { if (e.target === adminModal) adminModal.classList.add('hidden'); };
 if (studentModal) studentModal.onclick = (e) => { if (e.target === studentModal) studentModal.classList.add('hidden'); };
 
+// ===================== НАСТРОЙКИ (локально, per-device) =====================
+const SETTINGS_KEY = 'class_rating_settings';
+
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) { /* ignore */ }
+  return { animations: true, sounds: true };
+}
+
+function saveSettings(settings) {
+  try {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  } catch (e) { /* ignore */ }
+}
+
+let appSettings = loadSettings();
+
+// ---- Звуки (синтез через Web Audio API — без внешних mp3-файлов) ----
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    audioCtx = new Ctx();
+  }
+  return audioCtx;
+}
+
+function playTone(freq, duration = 0.12, type = 'sine', volume = 0.15) {
+  if (!appSettings.sounds) return;
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  if (ctx.state === 'suspended') ctx.resume();
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(volume, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + duration);
+}
+
+function playSound(name) {
+  if (!appSettings.sounds) return;
+  switch (name) {
+    case 'success':   playTone(880, 0.1); setTimeout(() => playTone(1200, 0.15), 90); break; // балл начислен
+    case 'remove':     playTone(300, 0.18, 'sawtooth', 0.12); break; // удаление/минус
+    case 'add':        playTone(600, 0.1); setTimeout(() => playTone(900, 0.12), 80); break; // добавление ученика
+    case 'error':      playTone(150, 0.2, 'square', 0.1); break; // ошибка входа и т.п.
+    case 'click':      playTone(500, 0.06, 'sine', 0.08); break; // общий клик/открытие панели
+    default: break;
+  }
+}
+window.playSound = playSound; // на случай если понадобится дернуть из HTML
+
+// ---- Применение настроек ----
+function applySettings() {
+  const seasonFx = document.getElementById('season-fx-container');
+  if (seasonFx) seasonFx.style.display = appSettings.animations ? '' : 'none';
+
+  const animCheckbox = document.getElementById('setting-animations');
+  const soundCheckbox = document.getElementById('setting-sounds');
+  if (animCheckbox) animCheckbox.checked = appSettings.animations;
+  if (soundCheckbox) soundCheckbox.checked = appSettings.sounds;
+}
+
+// ---- UI модалки настроек ----
+const settingsBtn = document.getElementById('settings-btn');
+const settingsModal = document.getElementById('settings-modal');
+const closeSettingsModalBtn = document.getElementById('close-settings-modal-btn');
+const settingAnimationsCheckbox = document.getElementById('setting-animations');
+const settingSoundsCheckbox = document.getElementById('setting-sounds');
+
+if (settingsBtn) {
+  settingsBtn.addEventListener('click', () => {
+    playSound('click');
+    applySettings();
+    settingsModal.classList.remove('hidden');
+  });
+}
+if (closeSettingsModalBtn) closeSettingsModalBtn.onclick = () => settingsModal.classList.add('hidden');
+if (settingsModal) settingsModal.onclick = (e) => { if (e.target === settingsModal) settingsModal.classList.add('hidden'); };
+
+if (settingAnimationsCheckbox) {
+  settingAnimationsCheckbox.addEventListener('change', () => {
+    appSettings.animations = settingAnimationsCheckbox.checked;
+    saveSettings(appSettings);
+    if (appSettings.animations) {
+      initAutoSeason();
+    }
+    applySettings();
+  });
+}
+
+if (settingSoundsCheckbox) {
+  settingSoundsCheckbox.addEventListener('change', () => {
+    appSettings.sounds = settingSoundsCheckbox.checked;
+    saveSettings(appSettings);
+    if (appSettings.sounds) playSound('click');
+  });
+}
+// ===================== /НАСТРОЙКИ =====================
+
 // Инициализация (данные придут через onSnapshot, здесь просто сезонные эффекты)
-initAutoSeason();
+applySettings();
+if (appSettings.animations) {
+  initAutoSeason();
+}
 
 // app.js подключён как type="module" — функции, вызываемые из inline onclick="..."
 // в HTML (renderManageStudentsList), нужно явно повесить на window, иначе браузер
