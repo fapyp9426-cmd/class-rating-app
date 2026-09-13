@@ -104,7 +104,6 @@ const openPrintBtn = document.getElementById('open-print-btn');
 // Сезоны
 const seasonParticlesContainer = document.getElementById('season-particles');
 const winterSnowdrifts = document.getElementById('winter-snowdrifts');
-const seasonBadge = document.getElementById('season-badge');
 
 // Рендер вызывается автоматически при любом изменении данных в Firestore
 // (см. onSnapshot ниже), поэтому здесь только отрисовка — без сохранения.
@@ -474,7 +473,7 @@ if (closePrintChoiceBtn) {
   closePrintChoiceBtn.onclick = () => printChoiceModal.classList.add('hidden');
 }
 
-// Сезоны (Зима, Весна, Лето, Осень)
+// Сезоны (Зима, Весна, Лето, Осень) — только фоновые частицы, без текстовой плашки
 function initAutoSeason() {
   const month = new Date().getMonth() + 1; // 1-12
 
@@ -483,26 +482,20 @@ function initAutoSeason() {
   seasonParticlesContainer.innerHTML = '';
   winterSnowdrifts.classList.add('hidden');
 
-  if (seasonBadge) seasonBadge.style.display = 'flex';
-
   // Зима (12, 1, 2)
   if (month === 12 || month === 1 || month === 2) {
-    if (seasonBadge) seasonBadge.innerHTML = '❄️ Зима';
     createWinterFX();
   } 
   // Весна (3, 4, 5)
   else if (month >= 3 && month <= 5) {
-    if (seasonBadge) seasonBadge.innerHTML = '🌸 Весна';
     createSpringFX();
   }
   // Лето (6, 7, 8)
   else if (month >= 6 && month <= 8) {
-    if (seasonBadge) seasonBadge.innerHTML = '☀️ Лето';
     createSummerFX();
   }
   // Осень (9, 10, 11)
   else if (month >= 9 && month <= 11) {
-    if (seasonBadge) seasonBadge.innerHTML = '🍂 Осень';
     createAutumnFX();
   }
 }
