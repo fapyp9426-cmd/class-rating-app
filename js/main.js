@@ -1,20 +1,20 @@
 // ===================== ТОЧКА ВХОДА =====================
-import { onSnapshot, studentsCol, historyCol } from './firebase.js?v=4';
-import { setStudents, setGlobalHistory } from './state.js?v=4';
+import { onSnapshot, studentsCol, historyCol } from './firebase.js?v=6';
+import { setStudents, setGlobalHistory } from './state.js?v=6';
 
 import {
   renderPodium, renderStudentsList, renderSelectOptions,
   renderGlobalHistory, renderManageStudentsList, updateTotalStudents
-} from './render.js?v=4';
-import { initSort } from './sort.js?v=4';
-import { initAutoSeason } from './seasons.js?v=4';
-import { updatePrintPreview, initPrint } from './print.js?v=4';
-import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './students.js?v=4';
-import { initBackup } from './backup.js?v=4';
-import { initAuth } from './auth.js?v=4';
-import { initUI } from './ui.js?v=4';
-import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js?v=4';
-import { initLoading, markDataReady } from './loading.js?v=4';
+} from './render.js?v=6';
+import { initSort } from './sort.js?v=6';
+import { initAutoSeason } from './seasons.js?v=6';
+import { updatePrintPreview, initPrint } from './print.js?v=6';
+import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './students.js?v=6';
+import { initBackup } from './backup.js?v=6';
+import { initAuth } from './auth.js?v=6';
+import { initUI } from './ui.js?v=6';
+import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js?v=6';
+import { initLoading } from './loading.js?v=6';
 
 initMaintenance();
 console.log('[DEBUG] main.js запустился, MAINTENANCE_MODE =', MAINTENANCE_MODE);
@@ -37,6 +37,9 @@ function renderAll() {
     updatePrintPreview();
     updateTotalStudents();
     console.log('[DEBUG] renderAll выполнился без ошибок');
+    const listEl = document.getElementById('students-list');
+    console.log('[DEBUG] students-list.children.length =', listEl ? listEl.children.length : 'ЭЛЕМЕНТ НЕ НАЙДЕН');
+    console.log('[DEBUG] students-list innerHTML первые 300 символов:', listEl ? listEl.innerHTML.slice(0, 300) : 'н/д');
   } catch (err) {
     console.error('[DEBUG] ОШИБКА внутри renderAll:', err);
   }
@@ -50,7 +53,6 @@ onSnapshot(studentsCol, (snapshot) => {
   students.sort((a, b) => b.score - a.score);
   setStudents(students);
   renderAll();
-  markDataReady();
 }, (err) => console.error("students onSnapshot error:", err));
 
 onSnapshot(historyCol, (snapshot) => {
