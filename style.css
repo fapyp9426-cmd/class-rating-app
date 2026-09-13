@@ -8,6 +8,10 @@
   --accent-purple: #8b5cf6;
   --gold: #fbbf24;
   --gold-glow: rgba(251, 191, 36, 0.25);
+  --silver: #cbd5e1;
+  --silver-glow: rgba(203, 213, 225, 0.22);
+  --bronze: #d97757;
+  --bronze-glow: rgba(217, 119, 87, 0.22);
   --danger: #ef4444;
   --success: #10b981;
   --radius: 16px;
@@ -246,11 +250,27 @@ h1 {
   order: 2;
   border-color: var(--gold);
   background: linear-gradient(180deg, rgba(251, 191, 36, 0.12) 0%, var(--card-bg) 100%);
-  box-shadow: 0 0 25px var(--gold-glow);
+  animation: pulse-gold 2.4s ease-in-out infinite;
 }
 
-.podium-card.place-2 { order: 1; }
-.podium-card.place-3 { order: 3; }
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 18px var(--gold-glow); }
+  50% { box-shadow: 0 0 32px var(--gold-glow); }
+}
+
+.podium-card.place-2 {
+  order: 1;
+  border-color: var(--silver);
+  background: linear-gradient(180deg, rgba(203, 213, 225, 0.10) 0%, var(--card-bg) 100%);
+  box-shadow: 0 0 18px var(--silver-glow);
+}
+
+.podium-card.place-3 {
+  order: 3;
+  border-color: var(--bronze);
+  background: linear-gradient(180deg, rgba(217, 119, 87, 0.10) 0%, var(--card-bg) 100%);
+  box-shadow: 0 0 18px var(--bronze-glow);
+}
 
 .crown {
   font-size: 24px;
@@ -282,6 +302,9 @@ h1 {
   font-weight: 800;
   color: var(--gold);
 }
+
+.podium-card.place-2 .score-badge { color: var(--silver); }
+.podium-card.place-3 .score-badge { color: var(--bronze); }
 
 /* Поиск */
 .controls {
