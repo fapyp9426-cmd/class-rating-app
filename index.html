@@ -1,9 +1,22 @@
 <!DOCTYPE html>
+<!--
+  ВАЖНО ПРО КЭШИРОВАНИЕ:
+  Перед каждым деплоем запускай в терминале: bash bump-version.sh
+  Он сам поднимет номер версии во всех файлах разом (index.html и js/*.js).
+  Без этого браузер (особенно на телефоне, если сайт "добавлен на экран")
+  может показывать старую версию сайта, даже если просто обновить страницу.
+-->
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
   <title>Рейтинг 8А 🏆</title>
+
+  <!-- Запрещаем браузеру кэшировать сам HTML, чтобы он всегда проверял свежую версию
+       ссылок на style.css/js/main.js (а через ?v= браузер увидит, что файлы обновились) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 
   <!-- PWA: манифест и иконки -->
   <link rel="manifest" href="manifest.json">
@@ -21,7 +34,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
   <!-- Библиотека для генерации PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
@@ -37,6 +50,11 @@
       <h1 class="maintenance-title">Технический перерыв</h1>
       <p class="maintenance-subtitle">Сайт скоро вернётся, мы что-то улучшаем ⚙️</p>
     </div>
+  </div>
+
+  <!-- Экран загрузки — крутилка, пока данные ещё не пришли из Firestore -->
+  <div id="loading-overlay" class="loading-overlay no-print">
+    <div class="loading-spinner"></div>
   </div>
 
   <!-- Блок сезонных эффектов на заднем плане -->
@@ -339,6 +357,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/main.js?v=2"></script>
 </body>
 </html>
