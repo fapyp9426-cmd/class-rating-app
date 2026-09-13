@@ -317,6 +317,65 @@ h1 {
 
 .stats-badge { font-size: 13px; color: var(--text-secondary); white-space: nowrap; font-weight: 600; }
 
+/* Сортировка */
+.sort-box { position: relative; flex-shrink: 0; }
+
+.sort-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.sort-btn:hover { border-color: var(--accent-blue); }
+.sort-btn.active { border-color: var(--accent-blue); background: rgba(59, 130, 246, 0.12); }
+
+.sort-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 6px;
+  min-width: 220px;
+  z-index: 50;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sort-menu.hidden { display: none; }
+
+.sort-option {
+  background: transparent;
+  border: none;
+  color: white;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sort-option:hover { background: rgba(255,255,255,0.08); }
+
+.sort-option.active {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent-blue);
+}
+
 /* Список учеников */
 .students-list { display: flex; flex-direction: column; gap: 8px; }
 
@@ -602,18 +661,8 @@ h1 {
 
   .header .logo { align-self: flex-start; }
 
-  .header > div:last-child {
-    display: flex;
-    width: 100%;
-    gap: 8px;
-  }
-
-  #settings-btn {
-    flex: 0 0 auto;
-  }
-
   #admin-btn {
-    flex: 1;
+    width: 100%;
     justify-content: center;
   }
 
