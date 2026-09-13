@@ -602,8 +602,18 @@ h1 {
 
   .header .logo { align-self: flex-start; }
 
-  #admin-btn {
+  .header > div:last-child {
+    display: flex;
     width: 100%;
+    gap: 8px;
+  }
+
+  #settings-btn {
+    flex: 0 0 auto;
+  }
+
+  #admin-btn {
+    flex: 1;
     justify-content: center;
   }
 
