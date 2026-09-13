@@ -1,14 +1,53 @@
-const TEACHER_PASSWORD = "Teach2026!Master";
+// ===================== FIREBASE =====================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import {
+  getAuth, signInAnonymously, signInWithEmailAndPassword,
+  onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import {
+  getFirestore, collection, doc, onSnapshot,
+  setDoc, updateDoc, deleteDoc, addDoc, writeBatch, getDocs
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-const defaultStudents = [
-  { id: 1, name: 'Алексей Смирнов', avatar: '🐱', score: 45, history: [{ id: 101, delta: 5, reason: 'Отличный ответ у доски' }] },
-  { id: 2, name: 'Мария Иванова', avatar: '🦊', score: 60, history: [{ id: 102, delta: 10, reason: 'Победа в олимпиаде' }] },
-  { id: 3, name: 'Дмитрий Козлов', avatar: '🦁', score: 38, history: [{ id: 103, delta: -2, reason: 'Забыл тетрадь' }] },
-  { id: 4, name: 'Анна Соколова', avatar: '🐼', score: 52, history: [{ id: 104, delta: 3, reason: 'Активность на уроке' }] }
-];
+const firebaseConfig = {
+  apiKey: "AIzaSyA3HhrwUimCKqw2CFvqcqzPY4GgFVk1B_s",
+  authDomain: "class-rating-db.firebaseapp.com",
+  projectId: "class-rating-db",
+  storageBucket: "class-rating-db.firebasestorage.app",
+  messagingSenderId: "1065420723057",
+  appId: "1:1065420723057:web:8a05589047644dfd921cd0"
+};
 
-let students = JSON.parse(localStorage.getItem('class_students')) || defaultStudents;
-let globalHistory = JSON.parse(localStorage.getItem('class_global_history')) || [];
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+
+const studentsCol = collection(db, "students");
+const historyCol = collection(db, "history");
+
+let isTeacher = false; // true когда учитель залогинен через email/пароль
+
+// Все посетители (включая учеников) заходят анонимно — это нужно,
+// чтобы Firestore Rules вообще давали читать данные (см. правила ниже)
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    signInAnonymously(auth).catch(err => console.error("Anon sign-in error:", err));
+    return;
+  }
+  // Считаем учителем только если вход был именно по email/паролю
+  isTeacher = user.providerData.some(p => p.providerId === 'password');
+  updateTeacherUI();
+});
+
+function updateTeacherUI() {
+  if (isTeacher) {
+    adminBtn.textContent = '👩‍🏫 Панель учителя';
+  }
+}
+// ===================== /FIREBASE =====================
+
+let students = [];
+let globalHistory = [];
 
 // Безопасное экранирование HTML
 function escapeHtml(str) {
@@ -67,12 +106,10 @@ const seasonParticlesContainer = document.getElementById('season-particles');
 const winterSnowdrifts = document.getElementById('winter-snowdrifts');
 const seasonBadge = document.getElementById('season-badge');
 
-// Сохранение и синхронный рендер
-function saveAndRender() {
+// Рендер вызывается автоматически при любом изменении данных в Firestore
+// (см. onSnapshot ниже), поэтому здесь только отрисовка — без сохранения.
+function renderAll() {
   students.sort((a, b) => b.score - a.score);
-  
-  localStorage.setItem('class_students', JSON.stringify(students));
-  localStorage.setItem('class_global_history', JSON.stringify(globalHistory));
 
   renderPodium();
   renderStudentsList();
@@ -83,6 +120,19 @@ function saveAndRender() {
 
   totalStudentsEl.textContent = `Учеников: ${students.length}`;
 }
+
+// Подписки на realtime-обновления Firestore — работают для всех устройств одновременно
+onSnapshot(studentsCol, (snapshot) => {
+  students = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderAll();
+}, (err) => console.error("students onSnapshot error:", err));
+
+onSnapshot(historyCol, (snapshot) => {
+  globalHistory = snapshot.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+  renderAll();
+}, (err) => console.error("history onSnapshot error:", err));
 
 function setScorePreset(val) {
   const input = document.getElementById('score-delta');
@@ -212,7 +262,7 @@ function renderManageStudentsList() {
   });
 }
 
-function editStudent(id) {
+async function editStudent(id) {
   const student = students.find(s => s.id === id);
   if (!student) return;
 
@@ -227,20 +277,29 @@ function editStudent(id) {
 
   const newScore = parseInt(newScoreStr, 10);
 
-  student.name = newName.trim() || student.name;
-  student.avatar = newAvatar.trim() || student.avatar;
-  if (!isNaN(newScore)) student.score = newScore;
+  const updates = {
+    name: newName.trim() || student.name,
+    avatar: newAvatar.trim() || student.avatar
+  };
+  if (!isNaN(newScore)) updates.score = newScore;
 
-  saveAndRender();
+  try {
+    await updateDoc(doc(db, "students", id), updates);
+  } catch (err) {
+    alert('Ошибка сохранения: ' + err.message);
+  }
 }
 
-function deleteStudent(id) {
+async function deleteStudent(id) {
   const student = students.find(s => s.id === id);
   if (!student) return;
 
   if (confirm(`Удалить ученика "${student.name}" из базы?`)) {
-    students = students.filter(s => s.id !== id);
-    saveAndRender();
+    try {
+      await deleteDoc(doc(db, "students", id));
+    } catch (err) {
+      alert('Ошибка удаления: ' + err.message);
+    }
   }
 }
 
@@ -248,6 +307,7 @@ function deleteStudent(id) {
 function openStudentHistory(studentId) {
   const student = students.find(s => s.id === studentId);
   if (!student) return;
+  if (!student.history) student.history = [];
 
   document.getElementById('student-modal-name').textContent = student.name;
   document.getElementById('student-modal-avatar').textContent = student.avatar;
@@ -538,19 +598,37 @@ if (importJsonFile) {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       try {
         const parsed = JSON.parse(event.target.result);
         if (parsed && Array.isArray(parsed.students)) {
-          students = parsed.students;
-          globalHistory = parsed.globalHistory || [];
-          saveAndRender();
+          if (!confirm('Это заменит ВСЕХ текущих учеников данными из файла. Продолжить?')) return;
+
+          // Удаляем текущих учеников
+          const existing = await getDocs(studentsCol);
+          const batch1 = writeBatch(db);
+          existing.forEach(d => batch1.delete(d.ref));
+          await batch1.commit();
+
+          // Добавляем новых
+          const batch2 = writeBatch(db);
+          parsed.students.forEach(s => {
+            const ref = doc(studentsCol);
+            batch2.set(ref, {
+              name: s.name,
+              avatar: s.avatar || '😎',
+              score: s.score || 0,
+              history: s.history || []
+            });
+          });
+          await batch2.commit();
+
           alert('Данные успешно импортированы!');
         } else {
           alert('Некорректная структура JSON-файла!');
         }
       } catch (err) {
-        alert('Ошибка при чтении файла JSON!');
+        alert('Ошибка при чтении файла JSON: ' + err.message);
       }
     };
     reader.readAsText(file);
@@ -558,12 +636,19 @@ if (importJsonFile) {
 }
 
 if (resetAllBtn) {
-  resetAllBtn.addEventListener('click', () => {
+  resetAllBtn.addEventListener('click', async () => {
     if (confirm('ВНИМАНИЕ! Это действие удалит всех учеников и всю историю. Продолжить?')) {
-      students = [];
-      globalHistory = [];
-      saveAndRender();
-      alert('Все данные сброшены!');
+      try {
+        const studentsSnap = await getDocs(studentsCol);
+        const historySnap = await getDocs(historyCol);
+        const batch = writeBatch(db);
+        studentsSnap.forEach(d => batch.delete(d.ref));
+        historySnap.forEach(d => batch.delete(d.ref));
+        await batch.commit();
+        alert('Все данные сброшены!');
+      } catch (err) {
+        alert('Ошибка сброса: ' + err.message);
+      }
     }
   });
 }
@@ -589,60 +674,74 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 // Форма баллов
-changeScoreForm.addEventListener('submit', (e) => {
+changeScoreForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const studentId = parseInt(selectStudent.value, 10);
+  const studentId = selectStudent.value;
   const delta = parseInt(document.getElementById('score-delta').value, 10);
   const reason = document.getElementById('score-reason').value.trim();
 
-  if (isNaN(studentId)) return alert('Пожалуйста, выберите ученика!');
+  if (!studentId) return alert('Пожалуйста, выберите ученика!');
   if (isNaN(delta)) return alert('Пожалуйста, введите число баллов!');
 
   const student = students.find(s => s.id === studentId);
   if (!student) return;
 
-  student.score += delta;
-  
-  if (!student.history) student.history = [];
+  const newScore = student.score + delta;
   const actionObj = { id: Date.now() + Math.floor(Math.random() * 1000), delta, reason };
-  student.history.push(actionObj);
+  const newHistory = [...(student.history || []), actionObj];
 
-  globalHistory.push({
-    id: actionObj.id,
-    studentId: student.id,
-    studentName: student.name,
-    delta: delta,
-    reason: reason
-  });
+  try {
+    await updateDoc(doc(db, "students", studentId), {
+      score: newScore,
+      history: newHistory
+    });
 
-  document.getElementById('score-delta').value = '';
-  document.getElementById('score-reason').value = '';
-  selectStudent.value = '';
+    await addDoc(historyCol, {
+      actionId: actionObj.id,
+      studentId: student.id,
+      studentName: student.name,
+      delta: delta,
+      reason: reason,
+      createdAt: Date.now()
+    });
 
-  saveAndRender();
-  alert(`Успешно! ${student.name}: ${delta > 0 ? '+' : ''}${delta} б.`);
+    document.getElementById('score-delta').value = '';
+    document.getElementById('score-reason').value = '';
+    selectStudent.value = '';
+
+    alert(`Успешно! ${student.name}: ${delta > 0 ? '+' : ''}${delta} б.`);
+  } catch (err) {
+    alert('Ошибка сохранения: ' + err.message);
+  }
 });
 
 // Отмена последнего действия
-undoLastBtn.addEventListener('click', () => {
+undoLastBtn.addEventListener('click', async () => {
   if (globalHistory.length === 0) return alert('История пуста!');
 
-  const lastAction = globalHistory.pop();
+  const lastAction = globalHistory[globalHistory.length - 1];
   const student = students.find(s => s.id === lastAction.studentId);
 
-  if (student) {
-    student.score -= lastAction.delta;
-    if (student.history) {
-      student.history = student.history.filter(h => h.id !== lastAction.id);
+  try {
+    if (student) {
+      const newScore = student.score - lastAction.delta;
+      const newHistory = (student.history || []).filter(h => h.id !== lastAction.actionId);
+      await updateDoc(doc(db, "students", student.id), {
+        score: newScore,
+        history: newHistory
+      });
     }
-  }
 
-  saveAndRender();
-  alert('❌ Изменение отменено!');
+    await deleteDoc(doc(db, "history", lastAction.id));
+
+    alert('❌ Изменение отменено!');
+  } catch (err) {
+    alert('Ошибка отмены: ' + err.message);
+  }
 });
 
 // Добавление нового ученика
-addStudentForm.addEventListener('submit', (e) => {
+addStudentForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const nameInput = document.getElementById('new-name');
   const avatarInput = document.getElementById('new-avatar');
@@ -653,33 +752,69 @@ addStudentForm.addEventListener('submit', (e) => {
 
   const scoreVal = parseInt(scoreInput.value, 10);
 
-  students.push({
-    id: Date.now(),
-    name: name,
-    avatar: avatarInput.value.trim() || '😎',
-    score: isNaN(scoreVal) ? 0 : scoreVal,
-    history: []
-  });
+  try {
+    await addDoc(studentsCol, {
+      name: name,
+      avatar: avatarInput.value.trim() || '😎',
+      score: isNaN(scoreVal) ? 0 : scoreVal,
+      history: []
+    });
 
-  nameInput.value = '';
-  avatarInput.value = '😎';
-  scoreInput.value = '0';
-  saveAndRender();
-  alert('Ученик добавлен!');
+    nameInput.value = '';
+    avatarInput.value = '😎';
+    scoreInput.value = '0';
+    alert('Ученик добавлен!');
+  } catch (err) {
+    alert('Ошибка добавления: ' + err.message);
+  }
 });
 
 if (searchInput) searchInput.addEventListener('input', renderStudentsList);
 
-// Авторизация
+// ===================== Авторизация учителя (Firebase Auth) =====================
+const loginModal = document.getElementById('login-modal');
+const closeLoginModalBtn = document.getElementById('close-login-modal-btn');
+const teacherLoginForm = document.getElementById('teacher-login-form');
+const loginError = document.getElementById('login-error');
+const logoutBtn = document.getElementById('logout-btn');
+
 adminBtn.addEventListener('click', () => {
-  const inputPassword = prompt('Пароль учителя:');
-  if (inputPassword === TEACHER_PASSWORD) {
+  if (isTeacher) {
     adminModal.classList.remove('hidden');
     updatePrintPreview();
-  } else if (inputPassword !== null) {
-    alert('❌ Неверный пароль!');
+  } else {
+    loginError.style.display = 'none';
+    loginModal.classList.remove('hidden');
   }
 });
+
+teacherLoginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    loginModal.classList.add('hidden');
+    teacherLoginForm.reset();
+    adminModal.classList.remove('hidden');
+    updatePrintPreview();
+  } catch (err) {
+    loginError.textContent = '❌ Неверный email или пароль';
+    loginError.style.display = 'block';
+  }
+});
+
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', async () => {
+    await signOut(auth);
+    adminModal.classList.add('hidden');
+    // signOut разлогинит и включит анонимный вход снова через onAuthStateChanged
+  });
+}
+
+if (closeLoginModalBtn) closeLoginModalBtn.onclick = () => loginModal.classList.add('hidden');
+if (loginModal) loginModal.onclick = (e) => { if (e.target === loginModal) loginModal.classList.add('hidden'); };
 
 // Закрытие модалок
 if (closeAdminModalBtn) closeAdminModalBtn.onclick = () => adminModal.classList.add('hidden');
@@ -688,6 +823,5 @@ if (closeStudentModalBtn) closeStudentModalBtn.onclick = () => studentModal.clas
 if (adminModal) adminModal.onclick = (e) => { if (e.target === adminModal) adminModal.classList.add('hidden'); };
 if (studentModal) studentModal.onclick = (e) => { if (e.target === studentModal) studentModal.classList.add('hidden'); };
 
-// Инициализация
-saveAndRender();
+// Инициализация (данные придут через onSnapshot, здесь просто сезонные эффекты)
 initAutoSeason();
