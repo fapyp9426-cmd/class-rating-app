@@ -846,7 +846,7 @@ function saveSettings(settings) {
 
 let appSettings = loadSettings();
 
-// ---- Звуки (синтез через Web Audio API — без внешних mp3-файлов) ----
+// ---- Звуки (синтез через Web Audio API — мягкие, "мультяшные", без 8-бит писка) ----
 let audioCtx = null;
 function getAudioCtx() {
   if (!audioCtx) {
@@ -857,32 +857,85 @@ function getAudioCtx() {
   return audioCtx;
 }
 
-function playTone(freq, duration = 0.12, type = 'sine', volume = 0.15) {
+// Одна мягкая нота: используем только sine/triangle (без резких гармоник),
+// плавную атаку и экспоненциальное затухание — звучит округло, а не пискляво.
+function playNote(ctx, freq, startTime, duration, volume = 0.12, type = 'sine') {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, startTime);
+
+  // Лёгкое "падающее" глиссандо в конце ноты — придаёт мультяшность (как в играх/мультиках)
+  osc.frequency.exponentialRampToValueAtTime(freq * 0.98, startTime + duration);
+
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.015); // мягкая атака
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration); // плавное затухание
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.02);
+}
+
+// Аккорд/мелодия — последовательность нот с относительным временем от "сейчас"
+function playMelody(notes) {
   if (!appSettings.sounds) return;
   const ctx = getAudioCtx();
   if (!ctx) return;
   if (ctx.state === 'suspended') ctx.resume();
 
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = type;
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(volume, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start();
-  osc.stop(ctx.currentTime + duration);
+  const now = ctx.currentTime;
+  notes.forEach(([freq, offset, duration, volume, type]) => {
+    playNote(ctx, freq, now + offset, duration, volume ?? 0.12, type ?? 'sine');
+  });
 }
 
 function playSound(name) {
   if (!appSettings.sounds) return;
   switch (name) {
-    case 'success':   playTone(880, 0.1); setTimeout(() => playTone(1200, 0.15), 90); break; // балл начислен
-    case 'remove':     playTone(300, 0.18, 'sawtooth', 0.12); break; // удаление/минус
-    case 'add':        playTone(600, 0.1); setTimeout(() => playTone(900, 0.12), 80); break; // добавление ученика
-    case 'error':      playTone(150, 0.2, 'square', 0.1); break; // ошибка входа и т.п.
-    case 'click':      playTone(500, 0.06, 'sine', 0.08); break; // общий клик/открытие панели
+    // Балл начислен — весёлое восходящее "дзынь-дзынь" (мажорное трезвучие вверх)
+    case 'success':
+      playMelody([
+        [523.25, 0,    0.16, 0.11, 'triangle'], // до
+        [659.25, 0.07, 0.16, 0.11, 'triangle'], // ми
+        [783.99, 0.14, 0.22, 0.13, 'triangle'], // соль
+      ]);
+      break;
+
+    // Отмена/минус балла — мягкое нисходящее "оп" (не резкое, просто грустноватое)
+    case 'remove':
+      playMelody([
+        [440,    0,    0.14, 0.10, 'sine'],
+        [349.23, 0.06, 0.18, 0.10, 'sine'],
+      ]);
+      break;
+
+    // Добавление ученика — короткая приятная восходящая трель
+    case 'add':
+      playMelody([
+        [493.88, 0,    0.10, 0.09, 'triangle'],
+        [587.33, 0.05, 0.10, 0.10, 'triangle'],
+        [739.99, 0.10, 0.16, 0.11, 'triangle'],
+      ]);
+      break;
+
+    // Ошибка — мягкий двойной "бум-бум", низкий но не резкий (без square/sawtooth)
+    case 'error':
+      playMelody([
+        [220, 0,    0.16, 0.10, 'sine'],
+        [196, 0.13, 0.20, 0.10, 'sine'],
+      ]);
+      break;
+
+    // Обычный клик/открытие панели — лёгкий короткий "тук"
+    case 'click':
+      playMelody([
+        [660, 0, 0.07, 0.06, 'sine'],
+      ]);
+      break;
+
     default: break;
   }
 }
