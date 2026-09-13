@@ -25,7 +25,12 @@ body {
   background-color: var(--bg-color);
   color: var(--text-primary);
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 16px 12px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  padding-left: max(12px, env(safe-area-inset-left));
+  padding-right: max(12px, env(safe-area-inset-right));
   position: relative;
   overflow-x: hidden;
 }
@@ -220,7 +225,7 @@ h1 {
 .podium {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
+  gap: 10px;
   align-items: end;
   overflow: hidden;
 }
@@ -607,6 +612,16 @@ h1 {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     max-height: 85vh;
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+
+  /* Табы админки — скролл вместо сжатия на маленьких экранах */
+  .tab-buttons {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-btn {
+    flex: 0 0 auto;
   }
 
   /* Подиум ТОП-3 — компактнее, без "расползания" по ширине */
@@ -639,6 +654,7 @@ h1 {
     overflow-wrap: break-word;
     word-break: break-word;
     hyphens: auto;
+    padding: 0 2px;
   }
 
   .score-badge {
