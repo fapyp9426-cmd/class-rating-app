@@ -66,6 +66,66 @@ const studentsListEl = document.getElementById('students-list');
 const searchInput = document.getElementById('search-input');
 const totalStudentsEl = document.getElementById('total-students');
 
+const sortBtn = document.getElementById('sort-btn');
+const sortMenu = document.getElementById('sort-menu');
+const sortOptions = document.querySelectorAll('.sort-option');
+
+// Режим сортировки списка учеников (подиум ТОП-3 всегда по баллам, независимо от этого)
+const SORT_KEY = 'class_rating_sort_mode';
+let sortMode = localStorage.getItem(SORT_KEY) || 'score_desc';
+
+function applySortMode(list) {
+  const sorted = [...list];
+  switch (sortMode) {
+    case 'score_desc':
+      sorted.sort((a, b) => b.score - a.score);
+      break;
+    case 'score_asc':
+      sorted.sort((a, b) => a.score - b.score);
+      break;
+    case 'name_asc':
+      sorted.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+      break;
+    case 'name_desc':
+      sorted.sort((a, b) => b.name.localeCompare(a.name, 'ru'));
+      break;
+  }
+  return sorted;
+}
+
+function updateSortUI() {
+  sortOptions.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.sort === sortMode);
+  });
+  const isDefault = sortMode === 'score_desc';
+  if (sortBtn) sortBtn.classList.toggle('active', !isDefault);
+}
+
+if (sortBtn) {
+  sortBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sortMenu.classList.toggle('hidden');
+  });
+}
+
+sortOptions.forEach(btn => {
+  btn.addEventListener('click', () => {
+    sortMode = btn.dataset.sort;
+    localStorage.setItem(SORT_KEY, sortMode);
+    updateSortUI();
+    sortMenu.classList.add('hidden');
+    renderStudentsList();
+  });
+});
+
+document.addEventListener('click', (e) => {
+  if (sortMenu && !sortMenu.classList.contains('hidden') && !sortMenu.contains(e.target) && e.target !== sortBtn) {
+    sortMenu.classList.add('hidden');
+  }
+});
+
+updateSortUI();
+
 const adminBtn = document.getElementById('admin-btn');
 const adminModal = document.getElementById('admin-modal');
 const closeAdminModalBtn = document.getElementById('close-admin-modal-btn');
@@ -104,6 +164,7 @@ const openPrintBtn = document.getElementById('open-print-btn');
 // Сезоны
 const seasonParticlesContainer = document.getElementById('season-particles');
 const winterSnowdrifts = document.getElementById('winter-snowdrifts');
+const seasonBadge = document.getElementById('season-badge');
 
 // Рендер вызывается автоматически при любом изменении данных в Firestore
 // (см. onSnapshot ниже), поэтому здесь только отрисовка — без сохранения.
@@ -170,7 +231,8 @@ function renderStudentsList() {
   const query = searchInput.value.toLowerCase().trim();
   studentsListEl.innerHTML = '';
 
-  const filtered = students.filter(s => s.name.toLowerCase().includes(query));
+  // students уже отсортирован по баллам (см. renderAll) — от этого порядка считаем ранг (#1, #2...)
+  const filtered = applySortMode(students).filter(s => s.name.toLowerCase().includes(query));
 
   if (filtered.length === 0) {
     studentsListEl.innerHTML = '<div style="text-align:center; color: #94a3b8; padding: 20px;">Никого не найдено 🔍</div>';
@@ -253,8 +315,8 @@ function renderManageStudentsList() {
         <span style="color: var(--accent-blue); font-weight: 700;">(${student.score} б.)</span>
       </div>
       <div style="display: flex; gap: 6px;">
-        <button class="btn btn-secondary btn-sm" onclick="editStudent('${student.id}')">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteStudent('${student.id}')">🗑️</button>
+        <button class="btn btn-secondary btn-sm" onclick="editStudent(${student.id})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(${student.id})">🗑️</button>
       </div>
     `;
     manageStudentsListEl.appendChild(item);
@@ -296,9 +358,7 @@ async function deleteStudent(id) {
   if (confirm(`Удалить ученика "${student.name}" из базы?`)) {
     try {
       await deleteDoc(doc(db, "students", id));
-      playSound('remove');
     } catch (err) {
-      playSound('error');
       alert('Ошибка удаления: ' + err.message);
     }
   }
@@ -475,7 +535,7 @@ if (closePrintChoiceBtn) {
   closePrintChoiceBtn.onclick = () => printChoiceModal.classList.add('hidden');
 }
 
-// Сезоны (Зима, Весна, Лето, Осень) — только фоновые частицы, без текстовой плашки
+// Сезоны (Зима, Весна, Лето, Осень)
 function initAutoSeason() {
   const month = new Date().getMonth() + 1; // 1-12
 
@@ -484,20 +544,26 @@ function initAutoSeason() {
   seasonParticlesContainer.innerHTML = '';
   winterSnowdrifts.classList.add('hidden');
 
+  if (seasonBadge) seasonBadge.style.display = 'flex';
+
   // Зима (12, 1, 2)
   if (month === 12 || month === 1 || month === 2) {
+    if (seasonBadge) seasonBadge.innerHTML = '❄️ Зима';
     createWinterFX();
   } 
   // Весна (3, 4, 5)
   else if (month >= 3 && month <= 5) {
+    if (seasonBadge) seasonBadge.innerHTML = '🌸 Весна';
     createSpringFX();
   }
   // Лето (6, 7, 8)
   else if (month >= 6 && month <= 8) {
+    if (seasonBadge) seasonBadge.innerHTML = '☀️ Лето';
     createSummerFX();
   }
   // Осень (9, 10, 11)
   else if (month >= 9 && month <= 11) {
+    if (seasonBadge) seasonBadge.innerHTML = '🍂 Осень';
     createAutumnFX();
   }
 }
@@ -704,10 +770,8 @@ changeScoreForm.addEventListener('submit', async (e) => {
     document.getElementById('score-reason').value = '';
     selectStudent.value = '';
 
-    playSound(delta >= 0 ? 'success' : 'remove');
     alert(`Успешно! ${student.name}: ${delta > 0 ? '+' : ''}${delta} б.`);
   } catch (err) {
-    playSound('error');
     alert('Ошибка сохранения: ' + err.message);
   }
 });
@@ -731,10 +795,8 @@ undoLastBtn.addEventListener('click', async () => {
 
     await deleteDoc(doc(db, "history", lastAction.id));
 
-    playSound('remove');
     alert('❌ Изменение отменено!');
   } catch (err) {
-    playSound('error');
     alert('Ошибка отмены: ' + err.message);
   }
 });
@@ -762,10 +824,8 @@ addStudentForm.addEventListener('submit', async (e) => {
     nameInput.value = '';
     avatarInput.value = '😎';
     scoreInput.value = '0';
-    playSound('add');
     alert('Ученик добавлен!');
   } catch (err) {
-    playSound('error');
     alert('Ошибка добавления: ' + err.message);
   }
 });
@@ -781,7 +841,6 @@ const logoutBtn = document.getElementById('logout-btn');
 
 adminBtn.addEventListener('click', () => {
   if (isTeacher) {
-    playSound('click');
     adminModal.classList.remove('hidden');
     updatePrintPreview();
   } else {
@@ -801,9 +860,7 @@ teacherLoginForm.addEventListener('submit', async (e) => {
     teacherLoginForm.reset();
     adminModal.classList.remove('hidden');
     updatePrintPreview();
-    playSound('success');
   } catch (err) {
-    playSound('error');
     loginError.textContent = '❌ Неверный email или пароль';
     loginError.style.display = 'block';
   }
@@ -827,176 +884,5 @@ if (closeStudentModalBtn) closeStudentModalBtn.onclick = () => studentModal.clas
 if (adminModal) adminModal.onclick = (e) => { if (e.target === adminModal) adminModal.classList.add('hidden'); };
 if (studentModal) studentModal.onclick = (e) => { if (e.target === studentModal) studentModal.classList.add('hidden'); };
 
-// ===================== НАСТРОЙКИ (локально, per-device) =====================
-const SETTINGS_KEY = 'class_rating_settings';
-
-function loadSettings() {
-  try {
-    const raw = localStorage.getItem(SETTINGS_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch (e) { /* ignore */ }
-  return { animations: true, sounds: true };
-}
-
-function saveSettings(settings) {
-  try {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  } catch (e) { /* ignore */ }
-}
-
-let appSettings = loadSettings();
-
-// ---- Звуки (синтез через Web Audio API — мягкие, "мультяшные", без 8-бит писка) ----
-let audioCtx = null;
-function getAudioCtx() {
-  if (!audioCtx) {
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    if (!Ctx) return null;
-    audioCtx = new Ctx();
-  }
-  return audioCtx;
-}
-
-// Одна мягкая нота: используем только sine/triangle (без резких гармоник),
-// плавную атаку и экспоненциальное затухание — звучит округло, а не пискляво.
-function playNote(ctx, freq, startTime, duration, volume = 0.12, type = 'sine') {
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, startTime);
-
-  // Лёгкое "падающее" глиссандо в конце ноты — придаёт мультяшность (как в играх/мультиках)
-  osc.frequency.exponentialRampToValueAtTime(freq * 0.98, startTime + duration);
-
-  gain.gain.setValueAtTime(0.0001, startTime);
-  gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.015); // мягкая атака
-  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration); // плавное затухание
-
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(startTime);
-  osc.stop(startTime + duration + 0.02);
-}
-
-// Аккорд/мелодия — последовательность нот с относительным временем от "сейчас"
-function playMelody(notes) {
-  if (!appSettings.sounds) return;
-  const ctx = getAudioCtx();
-  if (!ctx) return;
-  if (ctx.state === 'suspended') ctx.resume();
-
-  const now = ctx.currentTime;
-  notes.forEach(([freq, offset, duration, volume, type]) => {
-    playNote(ctx, freq, now + offset, duration, volume ?? 0.12, type ?? 'sine');
-  });
-}
-
-function playSound(name) {
-  if (!appSettings.sounds) return;
-  switch (name) {
-    // Балл начислен — весёлое восходящее "дзынь-дзынь" (мажорное трезвучие вверх)
-    case 'success':
-      playMelody([
-        [523.25, 0,    0.16, 0.11, 'triangle'], // до
-        [659.25, 0.07, 0.16, 0.11, 'triangle'], // ми
-        [783.99, 0.14, 0.22, 0.13, 'triangle'], // соль
-      ]);
-      break;
-
-    // Отмена/минус балла — мягкое нисходящее "оп" (не резкое, просто грустноватое)
-    case 'remove':
-      playMelody([
-        [440,    0,    0.14, 0.10, 'sine'],
-        [349.23, 0.06, 0.18, 0.10, 'sine'],
-      ]);
-      break;
-
-    // Добавление ученика — короткая приятная восходящая трель
-    case 'add':
-      playMelody([
-        [493.88, 0,    0.10, 0.09, 'triangle'],
-        [587.33, 0.05, 0.10, 0.10, 'triangle'],
-        [739.99, 0.10, 0.16, 0.11, 'triangle'],
-      ]);
-      break;
-
-    // Ошибка — мягкий двойной "бум-бум", низкий но не резкий (без square/sawtooth)
-    case 'error':
-      playMelody([
-        [220, 0,    0.16, 0.10, 'sine'],
-        [196, 0.13, 0.20, 0.10, 'sine'],
-      ]);
-      break;
-
-    // Обычный клик/открытие панели — лёгкий короткий "тук"
-    case 'click':
-      playMelody([
-        [660, 0, 0.07, 0.06, 'sine'],
-      ]);
-      break;
-
-    default: break;
-  }
-}
-window.playSound = playSound; // на случай если понадобится дернуть из HTML
-
-// ---- Применение настроек ----
-function applySettings() {
-  const seasonFx = document.getElementById('season-fx-container');
-  if (seasonFx) seasonFx.style.display = appSettings.animations ? '' : 'none';
-
-  const animCheckbox = document.getElementById('setting-animations');
-  const soundCheckbox = document.getElementById('setting-sounds');
-  if (animCheckbox) animCheckbox.checked = appSettings.animations;
-  if (soundCheckbox) soundCheckbox.checked = appSettings.sounds;
-}
-
-// ---- UI модалки настроек ----
-const settingsBtn = document.getElementById('settings-btn');
-const settingsModal = document.getElementById('settings-modal');
-const closeSettingsModalBtn = document.getElementById('close-settings-modal-btn');
-const settingAnimationsCheckbox = document.getElementById('setting-animations');
-const settingSoundsCheckbox = document.getElementById('setting-sounds');
-
-if (settingsBtn) {
-  settingsBtn.addEventListener('click', () => {
-    playSound('click');
-    applySettings();
-    settingsModal.classList.remove('hidden');
-  });
-}
-if (closeSettingsModalBtn) closeSettingsModalBtn.onclick = () => settingsModal.classList.add('hidden');
-if (settingsModal) settingsModal.onclick = (e) => { if (e.target === settingsModal) settingsModal.classList.add('hidden'); };
-
-if (settingAnimationsCheckbox) {
-  settingAnimationsCheckbox.addEventListener('change', () => {
-    appSettings.animations = settingAnimationsCheckbox.checked;
-    saveSettings(appSettings);
-    if (appSettings.animations) {
-      initAutoSeason();
-    }
-    applySettings();
-  });
-}
-
-if (settingSoundsCheckbox) {
-  settingSoundsCheckbox.addEventListener('change', () => {
-    appSettings.sounds = settingSoundsCheckbox.checked;
-    saveSettings(appSettings);
-    if (appSettings.sounds) playSound('click');
-  });
-}
-// ===================== /НАСТРОЙКИ =====================
-
 // Инициализация (данные придут через onSnapshot, здесь просто сезонные эффекты)
-applySettings();
-if (appSettings.animations) {
-  initAutoSeason();
-}
-
-// app.js подключён как type="module" — функции, вызываемые из inline onclick="..."
-// в HTML (renderManageStudentsList), нужно явно повесить на window, иначе браузер
-// их не найдёт (это и было причиной "не работающей" вкладки Редактировать).
-window.editStudent = editStudent;
-window.deleteStudent = deleteStudent;
+initAutoSeason();
