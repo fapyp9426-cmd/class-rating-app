@@ -2,11 +2,21 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
   <title>Рейтинг 8А 🏆</title>
 
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- PWA: манифест и иконки -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <!-- iOS: поведение "как приложение" при добавлении на главный экран -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Рейтинг 8А">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0b0f19">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,12 +66,9 @@
         </div>
       </div>
 
-      <div style="display:flex; gap:8px;">
-        <button id="settings-btn" class="btn btn-primary" title="Настройки">⚙️</button>
-        <button id="admin-btn" class="btn btn-primary glow-btn">
-          👩‍🏫 Панель учителя
-        </button>
-      </div>
+      <button id="admin-btn" class="btn btn-primary glow-btn">
+        👩‍🏫 Панель учителя
+      </button>
     </header>
 
     <!-- Подиум ТОП-3 -->
@@ -75,6 +82,15 @@
         <span class="search-icon">🔍</span>
         <input type="text" id="search-input" placeholder="Поиск ученика...">
       </div>
+      <div class="sort-box">
+        <button id="sort-btn" class="sort-btn" title="Сортировка" type="button">⇅</button>
+        <div id="sort-menu" class="sort-menu hidden">
+          <button class="sort-option" data-sort="score_desc">🔢 Баллы: сначала больше</button>
+          <button class="sort-option" data-sort="score_asc">🔢 Баллы: сначала меньше</button>
+          <button class="sort-option" data-sort="name_asc">🔤 Имя: А → Я</button>
+          <button class="sort-option" data-sort="name_desc">🔤 Имя: Я → А</button>
+        </div>
+      </div>
       <div class="stats-badge" id="total-students">
         Учеников: 0
       </div>
@@ -83,32 +99,6 @@
     <!-- Список учеников -->
     <main class="students-list" id="students-list"></main>
 
-  </div>
-
-  <!-- Модальное окно настроек (доступно всем) -->
-  <div id="settings-modal" class="modal-overlay hidden no-print">
-    <div class="modal" style="max-width: 400px;">
-      <div class="modal-header">
-        <h2>Настройки ⚙️</h2>
-        <button id="close-settings-modal-btn" class="close-btn">&times;</button>
-      </div>
-
-      <div class="checkbox-group">
-        <label class="checkbox-label">
-          <input type="checkbox" id="setting-animations" checked>
-          <span>Анимации фона (снег, листья и т.д.)</span>
-        </label>
-
-        <label class="checkbox-label">
-          <input type="checkbox" id="setting-sounds" checked>
-          <span>Звуки</span>
-        </label>
-      </div>
-
-      <p style="color: var(--text-secondary); font-size: 12px; margin-top: 12px;">
-        Настройки сохраняются только на этом устройстве.
-      </p>
-    </div>
   </div>
 
   <!-- Модальное окно входа учителя -->
@@ -257,17 +247,17 @@
 
             <div class="checkbox-group">
               <label class="checkbox-label">
-                <input type="checkbox" id="print-opt-date">
+                <input type="checkbox" id="print-opt-date" checked>
                 <span>Показывать дату формирования</span>
               </label>
 
               <label class="checkbox-label">
-                <input type="checkbox" id="print-opt-emoji">
+                <input type="checkbox" id="print-opt-emoji" checked>
                 <span>Показывать эмодзи</span>
               </label>
 
               <label class="checkbox-label">
-                <input type="checkbox" id="print-opt-last">
+                <input type="checkbox" id="print-opt-last" checked>
                 <span>Колонка «Последнее действие»</span>
               </label>
 
@@ -277,7 +267,7 @@
               </label>
 
               <label class="checkbox-label">
-                <input type="checkbox" id="print-opt-sign">
+                <input type="checkbox" id="print-opt-sign" checked>
                 <span>Блок для подписи учителя</span>
               </label>
             </div>
