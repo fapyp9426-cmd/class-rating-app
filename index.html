@@ -11,6 +11,8 @@
   <!-- Библиотека для генерации PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
+<!-- Firebase подключается в конце body через type="module", см. app.js -->
+
 <body>
 
   <!-- Блок сезонных эффектов на заднем плане -->
@@ -79,12 +81,37 @@
 
   </div>
 
+  <!-- Модальное окно входа учителя -->
+  <div id="login-modal" class="modal-overlay hidden no-print">
+    <div class="modal" style="max-width: 380px;">
+      <div class="modal-header">
+        <h2>Вход учителя 🔑</h2>
+        <button id="close-login-modal-btn" class="close-btn">&times;</button>
+      </div>
+      <form id="teacher-login-form" class="admin-form">
+        <div class="form-group">
+          <label>Email:</label>
+          <input type="email" id="login-email" class="input-lg" placeholder="teacher@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>Пароль:</label>
+          <input type="password" id="login-password" class="input-lg" placeholder="Пароль" required>
+        </div>
+        <div id="login-error" style="color:#fca5a5; font-size: 13px; display:none;"></div>
+        <button type="submit" class="btn btn-accent btn-block btn-lg glow-btn">Войти</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Модальное окно учителя -->
   <div id="admin-modal" class="modal-overlay hidden no-print">
     <div class="modal modal-lg">
       <div class="modal-header">
         <h2>Панель Учителя 🎓</h2>
-        <button id="close-admin-modal-btn" class="close-btn">&times;</button>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button id="logout-btn" class="btn btn-danger btn-sm">Выйти</button>
+          <button id="close-admin-modal-btn" class="close-btn">&times;</button>
+        </div>
       </div>
 
       <!-- Вкладки -->
@@ -282,6 +309,6 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
