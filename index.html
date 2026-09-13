@@ -29,6 +29,16 @@
 
 <body>
 
+  <!-- Экран технического перерыва — показывается только если MAINTENANCE_MODE = true в js/main.js -->
+  <div id="maintenance-overlay" class="maintenance-overlay hidden no-print">
+    <div class="maintenance-stripes"></div>
+    <div class="maintenance-content">
+      <div class="maintenance-icon">📋</div>
+      <h1 class="maintenance-title">Технический перерыв</h1>
+      <p class="maintenance-subtitle">Сайт скоро вернётся, мы что-то улучшаем ⚙️</p>
+    </div>
+  </div>
+
   <!-- Блок сезонных эффектов на заднем плане -->
   <div id="season-fx-container" class="no-print">
     <div id="season-particles"></div>
