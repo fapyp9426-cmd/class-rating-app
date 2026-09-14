@@ -16,7 +16,10 @@ import { initUI } from './ui.js';
 import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js';
 import { initLoading } from './loading.js';
 import { initNavigation } from './navigation.js';
-import { initFeed } from './feed.js';
+import {
+  initFeed,
+  updateFeedTeacherUI
+} from './feed.js';
 
 initMaintenance();
 
@@ -62,7 +65,10 @@ initSort(renderStudentsList);
 initPrint();
 initStudentForms();
 initBackup();
-initAuth(updatePrintPreview);
+initAuth(
+  updatePrintPreview,
+  updateFeedTeacherUI
+);
 initUI();
 initAutoSeason();
 initNavigation();
