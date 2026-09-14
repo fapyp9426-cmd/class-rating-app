@@ -1,6 +1,6 @@
 // ===================== РЕЗЕРВНОЕ КОПИРОВАНИЕ =====================
-import { db, studentsCol, historyCol, doc, writeBatch, getDocs } from './firebase.js?v=1';
-import { getStudents, getGlobalHistory } from './state.js?v=1';
+import { db, studentsCol, historyCol, doc, writeBatch, getDocs } from './firebase.js';
+import { getStudents, getGlobalHistory } from './state.js';
 
 const exportJsonBtn = document.getElementById('export-json-btn');
 const importJsonFile = document.getElementById('import-json-file');

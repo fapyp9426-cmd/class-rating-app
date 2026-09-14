@@ -1,5 +1,5 @@
 // ===================== СОРТИРОВКА СПИСКА =====================
-import { getSortMode, setSortMode } from './state.js?v=1';
+import { getSortMode, setSortMode } from './state.js';
 
 const sortBtn = document.getElementById('sort-btn');
 const sortMenu = document.getElementById('sort-menu');

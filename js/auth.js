@@ -1,8 +1,8 @@
 // ===================== АВТОРИЗАЦИЯ УЧИТЕЛЯ =====================
 import {
   auth, signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged, signOut
-} from './firebase.js?v=1';
-import { isTeacherLoggedIn, setIsTeacher } from './state.js?v=1';
+} from './firebase.js';
+import { isTeacherLoggedIn, setIsTeacher } from './state.js';
 
 const adminBtn = document.getElementById('admin-btn');
 const adminModal = document.getElementById('admin-modal');

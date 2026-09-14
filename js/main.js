@@ -1,23 +1,22 @@
 // ===================== ТОЧКА ВХОДА =====================
-import { onSnapshot, studentsCol, historyCol } from './firebase.js?v=7';
-import { setStudents, setGlobalHistory } from './state.js?v=7';
+import { onSnapshot, studentsCol, historyCol } from './firebase.js';
+import { setStudents, setGlobalHistory } from './state.js';
 
 import {
   renderPodium, renderStudentsList, renderSelectOptions,
   renderGlobalHistory, renderManageStudentsList, updateTotalStudents
-} from './render.js?v=7';
-import { initSort } from './sort.js?v=7';
-import { initAutoSeason } from './seasons.js?v=7';
-import { updatePrintPreview, initPrint } from './print.js?v=7';
-import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './students.js?v=7';
-import { initBackup } from './backup.js?v=7';
-import { initAuth } from './auth.js?v=7';
-import { initUI } from './ui.js?v=7';
-import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js?v=7';
-import { initLoading } from './loading.js?v=7';
+} from './render.js';
+import { initSort } from './sort.js';
+import { initAutoSeason } from './seasons.js';
+import { updatePrintPreview, initPrint } from './print.js';
+import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './students.js';
+import { initBackup } from './backup.js';
+import { initAuth } from './auth.js';
+import { initUI } from './ui.js';
+import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js';
+import { initLoading } from './loading.js';
 
 initMaintenance();
-console.log('[DEBUG] main.js запустился, MAINTENANCE_MODE =', MAINTENANCE_MODE);
 
 // Пока идёт технический перерыв — не грузим Firestore и не запускаем остальной сайт,
 // чтобы не тратить трафик/батарею на слабых устройствах впустую.
@@ -36,20 +35,14 @@ function renderAll() {
     renderManageStudentsList();
     updatePrintPreview();
     updateTotalStudents();
-    console.log('[DEBUG] renderAll выполнился без ошибок');
-    const listEl = document.getElementById('students-list');
-    console.log('[DEBUG] students-list.children.length =', listEl ? listEl.children.length : 'ЭЛЕМЕНТ НЕ НАЙДЕН');
-    console.log('[DEBUG] students-list innerHTML первые 300 символов:', listEl ? listEl.innerHTML.slice(0, 300) : 'н/д');
   } catch (err) {
-    console.error('[DEBUG] ОШИБКА внутри renderAll:', err);
+    console.error('Ошибка внутри renderAll:', err);
   }
 }
 
 // Подписки на realtime-обновления Firestore — работают для всех устройств одновременно
 onSnapshot(studentsCol, (snapshot) => {
-  console.log('[DEBUG] students onSnapshot сработал, документов:', snapshot.docs.length, 'empty:', snapshot.empty, 'metadata:', snapshot.metadata);
   const students = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-  console.log('[DEBUG] students массив после map:', students);
   students.sort((a, b) => b.score - a.score);
   setStudents(students);
   renderAll();

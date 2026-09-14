@@ -1,6 +1,6 @@
 // ===================== ПЕЧАТЬ / PDF =====================
-import { getStudents } from './state.js?v=1';
-import { escapeHtml } from './utils.js?v=1';
+import { getStudents } from './state.js';
+import { escapeHtml } from './utils.js';
 
 const optTitle = document.getElementById('print-opt-title');
 const optDate = document.getElementById('print-opt-date');

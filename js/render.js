@@ -1,7 +1,7 @@
 // ===================== РЕНДЕР =====================
-import { getStudents, getGlobalHistory } from './state.js?v=7';
-import { escapeHtml } from './utils.js?v=7';
-import { applySortMode } from './sort.js?v=7';
+import { getStudents, getGlobalHistory } from './state.js';
+import { escapeHtml } from './utils.js';
+import { applySortMode } from './sort.js';
 
 const podiumEl = document.getElementById('podium');
 const studentsListEl = document.getElementById('students-list');
@@ -45,14 +45,11 @@ export function renderPodium() {
 export function renderStudentsList() {
   const students = getStudents();
   const query = searchInput.value.toLowerCase().trim();
-  console.log('[DEBUG] searchInput.value =', JSON.stringify(searchInput.value), 'query =', JSON.stringify(query));
   studentsListEl.innerHTML = '';
 
   // students уже отсортирован по баллам (см. renderAll) — от этого порядка считаем ранг (#1, #2...)
   const sortedStudents = applySortMode(students);
-  console.log('[DEBUG] имена студентов перед фильтром:', sortedStudents.map(s => s.name));
   const filtered = sortedStudents.filter(s => s.name.toLowerCase().includes(query));
-  console.log('[DEBUG] filtered.length =', filtered.length);
 
   if (filtered.length === 0) {
     studentsListEl.innerHTML = '<div style="text-align:center; color: #94a3b8; padding: 20px;">Никого не найдено 🔍</div>';

@@ -1,8 +1,8 @@
 // ===================== УЧЕНИКИ: CRUD И БАЛЛЫ =====================
 import {
   db, doc, updateDoc, deleteDoc, addDoc, studentsCol, historyCol
-} from './firebase.js?v=1';
-import { getStudents, getGlobalHistory } from './state.js?v=1';
+} from './firebase.js';
+import { getStudents, getGlobalHistory } from './state.js';
 
 const addStudentForm = document.getElementById('add-student-form');
 const changeScoreForm = document.getElementById('change-score-form');
