@@ -900,4 +900,187 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   .loading-spinner { animation-duration: 2s; }
 }
+
+```css
+/* ============================================================
+   APP BOTTOM NAVIGATION
+   Новая навигация приложения
+   ============================================================ */
+
+.app-bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9000;
+
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+
+  height: 68px;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+
+  background: rgba(11, 15, 25, 0.96);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-sizing: content-box;
+
+  /* Лёгкая тень, без тяжёлого blur */
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.18);
+}
+
+.app-nav-item {
+  position: relative;
+
+  flex: 1;
+  min-width: 0;
+  max-width: 120px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  padding: 6px 4px;
+
+  border: 0;
+  outline: none;
+  background: transparent;
+
+  color: #64748b;
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
+
+  transition:
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.app-nav-item svg {
+  width: 23px;
+  height: 23px;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  transition:
+    transform 0.18s ease,
+    stroke-width 0.18s ease;
+}
+
+.app-nav-item span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  line-height: 1;
+}
+
+/* Активная вкладка */
+.app-nav-item.active {
+  color: #ffffff;
+}
+
+.app-nav-item.active svg {
+  transform: translateY(-1px);
+  stroke-width: 2.2;
+}
+
+/* Маленький индикатор активной страницы */
+.app-nav-item.active::before {
+  content: "";
+
+  position: absolute;
+  top: -6px;
+  left: 50%;
+
+  width: 24px;
+  height: 3px;
+
+  border-radius: 0 0 4px 4px;
+
+  background: #3b82f6;
+
+  transform: translateX(-50%);
+}
+
+/* Нажатие */
+.app-nav-item:active {
+  transform: scale(0.94);
+}
+
+/* Чтобы нижняя панель не закрывала контент */
+.app-container {
+  padding-bottom: 90px;
+}
+
+/* ------------------------------------------------------------
+   На очень маленьких экранах
+   ------------------------------------------------------------ */
+
+@media (max-width: 380px) {
+  .app-bottom-nav {
+    height: 64px;
+  }
+
+  .app-nav-item {
+    font-size: 9px;
+    gap: 3px;
+  }
+
+  .app-nav-item svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .app-container {
+    padding-bottom: 84px;
+  }
+}
+
+/* ------------------------------------------------------------
+   Планшеты / большие экраны:
+   пока оставляем нижнюю панель.
+   Позже здесь сделаем desktop sidebar.
+   ------------------------------------------------------------ */
+
+@media (min-width: 900px) {
+  .app-bottom-nav {
+    max-width: 560px;
+    left: 50%;
+    right: auto;
+    bottom: 18px;
+
+    transform: translateX(-50%);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+
+    height: 60px;
+    padding: 5px 8px;
+
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
+  }
+
+  .app-nav-item.active::before {
+    top: -5px;
+  }
+
+  .app-container {
+    padding-bottom: 30px;
+  }
+}
+```
+
 /* ===================== /Экран загрузки ===================== */

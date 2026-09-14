@@ -357,6 +357,49 @@
     </div>
   </div>
 
+  ```html
+<!-- ==================== APP BOTTOM NAVIGATION ==================== -->
+<nav class="app-bottom-nav" id="appBottomNav">
+    <button class="app-nav-item active" type="button" data-page="feed" aria-label="Лента">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 18.5z"/>
+            <path d="M8 7h8M8 11h8M8 15h5"/>
+        </svg>
+        <span>Лента</span>
+    </button>
+
+    <button class="app-nav-item" type="button" data-page="rating" aria-label="Рейтинг">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 20V10"/>
+            <path d="M12 20V4"/>
+            <path d="M19 20v-7"/>
+            <path d="M3 20h18"/>
+        </svg>
+        <span>Рейтинг</span>
+    </button>
+
+    <button class="app-nav-item" type="button" data-page="birthdays" aria-label="Дни рождения">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 10h12v10H6z"/>
+            <path d="M4 10h16v3H4z"/>
+            <path d="M8 10V7.5A2.5 2.5 0 0 1 10.5 5c.8 0 1.5.4 2 1"/>
+            <path d="M16 10V7.5A2.5 2.5 0 0 0 13.5 5c-.8 0-1.5.4-2 1"/>
+        </svg>
+        <span>Дни рождения</span>
+    </button>
+
+    <button class="app-nav-item" type="button" data-page="settings" aria-label="Настройки">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"/>
+            <path d="M19 13.5v-3l-2-.6a7.4 7.4 0 0 0-.7-1.7l1-1.8-2.1-2.1-1.8 1a7.4 7.4 0 0 0-1.7-.7L11.5 2h-3l-.6 2.6a7.4 7.4 0 0 0-1.7.7l-1.8-1-2.1 2.1 1 1.8a7.4 7.4 0 0 0-.7 1.7l-2 .6v3l2 .6c.2.6.4 1.2.7 1.7l-1 1.8 2.1 2.1 1.8-1c.5.3 1.1.5 1.7.7l.6 2.6h3l.6-2.6c.6-.2 1.2-.4 1.7-.7l1.8 1 2.1-2.1-1-1.8c.3-.5.5-1.1.7-1.7z"/>
+        </svg>
+        <span>Настройки</span>
+    </button>
+</nav>
+<!-- =============================================================== -->
+```
+
+
   <script type="module" src="js/main.js?v=7"></script>
 </body>
 </html>
