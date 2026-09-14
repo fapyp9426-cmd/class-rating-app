@@ -2474,8 +2474,12 @@ h1 {
 
 .feed-post {
     position: relative;
+    z-index: 1;
 }
 
+.feed-post:has(.feed-post-actions) {
+    z-index: 50;
+}
 
 /* Кнопка "..." */
 
