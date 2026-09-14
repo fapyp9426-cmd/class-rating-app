@@ -901,39 +901,46 @@ h1 {
   .loading-spinner { animation-duration: 2s; }
 }
 /* ============================================================
-   APP BOTTOM NAVIGATION
-   Новая навигация приложения
+   APP NAVIGATION
+   Mobile: floating bottom bar
+   Desktop: left sidebar
    ============================================================ */
 
 .app-bottom-nav {
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 9000;
+
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+
+  z-index: 100;
 
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: space-around;
 
-  height: 68px;
-  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  height: 64px;
+  padding: 6px;
 
-  background: rgba(11, 15, 25, 0.96);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
 
-  box-sizing: content-box;
+  background: rgba(21, 28, 44, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
 
-  /* Лёгкая тень, без тяжёлого blur */
-  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
 }
+
+/* ------------------------------------------------------------
+   Кнопки
+   ------------------------------------------------------------ */
 
 .app-nav-item {
   position: relative;
 
   flex: 1;
+  height: 100%;
   min-width: 0;
-  max-width: 120px;
 
   display: flex;
   flex-direction: column;
@@ -941,10 +948,12 @@ h1 {
   justify-content: center;
   gap: 4px;
 
-  padding: 6px 4px;
+  padding: 5px 4px;
 
   border: 0;
   outline: none;
+  border-radius: 13px;
+
   background: transparent;
 
   color: #64748b;
@@ -959,12 +968,13 @@ h1 {
 
   transition:
     color 0.18s ease,
+    background 0.18s ease,
     transform 0.18s ease;
 }
 
 .app-nav-item svg {
-  width: 23px;
-  height: 23px;
+  width: 22px;
+  height: 22px;
 
   fill: none;
   stroke: currentColor;
@@ -978,16 +988,20 @@ h1 {
 }
 
 .app-nav-item span {
+  line-height: 1;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
-  line-height: 1;
 }
 
-/* Активная вкладка */
+/* ------------------------------------------------------------
+   Активная кнопка
+   ------------------------------------------------------------ */
+
 .app-nav-item.active {
   color: #ffffff;
+  background: rgba(59, 130, 246, 0.12);
 }
 
 .app-nav-item.active svg {
@@ -995,15 +1009,17 @@ h1 {
   stroke-width: 2.2;
 }
 
-/* Маленький индикатор активной страницы */
+/* Верхний индикатор активной вкладки */
+
 .app-nav-item.active::before {
   content: "";
 
   position: absolute;
+
   top: -6px;
   left: 50%;
 
-  width: 24px;
+  width: 22px;
   height: 3px;
 
   border-radius: 0 0 4px 4px;
@@ -1014,27 +1030,37 @@ h1 {
 }
 
 /* Нажатие */
+
 .app-nav-item:active {
   transform: scale(0.94);
 }
 
-/* Чтобы нижняя панель не закрывала контент */
-.app-container {
-  padding-bottom: 90px;
-}
-
 /* ------------------------------------------------------------
-   На очень маленьких экранах
+   Контент не перекрывается нижней панелью
    ------------------------------------------------------------ */
 
+.app-container {
+  padding-bottom: 96px;
+}
+
+/* ============================================================
+   МАЛЕНЬКИЕ ТЕЛЕФОНЫ
+   ============================================================ */
+
 @media (max-width: 380px) {
+
   .app-bottom-nav {
-    height: 64px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+
+    height: 62px;
+
+    border-radius: 17px;
   }
 
   .app-nav-item {
     font-size: 9px;
-    gap: 3px;
   }
 
   .app-nav-item svg {
@@ -1043,41 +1069,124 @@ h1 {
   }
 
   .app-container {
-    padding-bottom: 84px;
+    padding-bottom: 88px;
   }
 }
 
-/* ------------------------------------------------------------
-   Планшеты / большие экраны:
-   пока оставляем нижнюю панель.
-   Позже здесь сделаем desktop sidebar.
-   ------------------------------------------------------------ */
+/* ============================================================
+   ПК / БОЛЬШИЕ ЭКРАНЫ
+   ============================================================ */
 
 @media (min-width: 900px) {
+
   .app-bottom-nav {
-    max-width: 560px;
-    left: 50%;
+
+    /* превращаем нижнюю панель в sidebar */
+    top: 0;
+    bottom: 0;
+    left: 0;
     right: auto;
-    bottom: 18px;
 
-    transform: translateX(-50%);
+    width: 220px;
+    height: 100vh;
 
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
+    padding: 28px 14px;
 
-    height: 60px;
-    padding: 5px 8px;
+    box-sizing: border-box;
 
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+
+    gap: 8px;
+
+    border-radius: 0;
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+
+    background: #0d111c;
+
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.18);
   }
+
+  .app-nav-item {
+
+    flex: none;
+
+    width: 100%;
+    height: 52px;
+
+    flex-direction: row;
+    justify-content: flex-start;
+
+    gap: 14px;
+
+    padding: 0 16px;
+
+    border-radius: 12px;
+
+    font-size: 13px;
+    text-align: left;
+  }
+
+  .app-nav-item svg {
+    flex-shrink: 0;
+
+    width: 22px;
+    height: 22px;
+  }
+
+  .app-nav-item span {
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  /* Активная кнопка на ПК */
+
+  .app-nav-item.active {
+    background: rgba(59, 130, 246, 0.12);
+  }
+
+  /* Индикатор теперь слева */
 
   .app-nav-item.active::before {
-    top: -5px;
+
+    top: 50%;
+    left: -14px;
+
+    width: 3px;
+    height: 26px;
+
+    border-radius: 0 4px 4px 0;
+
+    transform: translateY(-50%);
   }
 
+  /* Основной контент сдвигаем вправо */
+
   .app-container {
+
+    margin-left: 220px;
+
     padding-bottom: 30px;
   }
 }
 
-/* ===================== /Экран загрузки ===================== */
+/* ============================================================
+   МОДАЛЬНЫЕ ОКНА ВСЕГДА ВЫШЕ НАВИГАЦИИ
+   ============================================================ */
+
+/*
+   Навигация: z-index 100
+
+   Если твои модальные окна имеют меньший z-index,
+   этот блок гарантирует, что они будут выше панели.
+*/
+
+.modal-overlay,
+#maintenance-overlay,
+#loading-overlay {
+  z-index: 1000;
+}
