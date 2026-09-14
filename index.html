@@ -515,6 +515,194 @@
 </nav>
 <!-- =============================================================== -->
 
+<!-- ============================================================
+     FEED — МОДАЛЬНОЕ ОКНО НОВОЙ ПУБЛИКАЦИИ
+     ============================================================ -->
+
+<div
+    id="feed-create-modal"
+    class="feed-create-modal hidden"
+    aria-hidden="true"
+>
+    <div
+        class="feed-create-modal-backdrop"
+        data-feed-modal-close
+    ></div>
+
+    <div
+        class="feed-create-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="feed-create-title"
+    >
+
+        <!-- HEADER -->
+
+        <div class="feed-create-header">
+
+            <div>
+                <div class="feed-create-kicker">
+                    ЛЕНТА КЛАССА
+                </div>
+
+                <h2
+                    id="feed-create-title"
+                    class="feed-create-title"
+                >
+                    Новая публикация
+                </h2>
+            </div>
+
+            <button
+                id="feed-create-close"
+                class="feed-create-close"
+                type="button"
+                aria-label="Закрыть"
+                title="Закрыть"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 6l12 12"/>
+                    <path d="M18 6L6 18"/>
+                </svg>
+            </button>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <form
+            id="feed-create-form"
+            class="feed-create-form"
+        >
+
+            <!-- TYPE -->
+
+            <div class="feed-form-field">
+
+                <label
+                    class="feed-form-label"
+                    for="feed-post-type"
+                >
+                    Тип публикации
+                </label>
+
+                <select
+                    id="feed-post-type"
+                    class="feed-form-select"
+                    required
+                >
+                    <option value="news">
+                        Новость
+                    </option>
+
+                    <option value="announcement">
+                        Объявление
+                    </option>
+
+                    <option value="event">
+                        Событие
+                    </option>
+                </select>
+
+            </div>
+
+
+            <!-- TITLE -->
+
+            <div class="feed-form-field">
+
+                <label
+                    class="feed-form-label"
+                    for="feed-post-title"
+                >
+                    Заголовок
+                </label>
+
+                <input
+                    id="feed-post-title"
+                    class="feed-form-input"
+                    type="text"
+                    maxlength="100"
+                    placeholder="Например: Завтра контрольная"
+                    autocomplete="off"
+                    required
+                >
+
+            </div>
+
+
+            <!-- TEXT -->
+
+            <div class="feed-form-field">
+
+                <div class="feed-form-label-row">
+
+                    <label
+                        class="feed-form-label"
+                        for="feed-post-text"
+                    >
+                        Текст
+                    </label>
+
+                    <span
+                        id="feed-text-counter"
+                        class="feed-form-counter"
+                    >
+                        0 / 2000
+                    </span>
+
+                </div>
+
+                <textarea
+                    id="feed-post-text"
+                    class="feed-form-textarea"
+                    maxlength="2000"
+                    rows="7"
+                    placeholder="Напиши подробности публикации..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="feed-create-footer">
+
+                <button
+                    id="feed-create-cancel"
+                    class="feed-create-cancel"
+                    type="button"
+                >
+                    Отмена
+                </button>
+
+                <button
+                    id="feed-create-submit"
+                    class="feed-create-submit"
+                    type="submit"
+                >
+                    <span>
+                        Опубликовать
+                    </span>
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5 12h13"/>
+                        <path d="M13 6l6 6-6 6"/>
+                    </svg>
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- ============================================================
+     / FEED — МОДАЛЬНОЕ ОКНО НОВОЙ ПУБЛИКАЦИИ
+     ============================================================ -->
 
   <script type="module" src="js/main.js?v=7"></script>
 </body>

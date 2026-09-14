@@ -5,8 +5,9 @@ import {
   onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 import {
-  getFirestore, collection, doc, onSnapshot,
-  setDoc, updateDoc, deleteDoc, addDoc, writeBatch, getDocs
+getFirestore, collection, doc, onSnapshot,
+setDoc, updateDoc, deleteDoc, addDoc, writeBatch, getDocs,
+serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -30,7 +31,8 @@ export const historyCol = collection(db, "history");
 // импортировали всё из одного места и не тащили CDN-урлы у себя.
 export {
   signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged, signOut,
-  doc, onSnapshot, setDoc, updateDoc, deleteDoc, addDoc, writeBatch, getDocs
+    doc, onSnapshot, setDoc, updateDoc, deleteDoc, addDoc, writeBatch, getDocs,
+  serverTimestamp
 };
 
 // ===================== APP FEED =====================
