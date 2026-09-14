@@ -83,6 +83,17 @@
 
   <!-- Основной интерфейс -->
   <div class="app-container no-print">
+
+
+<!-- ============================================================
+     EXISTING RATING APP
+     Весь старый интерфейс рейтинга теперь является страницей
+     "Рейтинг" нашего приложения.
+     ============================================================ -->
+
+<div id="rating-app-content" class="rating-app-content">
+
+
     
     <!-- Шапка -->
     <header class="header">
@@ -126,6 +137,10 @@
 
     <!-- Список учеников -->
     <main class="students-list" id="students-list"></main>
+
+    </div>
+<!-- /rating-app-content -->
+
 
   </div>
 
@@ -356,8 +371,110 @@
       </div>
     </div>
   </div>
+<!-- ============================================================
+     APP PAGES
+     Пока это только контейнеры для будущих разделов.
+     Существующий рейтинг НЕ трогаем.
+     ============================================================ -->
 
-  ```html
+<div id="app-pages" class="app-pages no-print">
+
+  <!-- ЛЕНТА -->
+
+<section
+    id="app-page-feed"
+    class="app-page"
+    data-page="feed"
+    aria-hidden="true"
+>
+    <div class="feed-page">
+
+        <header class="feed-header">
+
+            <div>
+                <div class="feed-kicker">
+                    КЛАСС 8А
+                </div>
+
+                <h1 class="feed-heading">
+                    Лента
+                </h1>
+
+                <p class="feed-subtitle">
+                    Новости, события и объявления класса
+                </p>
+            </div>
+
+        </header>
+
+
+        <main
+            id="class-feed"
+            class="class-feed"
+            aria-live="polite"
+        ></main>
+
+
+        <!-- Кнопка создания публикации -->
+        <button
+            id="feed-create-button"
+            class="feed-create-button"
+            type="button"
+            aria-label="Создать публикацию"
+            title="Создать публикацию"
+        >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5v14"/>
+                <path d="M5 12h14"/>
+            </svg>
+        </button>
+
+    </div>
+</section>
+
+  <!-- РЕЙТИНГ -->
+  <section
+    id="app-page-rating"
+    class="app-page"
+    data-page="rating"
+    aria-hidden="true"
+  >
+    <!--
+      Сюда позже аккуратно перенесём существующий рейтинг.
+      Пока специально оставляем пустым.
+    -->
+  </section>
+
+  <!-- ДНИ РОЖДЕНИЯ -->
+  <section
+    id="app-page-birthdays"
+    class="app-page"
+    data-page="birthdays"
+    aria-hidden="true"
+  >
+    <div class="app-page-placeholder">
+      <div class="app-page-placeholder-icon">○</div>
+      <h2>Дни рождения</h2>
+      <p>Здесь будут дни рождения учеников 8А.</p>
+    </div>
+  </section>
+
+  <!-- НАСТРОЙКИ -->
+  <section
+    id="app-page-settings"
+    class="app-page"
+    data-page="settings"
+    aria-hidden="true"
+  >
+    <div class="app-page-placeholder">
+      <div class="app-page-placeholder-icon">⚙</div>
+      <h2>Настройки</h2>
+      <p>Настройки приложения появятся здесь.</p>
+    </div>
+  </section>
+
+</div>
+
 <!-- ==================== APP BOTTOM NAVIGATION ==================== -->
 <nav class="app-bottom-nav" id="appBottomNav">
     <button class="app-nav-item active" type="button" data-page="feed" aria-label="Лента">
@@ -397,7 +514,6 @@
     </button>
 </nav>
 <!-- =============================================================== -->
-```
 
 
   <script type="module" src="js/main.js?v=7"></script>

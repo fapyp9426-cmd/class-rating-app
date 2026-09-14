@@ -15,6 +15,8 @@ import { initAuth } from './auth.js';
 import { initUI } from './ui.js';
 import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js';
 import { initLoading } from './loading.js';
+import { initNavigation } from './navigation.js';
+import { initFeed } from './feed.js';
 
 initMaintenance();
 
@@ -63,6 +65,8 @@ initBackup();
 initAuth(updatePrintPreview);
 initUI();
 initAutoSeason();
+initNavigation();
+initFeed();
 
 // app.js подключён как type="module" — функции, вызываемые из inline onclick="..."
 // в HTML (renderManageStudentsList, setScorePreset), нужно явно повесить на window,

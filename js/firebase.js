@@ -32,4 +32,10 @@ export {
   signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged, signOut,
   doc, onSnapshot, setDoc, updateDoc, deleteDoc, addDoc, writeBatch, getDocs
 };
+
+// ===================== APP FEED =====================
+
+// Посты ленты класса
+export const postsCol = collection(db, "posts");
+
 // ===================== /FIREBASE =====================
