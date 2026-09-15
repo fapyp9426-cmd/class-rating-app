@@ -378,6 +378,13 @@ function createConfetti() {
         confettiContainer
     );
 }
+// ---------------------------------------------------------
+// APPEARANCE SETTINGS
+// ---------------------------------------------------------
+
+function isBirthdayParticlesEnabled() {
+    return window.appearanceSettings?.birthdayParticles !== false;
+}
 
 function removeConfetti() {
     if (!confettiContainer) {
@@ -715,7 +722,18 @@ function updateBirthdayMode(students) {
         active
     );
 
-    if (active) {
+    /*
+        Конфетти зависит только от настройки
+        "Частицы дней рождения".
+
+        Сам режим дня рождения при этом
+        продолжает работать независимо от настройки.
+    */
+
+    if (
+        active &&
+        isBirthdayParticlesEnabled()
+    ) {
         createConfetti();
     } else {
         removeConfetti();
@@ -737,7 +755,6 @@ function updateBirthdayMode(students) {
 }
 
 
-
 // ---------------------------------------------------------
 // INIT
 // ---------------------------------------------------------
@@ -746,7 +763,29 @@ function initBirthdayEffects() {
 
     injectStyles();
 
-   
+    /*
+        Следим за настройками оформления.
+
+        Если пользователь выключил/включил
+        частицы дней рождения — применяем
+        изменение сразу, без перезагрузки.
+    */
+
+    window.addEventListener(
+        "appearanceSettingsChanged",
+        () => {
+
+            if (!birthdayMode) {
+                return;
+            }
+
+            if (isBirthdayParticlesEnabled()) {
+                createConfetti();
+            } else {
+                removeConfetti();
+            }
+        }
+    );
 
     onSnapshot(
         studentsCol,

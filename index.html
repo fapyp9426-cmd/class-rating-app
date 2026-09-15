@@ -59,7 +59,9 @@
 
   <!-- Блок сезонных эффектов на заднем плане -->
   <div id="season-fx-container" class="no-print">
+    <div class="winter-frost"></div>
     <div id="season-particles"></div>
+
     <div id="winter-snowdrifts" class="snowdrift-container hidden">
       <div class="snowdrift drift-1"></div>
       <div class="snowdrift drift-2"></div>
@@ -445,21 +447,245 @@
     -->
   </section>
 
-  <!-- НАСТРОЙКИ -->
-  <section
+<section
     id="app-page-settings"
     class="app-page"
     data-page="settings"
     aria-hidden="true"
-  >
-    <div class="app-page-placeholder">
-      <div class="app-page-placeholder-icon">⚙</div>
-      <h2>Настройки</h2>
-      <p>Настройки приложения появятся здесь.</p>
+>
+    <div class="app-page-settings-block settings-appearance">
+
+        <div class="settings-page-heading">
+            <div class="settings-page-kicker">
+                ПЕРСОНАЛИЗАЦИЯ
+            </div>
+
+            <h1 class="settings-page-title">
+                Оформление приложения
+            </h1>
+
+            <p class="settings-page-subtitle">
+                Настройте фоновые эффекты и атмосферу приложения.
+            </p>
+        </div>
+
+
+        <!-- =====================================================
+             ЧАСТИЦЫ ВРЕМЕНИ ГОДА
+             ===================================================== -->
+
+        <section class="appearance-setting-card">
+
+            <div class="appearance-setting-top">
+
+                <div class="appearance-setting-icon season-icon">
+                    ✦
+                </div>
+
+                <div class="appearance-setting-info">
+
+                    <h2>
+                        Частицы времени года
+                    </h2>
+
+                    <p>
+                        Показывать сезонные частицы на фоне приложения.
+                    </p>
+
+                </div>
+
+                <label class="appearance-switch">
+
+                    <input
+                        type="checkbox"
+                        id="season-particles-toggle"
+                        checked
+                    >
+
+                    <span class="appearance-switch-slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <!-- Варианты сезона -->
+
+            <div
+                id="season-particles-options"
+                class="appearance-setting-options"
+            >
+
+                <button
+                    class="season-option is-active"
+                    type="button"
+                    data-season="auto"
+                >
+                    <span class="season-option-icon">↻</span>
+
+                    <span class="season-option-text">
+                        <strong>Автоматически</strong>
+                        <small>Определять по времени года</small>
+                    </span>
+
+                    <span class="season-option-check">✓</span>
+                </button>
+
+
+                <button
+                    class="season-option"
+                    type="button"
+                    data-season="winter"
+                >
+                    <span class="season-option-icon">❄</span>
+
+                    <span class="season-option-text">
+                        <strong>Зима</strong>
+                        <small>Снег и снежинки</small>
+                    </span>
+
+                    <span class="season-option-check">✓</span>
+                </button>
+
+
+                <button
+                    class="season-option"
+                    type="button"
+                    data-season="spring"
+                >
+                    <span class="season-option-icon">✿</span>
+
+                    <span class="season-option-text">
+                        <strong>Весна</strong>
+                        <small>Лёгкие лепестки</small>
+                    </span>
+
+                    <span class="season-option-check">✓</span>
+                </button>
+
+
+                <button
+                    class="season-option"
+                    type="button"
+                    data-season="summer"
+                >
+                    <span class="season-option-icon">☀</span>
+
+                    <span class="season-option-text">
+                        <strong>Лето</strong>
+                        <small>Светящиеся частицы</small>
+                    </span>
+
+                    <span class="season-option-check">✓</span>
+                </button>
+
+
+                <button
+                    class="season-option"
+                    type="button"
+                    data-season="autumn"
+                >
+                    <span class="season-option-icon">🍂</span>
+
+                    <span class="season-option-text">
+                        <strong>Осень</strong>
+                        <small>Листья и дождь</small>
+                    </span>
+
+                    <span class="season-option-check">✓</span>
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             ЧАСТИЦЫ ДНЕЙ РОЖДЕНИЯ
+             ===================================================== -->
+
+        <section class="appearance-setting-card birthday-setting-card">
+
+            <div class="appearance-setting-top">
+
+                <div class="appearance-setting-icon birthday-icon">
+                    🎂
+                </div>
+
+                <div class="appearance-setting-info">
+
+                    <h2>
+                        Частицы дней рождения
+                    </h2>
+
+                    <p>
+                        Специальные частицы во время дней рождения учеников.
+                    </p>
+
+                </div>
+
+                <label class="appearance-switch">
+
+                    <input
+                        type="checkbox"
+                        id="birthday-particles-toggle"
+                        checked
+                    >
+
+                    <span class="appearance-switch-slider"></span>
+
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             ЧАСТИЦЫ ПРАЗДНИКОВ
+             ===================================================== -->
+
+        <section class="appearance-setting-card holiday-setting-card">
+
+            <div class="appearance-setting-top">
+
+                <div class="appearance-setting-icon holiday-icon">
+                    ✨
+                </div>
+
+                <div class="appearance-setting-info">
+
+                    <h2>
+                        Частицы праздников
+                    </h2>
+
+                    <p>
+                        Особые эффекты автоматически появляются во время праздников.
+                    </p>
+
+                </div>
+
+                <label class="appearance-switch holiday-switch">
+
+                    <input
+                        type="checkbox"
+                        id="holiday-particles-toggle"
+                        checked
+                    >
+
+                    <span class="appearance-switch-slider"></span>
+
+                </label>
+
+            </div>
+
+        </section>
+
     </div>
-  </section>
+</section>
 
 </div>
+
 
 <section
     id="app-page-birthdays"
@@ -656,7 +882,7 @@
         <span>Настройки</span>
     </button>
 </nav>
-<!-- =============================================================== -->
+
 
 <!-- ============================================================
      FEED — МОДАЛЬНОЕ ОКНО НОВОЙ ПУБЛИКАЦИИ
@@ -850,6 +1076,8 @@
 <script type="module" src="js/birthdays.js?v=1"></script>
 <script type="module" src="js/birthdayEffects.js?v=1"></script>
 <script type="module" src="js/easterEgg.js?v=1"></script>
+<script type="module" src="js/easterEgg2.js?v=1"></script>
+<script type="module" src="js/settingsAppearance.js?v=1"></script>
 <script type="module" src="js/main.js?v=7"></script>
 
 </body>
