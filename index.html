@@ -445,20 +445,6 @@
     -->
   </section>
 
-  <!-- ДНИ РОЖДЕНИЯ -->
-  <section
-    id="app-page-birthdays"
-    class="app-page"
-    data-page="birthdays"
-    aria-hidden="true"
-  >
-    <div class="app-page-placeholder">
-      <div class="app-page-placeholder-icon">○</div>
-      <h2>Дни рождения</h2>
-      <p>Здесь будут дни рождения учеников 8А.</p>
-    </div>
-  </section>
-
   <!-- НАСТРОЙКИ -->
   <section
     id="app-page-settings"
@@ -474,6 +460,163 @@
   </section>
 
 </div>
+
+<section
+    id="app-page-birthdays"
+    class="app-page"
+    data-page="birthdays"
+    aria-hidden="true"
+>
+    <div class="birthdays-page">
+
+        <!-- Заголовок страницы -->
+        <header class="birthdays-header">
+            <div>
+                <div class="birthdays-kicker">
+                    КЛАСС 8А
+                </div>
+
+                <h1 class="birthdays-heading">
+                    Дни рождения
+                </h1>
+
+                <p class="birthdays-subtitle">
+                    Праздники нашего класса
+                </p>
+            </div>
+        </header>
+
+
+        <!-- Ближайший день рождения -->
+        <section
+            id="birthday-next"
+            class="birthday-next"
+        >
+
+            <div class="birthday-next-label">
+                СЛЕДУЮЩИЙ ДЕНЬ РОЖДЕНИЯ
+            </div>
+
+            <div
+                id="birthday-next-avatar"
+                class="birthday-next-avatar"
+            >
+                🤓
+            </div>
+
+            <h2
+                id="birthday-next-name"
+                class="birthday-next-name"
+            >
+                Сапёров Матвей
+            </h2>
+
+            <div
+                id="birthday-next-date"
+                class="birthday-next-date"
+            >
+                25 августа
+            </div>
+
+            <div
+                id="birthday-next-countdown"
+                class="birthday-next-countdown"
+            >
+                через 5 дней
+            </div>
+
+        </section>
+
+
+        <!-- Все дни рождения -->
+        <section class="birthdays-list-section">
+
+            <div class="birthdays-section-header">
+                <h2 class="birthdays-section-title">
+                    Все дни рождения
+                </h2>
+            </div>
+
+            <div
+                id="birthdays-list"
+                class="birthdays-list"
+            >
+
+                <!-- Тестовая запись -->
+                <article class="birthday-row">
+
+                    <div class="birthday-row-avatar">
+                        🤓
+                    </div>
+
+                    <div class="birthday-row-info">
+                        <div class="birthday-row-name">
+                            Сапёров Матвей
+                        </div>
+
+                        <div class="birthday-row-date">
+                            25 августа
+                        </div>
+                    </div>
+
+                    <div class="birthday-row-countdown">
+                        через 5 дней
+                    </div>
+
+                </article>
+
+
+                <article class="birthday-row">
+
+                    <div class="birthday-row-avatar">
+                        😎
+                    </div>
+
+                    <div class="birthday-row-info">
+                        <div class="birthday-row-name">
+                            Шумков Елисей
+                        </div>
+
+                        <div class="birthday-row-date">
+                            7 сентября
+                        </div>
+                    </div>
+
+                    <div class="birthday-row-countdown">
+                        через 18 дней
+                    </div>
+
+                </article>
+
+
+                <article class="birthday-row">
+
+                    <div class="birthday-row-avatar">
+                        🙂
+                    </div>
+
+                    <div class="birthday-row-info">
+                        <div class="birthday-row-name">
+                            Таран Вадим
+                        </div>
+
+                        <div class="birthday-row-date">
+                            21 сентября
+                        </div>
+                    </div>
+
+                    <div class="birthday-row-countdown">
+                        через 32 дня
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </div>
+</section>
 
 <!-- ==================== APP BOTTOM NAVIGATION ==================== -->
 <nav class="app-bottom-nav" id="appBottomNav">
@@ -704,6 +847,9 @@
      / FEED — МОДАЛЬНОЕ ОКНО НОВОЙ ПУБЛИКАЦИИ
      ============================================================ -->
 
-  <script type="module" src="js/main.js?v=7"></script>
+<script type="module" src="js/birthdays.js?v=1"></script>
+<script type="module" src="js/birthdayEffects.js?v=1"></script>
+<script type="module" src="js/main.js?v=7"></script>
+
 </body>
 </html>
