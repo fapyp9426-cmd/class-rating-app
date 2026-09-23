@@ -17,11 +17,20 @@ import {
   getStudentEmoji,
   getStudentTitle,
   getStudentTitleColor,
+  getStudentCardTheme,
   initStudentProfilesSync
 } from './studentProfiles.js';
 
 import {
-  giveTitleChest
+  profilesCol,
+  doc,
+  getDocs,
+  setDoc
+} from './firebase.js';
+
+import {
+  giveTitleChest,
+  giveThemeChest
 } from './rewards/chests.js';
 
 import {
@@ -262,6 +271,11 @@ export function renderStudentsList() {
       card.className =
         'student-card';
 
+      card.dataset.theme =
+        getStudentCardTheme(
+          student
+        );
+
       card.onclick =
         () =>
           openStudentHistory(
@@ -284,26 +298,26 @@ export function renderStudentsList() {
 
           <div>
 
-<div class="name">
-  ${escapeHtml(
-    student.name
-  )}
+            <div class="name">
+              ${escapeHtml(
+                student.name
+              )}
 
-${
-  getStudentTitle(student)
-    ? `
-      <span
-        class="student-title"
-        style="--title-color: ${getStudentTitleColor(student) || '#8b5cf6'};"
-      >
-        ${escapeHtml(
-          getStudentTitle(student)
-        )}
-      </span>
-    `
-    : ''
-}
-</div>
+              ${
+                getStudentTitle(student)
+                  ? `
+                    <span
+                      class="student-title"
+                      style="--title-color: ${getStudentTitleColor(student) || '#8b5cf6'};"
+                    >
+                      ${escapeHtml(
+                        getStudentTitle(student)
+                      )}
+                    </span>
+                  `
+                  : ''
+              }
+            </div>
 
             ${
               lastAction
@@ -351,8 +365,6 @@ if (searchInput) {
   );
 
 }
-
-
 // ===================== SELECT УЧЕНИКА =====================
 
 export function renderSelectOptions() {
@@ -525,31 +537,40 @@ export function renderManageStudentsList() {
           </span>
 
         </div>
-<div style="display:flex; gap:6px;">
 
-  <button
-    class="btn btn-secondary btn-sm"
-    onclick="giveChestFromAdmin('${student.id}')"
-    title="Выдать сундук"
-  >
-    🎁
-  </button>
+        <div style="display:flex; gap:6px;">
 
-  <button
-    class="btn btn-secondary btn-sm"
-    onclick="editStudent('${student.id}')"
-  >
-    ✏️
-  </button>
+          <button
+            class="btn btn-secondary btn-sm"
+            onclick="giveChestFromAdmin('${student.id}')"
+            title="Выдать сундук титулов"
+          >
+            🎁
+          </button>
 
-  <button
-    class="btn btn-danger btn-sm"
-    onclick="deleteStudent('${student.id}')"
-  >
-    🗑️
-  </button>
+          <button
+            class="btn btn-secondary btn-sm"
+            onclick="giveThemeChestFromAdmin('${student.id}')"
+            title="Выдать сундук тем"
+          >
+            🎨
+          </button>
 
-</div>
+          <button
+            class="btn btn-secondary btn-sm"
+            onclick="editStudent('${student.id}')"
+          >
+            ✏️
+          </button>
+
+          <button
+            class="btn btn-danger btn-sm"
+            onclick="deleteStudent('${student.id}')"
+          >
+            🗑️
+          </button>
+
+        </div>
       `;
 
 
@@ -560,11 +581,13 @@ export function renderManageStudentsList() {
   );
 }
 
-// ===================== ВЫДАЧА СУНДУКА ИЗ АДМИНКИ =====================
+
+// ===================== ВЫДАЧА СУНДУКА ТИТУЛОВ =====================
 
 async function giveChestFromAdmin(
   studentId
 ) {
+
   if (!studentId) {
     return;
   }
@@ -577,8 +600,9 @@ async function giveChestFromAdmin(
       );
 
     if (!success) {
+
       alert(
-        'Не удалось выдать сундук.'
+        'Не удалось выдать сундук титулов.'
       );
 
       return;
@@ -593,20 +617,78 @@ async function giveChestFromAdmin(
 
 
     if (student) {
+
       alert(
-        `🎁 Сундук выдан ученику ${student.name}!`
+        `🎁 Сундук титулов выдан ученику ${student.name}!`
       );
+
     }
 
   } catch (error) {
 
     console.error(
-      'Ошибка выдачи сундука:',
+      'Ошибка выдачи сундука титулов:',
       error
     );
 
     alert(
-      '❌ Произошла ошибка при выдаче сундука.'
+      '❌ Произошла ошибка при выдаче сундука титулов.'
+    );
+  }
+}
+
+
+// ===================== ВЫДАЧА СУНДУКА ТЕМ =====================
+
+async function giveThemeChestFromAdmin(
+  studentId
+) {
+
+  if (!studentId) {
+    return;
+  }
+
+  try {
+
+    const newCount =
+      await giveThemeChest(
+        studentId
+      );
+
+    if (!newCount) {
+
+      alert(
+        'Не удалось выдать сундук тем.'
+      );
+
+      return;
+    }
+
+
+    const student =
+      getStudents().find(
+        student =>
+          student.id === studentId
+      );
+
+
+    if (student) {
+
+      alert(
+        `🎨 Сундук тем выдан ученику ${student.name}!`
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      'Ошибка выдачи сундука тем:',
+      error
+    );
+
+    alert(
+      '❌ Произошла ошибка при выдаче сундука тем.'
     );
   }
 }
@@ -753,9 +835,105 @@ export function updateTotalStudents() {
     `Учеников: ${students.length}`;
 }
 
+// ===================== ОЧИСТКА ЭМОДЗИ ПРОФИЛЕЙ =====================
+
+async function normalizeProfileEmojis() {
+
+  const confirmed =
+    confirm(
+      'Очистить эмодзи всех профилей?\n\n' +
+      'У каждого профиля останется только один эмодзи.'
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+
+    const snapshot =
+      await getDocs(
+        profilesCol
+      );
+
+    let changed = 0;
+
+    for (
+      const profileDoc of snapshot.docs
+    ) {
+
+      const data =
+        profileDoc.data();
+
+      const value =
+        String(
+          data.emoji || ''
+        ).trim();
+
+      if (!value) {
+        continue;
+      }
+
+      const segments =
+        typeof Intl.Segmenter === 'function'
+          ? [
+              ...new Intl.Segmenter(
+                undefined,
+                {
+                  granularity: 'grapheme'
+                }
+              ).segment(value)
+            ]
+          : Array.from(value);
+
+      const emoji =
+        segments[0]?.segment || '';
+
+      if (
+        emoji &&
+        emoji !== value
+      ) {
+
+        await setDoc(
+          doc(
+            profilesCol,
+            profileDoc.id
+          ),
+          {
+            emoji
+          },
+          {
+            merge: true
+          }
+        );
+
+        changed++;
+      }
+    }
+
+    alert(
+      `Готово!\nИзменено профилей: ${changed}`
+    );
+
+  } catch (error) {
+
+    console.error(
+      'Ошибка очистки эмодзи:',
+      error
+    );
+
+    alert(
+      '❌ Не удалось очистить эмодзи профилей.'
+    );
+  }
+}
+
 // ===================== ГЛОБАЛЬНЫЕ ФУНКЦИИ АДМИНКИ =====================
 
 window.giveChestFromAdmin =
   giveChestFromAdmin;
+
+window.giveThemeChestFromAdmin =
+  giveThemeChestFromAdmin;
 
 // ===================== /РЕНДЕР =====================

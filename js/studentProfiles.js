@@ -68,9 +68,24 @@ export function getStudentProfile(student) {
 // ===================== ЭМОДЗИ =====================
 
 export function getStudentEmoji(student) {
-  return getStudentProfile(
-    student
-  ).emoji;
+
+  if (!student?.id) {
+    return '😀';
+  }
+
+  const profile =
+    profilesCache.get(
+      student.id
+    );
+
+  if (
+    profile &&
+    profile.emoji
+  ) {
+    return profile.emoji;
+  }
+
+  return student.avatar || '😀';
 }
 
 // ===================== ТИТУЛ =====================
@@ -116,12 +131,23 @@ export function getStudentTitleColor(
     : null;
 }
 
+// ===================== ТЕМА КАРТОЧКИ УЧЕНИКА =====================
+
+export function getStudentCardTheme(student) {
+  const profile =
+    getStudentProfile(
+      student
+    );
+
+  return profile.selectedCardTheme || 'default';
+}
 
 // ===================== СИНХРОНИЗАЦИЯ =====================
 
 export function initStudentProfilesSync(
   onUpdate = null
 ) {
+
   if (
     typeof onUpdate === 'function'
   ) {
@@ -137,82 +163,85 @@ export function initStudentProfilesSync(
   unsubscribeProfiles =
     onSnapshot(
       profilesCol,
-snapshot => {
 
-  profilesCache.clear();
+      snapshot => {
 
-  snapshot.docs.forEach(
-    profileDoc => {
+        profilesCache.clear();
 
-      const data =
-        profileDoc.data();
+        snapshot.forEach(
+          profileDoc => {
 
-      profilesCache.set(
-        profileDoc.id,
-        {
-          studentId:
-            profileDoc.id,
+            const data =
+              profileDoc.data();
 
-          emoji:
-            data.emoji ||
-            '😀',
+            profilesCache.set(
+              profileDoc.id,
+              {
+                studentId:
+                  profileDoc.id,
 
-          unlockedTitles:
-            Array.isArray(
-              data.unlockedTitles
-            )
-              ? data.unlockedTitles
-              : [],
+                emoji:
+                  data.emoji ||
+                  '😀',
 
-          unlockedCardThemes:
-            Array.isArray(
-              data.unlockedCardThemes
-            )
-              ? data.unlockedCardThemes
-              : [],
+                unlockedTitles:
+                  Array.isArray(
+                    data.unlockedTitles
+                  )
+                    ? data.unlockedTitles
+                    : [],
 
-          selectedTitle:
-            data.selectedTitle ||
-            null,
+                unlockedCardThemes:
+                  Array.isArray(
+                    data.unlockedCardThemes
+                  )
+                    ? data.unlockedCardThemes
+                    : [],
 
-          selectedCardTheme:
-            data.selectedCardTheme ||
-            null
-        }
-      );
-    }
-  );
+                selectedTitle:
+                  data.selectedTitle ||
+                  null,
 
+                selectedCardTheme:
+                  data.selectedCardTheme ||
+                  null
+              }
+            );
+          }
+        );
 
-        // Все части приложения,
-        // которые подписались,
-        // перерисовываются.
+        console.log(
+          'Профили обновлены:',
+          profilesCache
+        );
+
         listeners.forEach(
           callback => {
 
             try {
               callback();
             } catch (error) {
+
               console.error(
                 'Ошибка обновления профилей:',
                 error
               );
-            }
 
+            }
           }
         );
       },
 
       error => {
+
         console.error(
           'Ошибка синхронизации profiles:',
           error
         );
+
       }
     );
 }
-
-
 // ===================== ОТКЛЮЧЕНИЕ =====================
 
 export function stopStudentProfilesSync() {

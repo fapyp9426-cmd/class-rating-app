@@ -11,6 +11,10 @@ import {
   TITLES
 } from './titles.js';
 
+import {
+  CARD_THEMES
+} from './themes.js';
+
 
 // ===================== ВЫДАТЬ СУНДУК =====================
 
@@ -205,6 +209,183 @@ export async function openTitleChest(
     success: true,
 
     title: reward,
+
+    chestCount:
+      newChestCount
+  };
+}
+
+// ===================== ВЫДАТЬ СУНДУК ТЕМ =====================
+
+export async function giveThemeChest(
+  studentId
+) {
+
+  if (!studentId) {
+    return false;
+  }
+
+  const profileRef =
+    doc(
+      profilesCol,
+      studentId
+    );
+
+  const snapshot =
+    await getDoc(
+      profileRef
+    );
+
+  if (!snapshot.exists()) {
+    return false;
+  }
+
+  const data =
+    snapshot.data();
+
+  const currentCount =
+    Number(
+      data.chests?.themes
+    ) || 0;
+
+  const newCount =
+    currentCount + 1;
+
+  await setDoc(
+    profileRef,
+    {
+      chests: {
+        themes:
+          newCount
+      }
+    },
+    {
+      merge: true
+    }
+  );
+
+  return newCount;
+}
+
+
+// ===================== ОТКРЫТЬ СУНДУК ТЕМ =====================
+
+export async function openThemeChest(
+  studentId
+) {
+
+  if (!studentId) {
+    return {
+      success: false,
+      reason: 'invalid_student'
+    };
+  }
+
+  const profileRef =
+    doc(
+      profilesCol,
+      studentId
+    );
+
+  const snapshot =
+    await getDoc(
+      profileRef
+    );
+
+  if (!snapshot.exists()) {
+    return {
+      success: false,
+      reason: 'profile_not_found'
+    };
+  }
+
+  const data =
+    snapshot.data();
+
+  const chestCount =
+    Number(
+      data.chests?.themes
+    ) || 0;
+
+  if (chestCount <= 0) {
+    return {
+      success: false,
+      reason: 'no_chests'
+    };
+  }
+
+  const unlockedThemes =
+    Array.isArray(
+      data.unlockedCardThemes
+    )
+      ? data.unlockedCardThemes
+      : [];
+
+  // Только ещё не открытые темы
+const availableThemes =
+  CARD_THEMES.filter(
+    theme =>
+      theme.id !== 'default' &&
+      !unlockedThemes.includes(
+        theme.id
+      )
+  );
+
+  // Все темы собраны
+  if (
+    availableThemes.length === 0
+  ) {
+    return {
+      success: false,
+      reason: 'all_themes_unlocked'
+    };
+  }
+
+  // Случайная тема
+  const randomIndex =
+    Math.floor(
+      Math.random() *
+      availableThemes.length
+    );
+
+  const reward =
+    availableThemes[
+      randomIndex
+    ];
+
+  const newUnlockedThemes = [
+    ...unlockedThemes,
+    reward.id
+  ];
+
+  const newChestCount =
+    chestCount - 1;
+
+  // Сохраняем результат
+  await setDoc(
+    profileRef,
+    {
+      chests: {
+        themes:
+          newChestCount
+      },
+
+      unlockedCardThemes:
+        newUnlockedThemes,
+
+      selectedCardTheme:
+        reward.id
+    },
+    {
+      merge: true
+    }
+  );
+
+  return {
+    success: true,
+
+    theme:
+      reward,
 
     chestCount:
       newChestCount

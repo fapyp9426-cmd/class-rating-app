@@ -674,7 +674,10 @@
 
                         <div class="student-profile-chest-list">
 
-                            <div class="student-profile-chest">
+                            <div
+    id="student-profile-title-chest"
+    class="student-profile-chest"
+>
 
                                 <div class="student-profile-chest-icon">
                                     🎁
@@ -693,6 +696,29 @@
                                 </div>
 
                             </div>
+
+                            <div
+    id="student-profile-theme-chest"
+    class="student-profile-chest"
+>
+
+    <div class="student-profile-chest-icon">
+        🎨
+    </div>
+
+    <div class="student-profile-chest-info">
+
+        <strong>
+            Сундук тем
+        </strong>
+
+        <span id="student-profile-theme-chest-count">
+            0 сундуков
+        </span>
+
+    </div>
+
+</div>
 
                         </div>
 
@@ -740,6 +766,25 @@
                             id="student-profile-emojis"
                             class="student-profile-emojis"
                         ></div>
+
+                        <div class="student-profile-custom-emoji">
+
+    <input
+        id="student-profile-custom-emoji-input"
+        type="text"
+        maxlength="2"
+        placeholder="Например: 🐔"
+        autocomplete="off"
+    >
+
+    <button
+        id="student-profile-custom-emoji-btn"
+        type="button"
+    >
+        Установить
+    </button>
+
+</div>
 
                     </div>
 
@@ -796,10 +841,11 @@
 
                         </div>
 
-                        <select
-                            id="student-profile-theme"
-                            class="student-profile-select"
-                        ></select>
+                        <div
+    id="student-profile-theme-inventory"
+    class="student-profile-theme-inventory"
+>
+</div>
 
                     </div>
 
@@ -1562,6 +1608,169 @@
 <!-- ============================================================
      / FEED — МОДАЛЬНОЕ ОКНО НОВОЙ ПУБЛИКАЦИИ
      ============================================================ -->
+
+
+<!-- ===================== ПРЕМИАЛЬНЫЙ СУНДУК ТЕМ ===================== -->
+
+<div
+    id="student-profile-theme-chest-modal"
+    class="student-profile-chest-modal hidden"
+    aria-hidden="true"
+>
+
+    <div
+        class="student-profile-chest-modal-backdrop"
+        id="student-profile-theme-chest-modal-backdrop"
+    ></div>
+
+
+    <div class="student-profile-theme-chest-dialog">
+
+        <!-- Свечение за сундуком -->
+
+        <div class="student-profile-theme-chest-glow"></div>
+
+
+        <!-- СУНДУК -->
+
+        <div
+            id="student-profile-theme-chest-animation"
+            class="student-profile-theme-chest-animation"
+        >
+
+            <div class="theme-chest">
+
+                <div class="theme-chest-lid">
+                    <div class="theme-chest-lid-line"></div>
+                </div>
+
+                <div class="theme-chest-body">
+
+                    <div class="theme-chest-lock">
+                        ✦
+                    </div>
+
+                </div>
+
+                <div class="theme-chest-light"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ЧАСТИЦЫ -->
+
+        <div class="theme-chest-particles">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+
+        <!-- НАГРАДА -->
+
+        <div
+            id="student-profile-theme-chest-reward"
+            class="student-profile-theme-chest-reward hidden"
+        >
+
+            <div class="theme-reward-kicker">
+                НОВАЯ ТЕМА
+            </div>
+
+            <div
+                id="student-profile-theme-chest-reward-title"
+                class="theme-reward-title"
+            >
+                Аврора
+            </div>
+
+            <div
+                id="student-profile-theme-chest-reward-description"
+                class="theme-reward-description"
+            >
+                Переливы северного сияния
+            </div>
+
+            <!-- Превью самой карточки -->
+
+<div
+  class="student-profile-theme-preview"
+  data-theme="${theme.id}"
+>
+
+  <div class="student-profile-theme-preview-glow"></div>
+
+  <div class="student-profile-theme-preview-content">
+
+    <div class="student-profile-theme-preview-avatar">
+      ${currentProfile.emoji || '😀'}
+    </div>
+
+    <div class="student-profile-theme-preview-name">
+      ${currentStudent?.name || 'Твой профиль'}
+    </div>
+
+    <div class="student-profile-theme-preview-title">
+      ${
+        getTitleName(
+          currentProfile.selectedTitle
+        ) || 'Без титула'
+      }
+    </div>
+
+    <div class="student-profile-theme-preview-score">
+      🏆 ${Number(currentStudent?.score) || 0} баллов
+    </div>
+
+  </div>
+
+</div>
+
+        </div>
+
+
+        <!-- ВСЕ ТЕМЫ СОБРАНЫ -->
+
+        <div
+            id="student-profile-theme-chest-info"
+            class="student-profile-theme-chest-info hidden"
+        >
+
+            <div class="theme-reward-kicker">
+                ВСЕ ТЕМЫ СОБРАНЫ
+            </div>
+
+            <div class="theme-reward-title">
+                Ты собрал всё
+            </div>
+
+            <div class="theme-reward-description">
+                Новые темы появятся здесь, когда будут добавлены.
+            </div>
+
+        </div>
+
+
+        <!-- КНОПКА -->
+
+<button
+  id="student-profile-theme-chest-close"
+  class="student-profile-chest-close hidden"
+  type="button"
+>
+  Продолжить
+</button>
+
+    </div>
+
+</div>
 
 <script type="module" src="js/birthdays.js?v=1"></script>
 <script type="module" src="js/birthdayEffects.js?v=1"></script>

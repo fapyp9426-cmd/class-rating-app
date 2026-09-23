@@ -19,7 +19,12 @@ import {
 } from './rewards/titles.js';
 
 import {
-  openTitleChest
+  getCardThemeById
+} from './rewards/themes.js';
+
+import {
+  openTitleChest,
+  openThemeChest
 } from './rewards/chests.js';
 
 // ===================== НАСТРОЙКИ =====================
@@ -360,12 +365,17 @@ async function loadProfile(
         student.avatar ||
         '😀',
 
-      chests: {
-        titles:
-          Number(
-            data.chests?.titles
-          ) || 0
-      },
+chests: {
+  titles:
+    Number(
+      data.chests?.titles
+    ) || 0,
+
+  themes:
+    Number(
+      data.chests?.themes
+    ) || 0
+},
 
       unlockedTitles:
         Array.isArray(
@@ -398,9 +408,10 @@ async function loadProfile(
 const profile = {
   studentId: student.id,
   emoji: student.avatar || '😀',
-  chests: {
-    titles: 1
-  },
+chests: {
+  titles: 1,
+  themes: 0
+},
   unlockedTitles: [],
   unlockedCardThemes: [],
   selectedTitle: null,
@@ -454,12 +465,17 @@ async function saveProfile() {
 
         // ===================== СУНДУКИ =====================
 
-        chests: {
-          titles:
-            Number(
-              currentProfile.chests?.titles
-            ) || 0
-        },
+chests: {
+  titles:
+    Number(
+      currentProfile.chests?.titles
+    ) || 0,
+
+  themes:
+    Number(
+      currentProfile.chests?.themes
+    ) || 0
+},
 
         // ===================== НАГРАДЫ =====================
 
@@ -582,6 +598,16 @@ function renderEmojis() {
       'student-profile-emojis'
     );
 
+  const customInput =
+    document.getElementById(
+      'student-profile-custom-emoji-input'
+    );
+
+  const customButton =
+    document.getElementById(
+      'student-profile-custom-emoji-btn'
+    );
+
   if (!container) {
     return;
   }
@@ -624,6 +650,11 @@ function renderEmojis() {
           currentProfile.emoji =
             emoji;
 
+          if (customInput) {
+            customInput.value =
+              emoji;
+          }
+
           renderEmojis();
           renderCard();
         }
@@ -634,6 +665,67 @@ function renderEmojis() {
       );
     }
   );
+
+
+  // =====================
+  // СВОЙ ЭМОДЗИ
+  // =====================
+
+  if (
+    customInput &&
+    customButton
+  ) {
+
+    // Показываем текущий эмодзи
+    customInput.value =
+      currentProfile.emoji || '';
+
+
+    // Чтобы обработчик не создавался
+    // заново при каждом renderEmojis()
+    customButton.onclick =
+      () => {
+
+        const value =
+          customInput.value
+            .trim();
+
+        if (!value) {
+          return;
+        }
+
+
+        // Берём только первый эмодзи
+        // даже если пользователь вставил несколько
+        const segments =
+          typeof Intl.Segmenter === 'function'
+            ? [
+                ...new Intl.Segmenter(
+                  undefined,
+                  {
+                    granularity: 'grapheme'
+                  }
+                ).segment(value)
+              ]
+            : Array.from(value);
+
+        const emoji =
+          segments[0]?.segment || '';
+
+        if (!emoji) {
+          return;
+        }
+
+
+        // Устанавливаем только один эмодзи
+        currentProfile.emoji =
+          emoji;
+
+        renderEmojis();
+        renderCard();
+
+      };
+  }
 }
 
 
@@ -703,69 +795,171 @@ function renderTitles() {
 
 }
 
-
-// ===================== РЕНДЕР ТЕМ =====================
-
 function renderThemes() {
-  const select =
+
+  const inventory =
     document.getElementById(
-      'student-profile-theme'
+      'student-profile-theme-inventory'
     );
 
-  if (!select) return;
+  if (!inventory) {
+    return;
+  }
 
-  select.innerHTML = '';
+
+  inventory.innerHTML = '';
+
 
   const themes =
-    currentProfile.unlockedCardThemes || [];
+    currentProfile?.unlockedCardThemes || [];
 
-  if (
-    themes.length === 0
-  ) {
-    const option =
-      document.createElement(
-        'option'
-      );
 
-    option.value = '';
-    option.textContent =
-      'Нет доступных тем';
+  if (themes.length === 0) {
 
-    option.selected = true;
+    inventory.innerHTML = `
+      <div class="student-profile-theme-empty">
+        <div class="student-profile-theme-empty-icon">
+          🎨
+        </div>
 
-    select.appendChild(
-      option
-    );
+        <strong>
+          Тем пока нет
+        </strong>
+
+        <span>
+          Открывай сундуки тем, чтобы получить новые оформления.
+        </span>
+      </div>
+    `;
 
     return;
   }
 
-  themes.forEach(theme => {
-    const option =
-      document.createElement(
-        'option'
+
+  themes.forEach(themeId => {
+
+    const theme =
+      getCardThemeById(
+        themeId
       );
 
-    option.value = theme;
-    option.textContent = theme;
+    if (!theme) {
+      return;
+    }
 
-    option.selected =
-      theme ===
-      currentProfile.selectedCardTheme;
 
-    select.appendChild(
-      option
+    const isSelected =
+      currentProfile.selectedCardTheme ===
+      theme.id;
+
+
+    const item =
+      document.createElement(
+        'div'
+      );
+
+    item.className =
+      'student-profile-theme-item';
+
+
+    if (isSelected) {
+      item.classList.add(
+        'selected'
+      );
+    }
+
+
+    item.dataset.theme =
+      theme.id;
+
+
+    item.innerHTML = `
+
+      <div class="student-profile-theme-preview">
+
+        <div class="student-profile-theme-preview-glow"></div>
+
+        <div class="student-profile-theme-preview-content">
+
+          <div class="student-profile-theme-preview-avatar">
+            ${currentProfile.emoji || '😀'}
+          </div>
+
+          <div class="student-profile-theme-preview-name">
+            ${theme.name}
+          </div>
+
+          <div class="student-profile-theme-preview-score">
+            999 очков
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="student-profile-theme-item-info">
+
+        <strong>
+          ${theme.name}
+        </strong>
+
+        <span>
+          ${theme.description}
+        </span>
+
+      </div>
+
+
+      <button
+        class="student-profile-theme-equip"
+        type="button"
+      >
+        ${
+          isSelected
+            ? 'Надето'
+            : 'Надеть'
+        }
+      </button>
+
+    `;
+
+
+    const equipButton =
+      item.querySelector(
+        '.student-profile-theme-equip'
+      );
+
+
+    equipButton.addEventListener(
+      'click',
+      () => {
+
+        if (
+          currentProfile.selectedCardTheme ===
+          theme.id
+        ) {
+          return;
+        }
+
+
+        currentProfile.selectedCardTheme =
+          theme.id;
+
+
+        renderProfile();
+
+      }
     );
+
+
+    inventory.appendChild(
+      item
+    );
+
   });
 
-  select.onchange = () => {
-    currentProfile.selectedCardTheme =
-      select.value || null;
-
-    renderCard();
-  };
 }
-
 
 // ===================== ОКНО ВЫБОРА ТИТУЛА =====================
 
@@ -1092,39 +1286,69 @@ function closeTitleSelectionModal() {
 
 function renderChests() {
 
-  const countElement =
+  const titleCountElement =
     document.getElementById(
       'student-profile-title-chest-count'
     );
 
-  if (!countElement) {
-    return;
+  const themeCountElement =
+    document.getElementById(
+      'student-profile-theme-chest-count'
+    );
+
+
+  // ===================== СУНДУК ТИТУЛОВ =====================
+
+  if (titleCountElement) {
+
+    const titleCount =
+      Number(
+        currentProfile?.chests?.titles
+      ) || 0;
+
+    titleCountElement.textContent =
+      formatChestCount(
+        titleCount
+      );
   }
 
-  const count =
-    Number(
-      currentProfile?.chests?.titles
-    ) || 0;
 
+  // ===================== СУНДУК ТЕМ =====================
+
+  if (themeCountElement) {
+
+    const themeCount =
+      Number(
+        currentProfile?.chests?.themes
+      ) || 0;
+
+    themeCountElement.textContent =
+      formatChestCount(
+        themeCount
+      );
+  }
+
+}
+
+
+// ===================== ФОРМАТ СЧЁТЧИКА =====================
+
+function formatChestCount(
+  count
+) {
 
   if (count === 1) {
+    return '1 сундук';
+  }
 
-    countElement.textContent =
-      '1 сундук';
-
-  } else if (
+  if (
     count >= 2 &&
     count <= 4
   ) {
-
-    countElement.textContent =
-      `${count} сундука`;
-
-  } else {
-
-    countElement.textContent =
-      `${count} сундуков`;
+    return `${count} сундука`;
   }
+
+  return `${count} сундуков`;
 }
 
 async function handleTitleChestClick() {
@@ -1297,9 +1521,12 @@ console.log('CHEST ELEMENTS:', {
       return;
     }
 
-    currentProfile.chests = {
-      titles: result.chestCount
-    };
+currentProfile.chests = {
+  ...currentProfile.chests,
+
+  titles:
+    result.chestCount
+};
 
     currentProfile.unlockedTitles =
       Array.isArray(
@@ -1383,9 +1610,351 @@ console.log('CHEST ELEMENTS:', {
 }
 
 
+// ===================== СУНДУК ТЕМ =====================
+// ===================== ПРЕМИАЛЬНЫЙ СУНДУК ТЕМ =====================
+
+async function handleThemeChestClick() {
+
+  if (!currentStudent) {
+    return;
+  }
 
 
-  
+  const themeCount =
+    Number(
+      currentProfile?.chests?.themes
+    ) || 0;
+
+
+  if (themeCount <= 0) {
+    return;
+  }
+
+
+  const modal =
+    document.getElementById(
+      'student-profile-theme-chest-modal'
+    );
+
+  const dialog =
+    modal?.querySelector(
+      '.student-profile-theme-chest-dialog'
+    );
+
+  const animation =
+    document.getElementById(
+      'student-profile-theme-chest-animation'
+    );
+
+  const reward =
+    document.getElementById(
+      'student-profile-theme-chest-reward'
+    );
+
+  const rewardTitle =
+    document.getElementById(
+      'student-profile-theme-chest-reward-title'
+    );
+
+  const rewardDescription =
+    document.getElementById(
+      'student-profile-theme-chest-reward-description'
+    );
+
+  const rewardPreview =
+    document.getElementById(
+      'student-profile-theme-preview'
+    );
+
+  const info =
+    document.getElementById(
+      'student-profile-theme-chest-info'
+    );
+
+  const closeButton =
+    document.getElementById(
+      'student-profile-theme-chest-close'
+    );
+
+  const backdrop =
+    document.getElementById(
+      'student-profile-theme-chest-modal-backdrop'
+    );
+
+
+  if (
+    !modal ||
+    !dialog ||
+    !animation ||
+    !reward ||
+    !rewardTitle ||
+    !rewardDescription ||
+    !closeButton
+  ) {
+    return;
+  }
+
+
+  // ===================== СБРОС =====================
+
+  dialog.classList.remove(
+    'is-opening'
+  );
+
+  reward.classList.add(
+    'hidden'
+  );
+
+  info?.classList.add(
+    'hidden'
+  );
+
+  closeButton.classList.add(
+    'hidden'
+  );
+
+  animation.classList.remove(
+    'hidden'
+  );
+
+
+  // ===================== ОТКРЫВАЕМ ОКНО =====================
+
+  modal.classList.remove(
+    'hidden'
+  );
+
+  modal.setAttribute(
+    'aria-hidden',
+    'false'
+  );
+
+
+  // Даём браузеру применить начальное состояние
+
+  await new Promise(
+    resolve =>
+      requestAnimationFrame(resolve)
+  );
+
+
+  // ===================== ПОЛУЧАЕМ НАГРАДУ =====================
+
+  const result =
+    await openThemeChest(
+      currentStudent.id
+    );
+
+
+  if (!result?.success) {
+
+    modal.classList.add(
+      'hidden'
+    );
+
+    modal.setAttribute(
+      'aria-hidden',
+      'true'
+    );
+
+
+    if (
+      result?.reason ===
+      'all_themes_unlocked'
+    ) {
+
+      info?.classList.remove(
+        'hidden'
+      );
+
+      modal.classList.remove(
+        'hidden'
+      );
+
+      modal.setAttribute(
+        'aria-hidden',
+        'false'
+      );
+
+      animation.classList.add(
+        'hidden'
+      );
+
+      closeButton.classList.remove(
+        'hidden'
+      );
+
+      // ===================== ЗАКРЫТИЕ ОКНА =====================
+
+      const closeChest = () => {
+
+        modal.classList.add(
+          'hidden'
+        );
+
+        modal.setAttribute(
+          'aria-hidden',
+          'true'
+        );
+
+        info?.classList.add(
+          'hidden'
+        );
+
+        closeButton.classList.add(
+          'hidden'
+        );
+
+        closeButton.onclick = null;
+
+        if (backdrop) {
+          backdrop.onclick = null;
+        }
+      };
+
+      closeButton.onclick =
+        closeChest;
+
+      if (backdrop) {
+        backdrop.onclick =
+          closeChest;
+      }
+    }
+
+    return;
+  }
+
+
+  const theme =
+    result.theme;
+
+  // ===================== ОБНОВЛЯЕМ ПРОФИЛЬ =====================
+
+  currentProfile.chests = {
+    ...currentProfile.chests,
+
+    themes:
+      result.chestCount
+  };
+
+
+  currentProfile.unlockedCardThemes =
+    Array.isArray(
+      currentProfile.unlockedCardThemes
+    )
+      ? currentProfile.unlockedCardThemes
+      : [];
+
+
+  if (
+    theme?.id &&
+    !currentProfile.unlockedCardThemes.includes(
+      theme.id
+    )
+  ) {
+
+    currentProfile.unlockedCardThemes.push(
+      theme.id
+    );
+  }
+
+
+  currentProfile.selectedCardTheme =
+    theme.id;
+
+
+  // ===================== ЗАПОЛНЯЕМ НАГРАДУ =====================
+
+  rewardTitle.textContent =
+    theme.name;
+
+  rewardDescription.textContent =
+    theme.description;
+
+
+  // ===================== ПРЕВЬЮ ТЕМЫ =====================
+
+  if (rewardPreview) {
+
+    rewardPreview.dataset.theme =
+      theme.id;
+  }
+
+
+  // ===================== АНИМАЦИЯ =====================
+
+  setTimeout(() => {
+
+    dialog.classList.add(
+      'is-opening'
+    );
+
+  }, 250);
+
+
+  // Ждём открытия сундука
+
+  setTimeout(() => {
+
+    animation.classList.add(
+      'hidden'
+    );
+
+    reward.classList.remove(
+      'hidden'
+    );
+
+    closeButton.classList.remove(
+      'hidden'
+    );
+
+  }, 1250);
+
+
+  // ===================== ЗАКРЫТИЕ =====================
+
+const closeChest = () => {
+
+  modal.classList.add(
+    'hidden'
+  );
+
+  modal.setAttribute(
+    'aria-hidden',
+    'true'
+  );
+
+  dialog.classList.remove(
+    'is-opening'
+  );
+
+  animation.classList.remove(
+    'hidden'
+  );
+
+  reward.classList.add(
+    'hidden'
+  );
+
+  info?.classList.add(
+    'hidden'
+  );
+
+  closeButton.classList.add(
+    'hidden'
+  );
+
+  renderProfile();
+
+};
+
+closeButton.onclick = closeChest;
+
+if (backdrop) {
+  backdrop.onclick = closeChest;
+}
+
+}
 
 // ===================== ПОЛНЫЙ РЕНДЕР =====================
 
@@ -1435,12 +2004,17 @@ function startProfileSync(
 
           // ===================== СУНДУКИ =====================
 
-          chests: {
-            titles:
-              Number(
-                data.chests?.titles
-              ) || 0
-          },
+chests: {
+  titles:
+    Number(
+      data.chests?.titles
+    ) || 0,
+
+  themes:
+    Number(
+      data.chests?.themes
+    ) || 0
+},
 
           // ===================== НАГРАДЫ =====================
 
@@ -1635,17 +2209,28 @@ export async function openStudentProfile() {
 
 export function initProfilePrototype() {
 
-  const titleChest =
-  document.querySelector(
-    '.student-profile-chest'
+const titleChest =
+  document.getElementById(
+    'student-profile-title-chest'
   );
 
-
 if (titleChest) {
-
   titleChest.addEventListener(
     'click',
     handleTitleChestClick
+  );
+}
+
+
+const themeChest =
+  document.getElementById(
+    'student-profile-theme-chest'
+  );
+
+if (themeChest) {
+  themeChest.addEventListener(
+    'click',
+    handleThemeChestClick
   );
 }
 

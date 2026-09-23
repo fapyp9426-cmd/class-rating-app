@@ -767,6 +767,503 @@ body.winter-active .winter-frost {
   backdrop-filter: blur(8px);
 }
 
+/* ===================== ТЕМЫ КАРТОЧЕК УЧЕНИКОВ ===================== */
+
+.student-card[data-theme="gold"] {
+  background:
+    radial-gradient(
+      circle at 15% 50%,
+      rgba(251, 191, 36, 0.16),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(59, 42, 11, 0.95),
+      rgba(21, 18, 10, 0.98)
+    );
+
+  border-color:
+    rgba(251, 191, 36, 0.32);
+
+  box-shadow:
+    0 0 24px rgba(251, 191, 36, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+
+.student-card[data-theme="aurora"] {
+  background:
+    radial-gradient(
+      circle at 15% 30%,
+      rgba(34, 197, 94, 0.14),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 85% 70%,
+      rgba(139, 92, 246, 0.16),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(16, 28, 45, 0.98),
+      rgba(17, 19, 41, 0.98)
+    );
+
+  border-color:
+    rgba(139, 92, 246, 0.30);
+
+  box-shadow:
+    0 0 28px rgba(139, 92, 246, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+
+.student-card[data-theme="ocean"] {
+  background:
+    radial-gradient(
+      circle at 15% 30%,
+      rgba(45, 212, 191, 0.15),
+      transparent 42%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(11, 39, 48, 0.98),
+      rgba(10, 23, 32, 0.98)
+    );
+
+  border-color:
+    rgba(45, 212, 191, 0.30);
+
+  box-shadow:
+    0 0 26px rgba(45, 212, 191, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* ==================== LEAVES THEME ==================== */
+
+.student-card[data-theme="leaves"] {
+  background:
+    radial-gradient(
+      circle at 15% 25%,
+      rgba(34, 197, 94, 0.16),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(22, 163, 74, 0.10),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(12, 39, 27, 0.98),
+      rgba(10, 25, 20, 0.99)
+    );
+
+  border-color:
+    rgba(34, 197, 94, 0.30);
+
+  box-shadow:
+    0 0 26px rgba(34, 197, 94, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.student-card[data-theme="leaves"]:hover {
+  border-color:
+    rgba(34, 197, 94, 0.52);
+
+  box-shadow:
+    0 8px 30px rgba(34, 197, 94, 0.10),
+    0 0 30px rgba(22, 163, 74, 0.09);
+}
+
+/* ==================== ICE THEME ==================== */
+
+.student-card[data-theme="ice"] {
+  background:
+    radial-gradient(
+      circle at 15% 25%,
+      rgba(125, 211, 252, 0.18),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 85% 75%,
+      rgba(59, 130, 246, 0.12),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(14, 35, 55, 0.98),
+      rgba(10, 22, 38, 0.99)
+    );
+
+  border-color:
+    rgba(125, 211, 252, 0.32);
+
+  box-shadow:
+    0 0 28px rgba(56, 189, 248, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.student-card[data-theme="ice"]:hover {
+  border-color:
+    rgba(125, 211, 252, 0.58);
+
+  box-shadow:
+    0 8px 32px rgba(56, 189, 248, 0.12),
+    0 0 34px rgba(125, 211, 252, 0.10);
+}
+
+
+/* ==================== VOID THEME ==================== */
+
+.student-card[data-theme="void"] {
+  background:
+    radial-gradient(
+      circle at 20% 25%,
+      rgba(168, 85, 247, 0.18),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(91, 33, 182, 0.14),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(25, 16, 45, 0.99),
+      rgba(12, 10, 23, 0.99)
+    );
+
+  border-color:
+    rgba(168, 85, 247, 0.34);
+
+  box-shadow:
+    0 0 30px rgba(139, 92, 246, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.student-card[data-theme="void"]:hover {
+  border-color:
+    rgba(168, 85, 247, 0.60);
+
+  box-shadow:
+    0 8px 34px rgba(139, 92, 246, 0.14),
+    0 0 36px rgba(168, 85, 247, 0.12);
+}
+
+
+/* ==================== FLAME THEME ==================== */
+
+.student-card[data-theme="flame"] {
+  background:
+    radial-gradient(
+      circle at 18% 25%,
+      rgba(249, 115, 22, 0.20),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(239, 68, 68, 0.15),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(48, 21, 13, 0.99),
+      rgba(28, 13, 11, 0.99)
+    );
+
+  border-color:
+    rgba(249, 115, 22, 0.34);
+
+  box-shadow:
+    0 0 28px rgba(249, 115, 22, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.student-card[data-theme="flame"]:hover {
+  border-color:
+    rgba(249, 115, 22, 0.62);
+
+  box-shadow:
+    0 8px 34px rgba(249, 115, 22, 0.14),
+    0 0 36px rgba(239, 68, 68, 0.11);
+}
+
+
+/* ==================== ПРЕВЬЮ ТЕМ В ПРОФИЛЕ ==================== */
+
+.student-profile-theme-preview[data-theme="default"] {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(31, 41, 55, 0.98),
+      rgba(15, 23, 42, 0.99)
+    );
+
+  border-color:
+    rgba(255, 255, 255, 0.10);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+/* ==================== GOLD ==================== */
+
+.student-profile-theme-preview[data-theme="gold"] {
+  background:
+    radial-gradient(
+      circle at 15% 25%,
+      rgba(251, 191, 36, 0.20),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(59, 42, 11, 0.98),
+      rgba(21, 18, 10, 0.99)
+    );
+
+  border-color:
+    rgba(251, 191, 36, 0.38);
+
+  box-shadow:
+    0 0 22px rgba(251, 191, 36, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+
+/* ==================== LEAVES ==================== */
+
+.student-profile-theme-preview[data-theme="leaves"] {
+  background:
+    radial-gradient(
+      circle at 15% 25%,
+      rgba(34, 197, 94, 0.18),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(12, 39, 27, 0.98),
+      rgba(10, 25, 20, 0.99)
+    );
+
+  border-color:
+    rgba(34, 197, 94, 0.34);
+
+  box-shadow:
+    0 0 22px rgba(34, 197, 94, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+/* ==================== ICE ==================== */
+
+.student-profile-theme-preview[data-theme="ice"] {
+  background:
+    radial-gradient(
+      circle at 15% 25%,
+      rgba(125, 211, 252, 0.20),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(14, 35, 55, 0.98),
+      rgba(10, 22, 38, 0.99)
+    );
+
+  border-color:
+    rgba(125, 211, 252, 0.36);
+
+  box-shadow:
+    0 0 24px rgba(56, 189, 248, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+
+/* ==================== AURORA ==================== */
+
+.student-profile-theme-preview[data-theme="aurora"] {
+  background:
+    radial-gradient(
+      circle at 15% 25%,
+      rgba(34, 197, 94, 0.18),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 85% 75%,
+      rgba(139, 92, 246, 0.20),
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(16, 28, 45, 0.98),
+      rgba(17, 19, 41, 0.99)
+    );
+
+  border-color:
+    rgba(139, 92, 246, 0.34);
+
+  box-shadow:
+    0 0 25px rgba(139, 92, 246, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+/* ==================== VOID ==================== */
+
+.student-profile-theme-preview[data-theme="void"] {
+  background:
+    radial-gradient(
+      circle at 20% 25%,
+      rgba(168, 85, 247, 0.20),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(91, 33, 182, 0.16),
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(25, 16, 45, 0.99),
+      rgba(12, 10, 23, 0.99)
+    );
+
+  border-color:
+    rgba(168, 85, 247, 0.38);
+
+  box-shadow:
+    0 0 26px rgba(139, 92, 246, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+/* ==================== FLAME ==================== */
+
+.student-profile-theme-preview[data-theme="flame"] {
+  background:
+    radial-gradient(
+      circle at 18% 25%,
+      rgba(249, 115, 22, 0.22),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(239, 68, 68, 0.16),
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(48, 21, 13, 0.99),
+      rgba(28, 13, 11, 0.99)
+    );
+
+  border-color:
+    rgba(249, 115, 22, 0.38);
+
+  box-shadow:
+    0 0 25px rgba(249, 115, 22, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+/* ==================== OCEAN ==================== */
+
+.student-profile-theme-preview[data-theme="ocean"] {
+  background:
+    radial-gradient(
+      circle at 15% 25%,
+      rgba(45, 212, 191, 0.19),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(11, 39, 48, 0.98),
+      rgba(10, 23, 32, 0.99)
+    );
+
+  border-color:
+    rgba(45, 212, 191, 0.36);
+
+  box-shadow:
+    0 0 24px rgba(45, 212, 191, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+/* ==================== СВЕЧЕНИЕ КОНТЕНТА ==================== */
+
+.student-profile-theme-preview[data-theme="gold"]
+.student-profile-theme-preview-glow {
+  background: rgba(251, 191, 36, 0.16);
+}
+
+.student-profile-theme-preview[data-theme="leaves"]
+.student-profile-theme-preview-glow {
+  background: rgba(34, 197, 94, 0.14);
+}
+
+.student-profile-theme-preview[data-theme="ice"]
+.student-profile-theme-preview-glow {
+  background: rgba(125, 211, 252, 0.16);
+}
+
+.student-profile-theme-preview[data-theme="aurora"]
+.student-profile-theme-preview-glow {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(34, 197, 94, 0.16),
+      rgba(139, 92, 246, 0.18)
+    );
+}
+
+.student-profile-theme-preview[data-theme="void"]
+.student-profile-theme-preview-glow {
+  background: rgba(168, 85, 247, 0.17);
+}
+
+.student-profile-theme-preview[data-theme="flame"]
+.student-profile-theme-preview-glow {
+  background: rgba(249, 115, 22, 0.18);
+}
+
+.student-profile-theme-preview[data-theme="ocean"]
+.student-profile-theme-preview-glow {
+  background: rgba(45, 212, 191, 0.16);
+}
+
+/* ===================== HOVER ТЕМ ===================== */
+
+.student-card[data-theme="gold"]:hover {
+  border-color:
+    rgba(251, 191, 36, 0.55);
+
+  box-shadow:
+    0 8px 30px rgba(251, 191, 36, 0.10),
+    0 0 30px rgba(251, 191, 36, 0.10);
+}
+
+
+.student-card[data-theme="aurora"]:hover {
+  border-color:
+    rgba(139, 92, 246, 0.52);
+
+  box-shadow:
+    0 8px 30px rgba(139, 92, 246, 0.10),
+    0 0 30px rgba(34, 197, 94, 0.07);
+}
+
+
+.student-card[data-theme="ocean"]:hover {
+  border-color:
+    rgba(45, 212, 191, 0.52);
+
+  box-shadow:
+    0 8px 30px rgba(45, 212, 191, 0.10),
+    0 0 30px rgba(45, 212, 191, 0.08);
+}
+
 .student-card:active { background: #1c263b; }
 
 .student-info { display: flex; align-items: center; gap: 14px; }
@@ -5768,15 +6265,21 @@ body:has(.birthday-next.is-today) #season-fx-container .rain-drop {
 /* ==================== CLOSE BUTTON ==================== */
 
 .student-profile-chest-close {
-  position: relative;
-  z-index: 4;
+  position: absolute;
+
+  left: 50%;
+  bottom: 28px;
+
+  transform: translateX(-50%);
+
+  z-index: 100;
 
   min-width: 190px;
 
-  margin-top: 28px;
   padding: 13px 22px;
 
   border: 1px solid rgba(96, 165, 250, 0.25);
+
   border-radius: 13px;
 
   background:
@@ -5806,14 +6309,14 @@ body:has(.birthday-next.is-today) #season-fx-container .rain-drop {
     chest-button-in 0.5s 0.15s ease both;
 }
 
-
 .student-profile-chest-close.hidden {
   display: none;
 }
 
-
 .student-profile-chest-close:hover {
-  transform: translateY(-2px);
+  transform:
+    translateX(-50%)
+    translateY(-2px);
 
   box-shadow:
     0 14px 35px rgba(59, 130, 246, 0.35);
@@ -5821,26 +6324,27 @@ body:has(.birthday-next.is-today) #season-fx-container .rain-drop {
   filter: brightness(1.08);
 }
 
-
 .student-profile-chest-close:active {
-  transform: translateY(0) scale(0.97);
+  transform:
+    translateX(-50%)
+    scale(0.97);
 }
 
-
 @keyframes chest-button-in {
-
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform:
+      translateX(-50%)
+      translateY(12px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform:
+      translateX(-50%)
+      translateY(0);
   }
-
 }
-
 
 /* ============================================================
    АДАПТАЦИЯ ПОД ТЕЛЕФОН
@@ -6410,4 +6914,1630 @@ body:has(.birthday-next.is-today) #season-fx-container .rain-drop {
     max-width: 190px;
   }
 
+}
+
+/* =========================================================
+   ПРЕМИАЛЬНЫЙ СУНДУК ТЕМ
+   ========================================================= */
+
+.student-profile-theme-chest-dialog {
+    position: relative;
+    width: min(520px, calc(100vw - 32px));
+    min-height: 620px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 32px;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(59, 130, 246, 0.16),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(21, 28, 44, 0.98),
+            rgba(11, 15, 25, 0.99)
+        );
+
+    box-shadow:
+        0 40px 100px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    animation:
+        themeChestDialogIn
+        0.55s cubic-bezier(.16, 1, .3, 1);
+}
+
+
+/* ===================== ФОНОВОЕ СВЕЧЕНИЕ ===================== */
+
+.student-profile-theme-chest-glow {
+    position: absolute;
+    width: 360px;
+    height: 360px;
+
+    top: 90px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(139, 92, 246, 0.30),
+            rgba(59, 130, 246, 0.12) 35%,
+            transparent 70%
+        );
+
+    filter: blur(20px);
+
+    opacity: 0.8;
+
+    animation:
+        themeChestGlow
+        3s ease-in-out infinite;
+}
+
+
+/* ===================== СУНДУК ===================== */
+
+.student-profile-theme-chest-animation {
+    position: relative;
+    z-index: 5;
+
+    width: 230px;
+    height: 230px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    animation:
+        themeChestFloat
+        3s ease-in-out infinite;
+}
+
+
+.theme-chest {
+    position: relative;
+
+    width: 150px;
+    height: 125px;
+
+    transform:
+        perspective(500px)
+        rotateX(3deg);
+
+    filter:
+        drop-shadow(
+            0 25px 25px
+            rgba(0, 0, 0, 0.45)
+        );
+}
+
+
+/* ===================== КОРПУС ===================== */
+
+.theme-chest-body {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 150px;
+    height: 88px;
+
+    border-radius: 10px 10px 18px 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #303b58,
+            #171d30 55%,
+            #0e1322
+        );
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.13);
+
+    box-shadow:
+        inset 0 2px 0
+        rgba(255, 255, 255, 0.08),
+
+        inset 0 -12px 20px
+        rgba(0, 0, 0, 0.35);
+}
+
+
+/* ===================== КРЫШКА ===================== */
+.theme-chest-lid {
+    position: absolute;
+
+    left: -4px;
+    top: 18px;
+
+    width: 158px;
+    height: 55px;
+
+    z-index: 3;
+
+    border-radius:
+        14px 14px 7px 7px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #465474,
+            #202941 60%,
+            #111728
+        );
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.16);
+
+    box-shadow:
+        inset 0 2px 0
+        rgba(255, 255, 255, 0.10),
+
+        0 7px 14px
+        rgba(0, 0, 0, 0.35);
+
+    /* Нижний край — шарнир */
+    transform-origin: center bottom;
+
+    transform:
+        perspective(500px)
+        rotateX(0deg);
+
+    transition:
+        transform
+        0.8s cubic-bezier(.16, 1, .3, 1);
+}
+
+.theme-chest.is-opening .theme-chest-lid {
+    transform:
+        perspective(500px)
+        rotateX(-68deg)
+        translateY(-18px);
+}
+
+/* ===================== ЗАМОК ===================== */
+
+.theme-chest-lock {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transform:
+        translate(-50%, -50%);
+
+    border-radius: 10px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #3b82f6
+        );
+
+    box-shadow:
+        0 0 20px
+        rgba(99, 102, 241, 0.55),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.35);
+
+    font-size: 17px;
+
+    animation:
+        themeChestLockPulse
+        2s ease-in-out infinite;
+}
+
+
+/* ===================== СВЕТ ВНУТРИ ===================== */
+
+.theme-chest-light {
+    position: absolute;
+
+    left: 50%;
+    bottom: 15px;
+
+    width: 70px;
+    height: 45px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(167, 139, 250, 0.75),
+            rgba(59, 130, 246, 0.18),
+            transparent 70%
+        );
+
+    filter: blur(8px);
+
+    opacity: 0;
+
+    transition:
+        opacity
+        0.35s ease;
+}
+
+
+/* ===================== ПАРТИКЛЫ ===================== */
+
+.theme-chest-particles {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 4;
+}
+
+.theme-chest-particles span {
+    position: absolute;
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #3b82f6
+        );
+
+    box-shadow:
+        0 0 12px
+        rgba(139, 92, 246, 0.8);
+
+    opacity: 0;
+}
+
+
+/* Разные позиции */
+
+.theme-chest-particles span:nth-child(1) {
+    left: 25%;
+    top: 45%;
+}
+
+.theme-chest-particles span:nth-child(2) {
+    left: 36%;
+    top: 55%;
+}
+
+.theme-chest-particles span:nth-child(3) {
+    left: 48%;
+    top: 42%;
+}
+
+.theme-chest-particles span:nth-child(4) {
+    left: 58%;
+    top: 53%;
+}
+
+.theme-chest-particles span:nth-child(5) {
+    left: 68%;
+    top: 44%;
+}
+
+.theme-chest-particles span:nth-child(6) {
+    left: 42%;
+    top: 65%;
+}
+
+.theme-chest-particles span:nth-child(7) {
+    left: 63%;
+    top: 64%;
+}
+
+.theme-chest-particles span:nth-child(8) {
+    left: 31%;
+    top: 67%;
+}
+
+
+/* ===================== НАГРАДА ===================== */
+
+.student-profile-theme-chest-reward {
+    position: absolute;
+
+    inset: 55px 30px 80px;
+
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+
+    animation:
+        themeRewardIn
+        0.7s cubic-bezier(.16, 1, .3, 1);
+}
+
+
+.theme-reward-kicker {
+    margin-bottom: 8px;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.18em;
+
+    color: #a78bfa;
+}
+
+
+.theme-reward-title {
+    font-size: 30px;
+    font-weight: 800;
+
+    letter-spacing: -0.03em;
+
+    color: #ffffff;
+
+    text-shadow:
+        0 0 25px
+        rgba(139, 92, 246, 0.35);
+}
+
+
+.theme-reward-description {
+    margin-top: 7px;
+
+    font-size: 13px;
+
+    color: rgba(255, 255, 255, 0.58);
+}
+
+
+/* ===================== ПРЕВЬЮ КАРТОЧКИ ===================== */
+
+.theme-reward-card-preview {
+    position: relative;
+
+    width: 280px;
+    height: 170px;
+
+    margin-top: 28px;
+
+    overflow: hidden;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #151c2c,
+            #0b0f19
+        );
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.13);
+
+    box-shadow:
+        0 25px 55px
+        rgba(0, 0, 0, 0.45),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.08);
+}
+
+
+.theme-reward-card-preview-glow {
+    position: absolute;
+
+    inset: -50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(139, 92, 246, 0.35),
+            transparent 55%
+        );
+
+    filter: blur(18px);
+
+    animation:
+        themePreviewGlow
+        4s ease-in-out infinite;
+}
+
+
+.theme-reward-card-preview-content {
+    position: relative;
+    z-index: 2;
+
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.theme-reward-card-preview-avatar {
+    font-size: 38px;
+}
+
+
+.theme-reward-card-preview-name {
+    margin-top: 7px;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    color: #ffffff;
+}
+
+
+.theme-reward-card-preview-score {
+    margin-top: 4px;
+
+    font-size: 12px;
+
+    color: rgba(255, 255, 255, 0.55);
+}
+
+
+/* ===================== ВСЕ ТЕМЫ ===================== */
+
+.student-profile-theme-chest-info {
+    position: absolute;
+
+    inset: 120px 35px 100px;
+
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+
+    animation:
+        themeRewardIn
+        0.7s cubic-bezier(.16, 1, .3, 1);
+}
+
+
+/* ===================== СОСТОЯНИЯ ОТКРЫТИЯ ===================== */
+
+.student-profile-theme-chest-dialog.is-opening
+.theme-chest-lid {
+    transform:
+        rotateX(-115deg)
+        translateY(-8px);
+}
+
+
+.student-profile-theme-chest-dialog.is-opening
+.theme-chest-light {
+    opacity: 1;
+
+    animation:
+        themeChestBurst
+        0.9s ease-out;
+}
+
+
+.student-profile-theme-chest-dialog.is-opening
+.theme-chest-particles span {
+    animation:
+        themeParticleBurst
+        0.9s ease-out
+        forwards;
+}
+
+
+/* ===================== ANIMATIONS ===================== */
+
+@keyframes themeChestDialogIn {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(25px)
+            scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+@keyframes themeChestFloat {
+
+    0%,
+    100% {
+        transform:
+            translateY(0)
+            rotate(0deg);
+    }
+
+    50% {
+        transform:
+            translateY(-9px)
+            rotate(-1deg);
+    }
+
+}
+
+
+@keyframes themeChestGlow {
+
+    0%,
+    100% {
+        transform: scale(0.95);
+        opacity: 0.65;
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: 0.95;
+    }
+
+}
+
+
+@keyframes themeChestLockPulse {
+
+    0%,
+    100% {
+        transform:
+            translate(-50%, -50%)
+            scale(1);
+    }
+
+    50% {
+        transform:
+            translate(-50%, -50%)
+            scale(1.08);
+    }
+
+}
+
+
+@keyframes themeChestBurst {
+
+    0% {
+        transform:
+            translateX(-50%)
+            scale(0.4);
+
+        opacity: 0;
+    }
+
+    45% {
+        transform:
+            translateX(-50%)
+            scale(1.5);
+
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            translateX(-50%)
+            scale(2.2);
+
+        opacity: 0;
+    }
+
+}
+
+
+@keyframes themeParticleBurst {
+
+    0% {
+        opacity: 0;
+        transform:
+            translate(0, 0)
+            scale(0.5);
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translate(
+                calc((var(--particle-x, 0) * 1px)),
+                calc((var(--particle-y, 0) * 1px))
+            )
+            scale(0.1);
+    }
+
+}
+
+
+@keyframes themeRewardIn {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(25px)
+            scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+@keyframes themePreviewGlow {
+
+    0%,
+    100% {
+        transform:
+            translate(-8%, -4%)
+            scale(0.95);
+    }
+
+    50% {
+        transform:
+            translate(8%, 4%)
+            scale(1.08);
+    }
+
+}
+
+
+/* ===================== MOBILE ===================== */
+
+@media (max-width: 600px) {
+
+    .student-profile-theme-chest-dialog {
+        min-height: 560px;
+        border-radius: 26px;
+    }
+
+    .theme-reward-card-preview {
+        width: 250px;
+        height: 155px;
+    }
+
+    .theme-reward-title {
+        font-size: 26px;
+    }
+
+}
+
+/* =========================================================
+   ПРЕВЬЮ ТЕМЫ В СУНДУКЕ
+   ========================================================= */
+
+.theme-reward-card-preview {
+    transition:
+        background 0.5s ease,
+        box-shadow 0.5s ease,
+        border-color 0.5s ease;
+}
+
+
+/* ===================== GOLD ===================== */
+
+.theme-reward-card-preview[data-theme="gold"] {
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(251, 191, 36, 0.28),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            #3b2a0b,
+            #17120a 65%,
+            #0b0f19
+        );
+
+    border-color:
+        rgba(251, 191, 36, 0.45);
+
+    box-shadow:
+        0 25px 55px rgba(0, 0, 0, 0.45),
+        0 0 35px rgba(251, 191, 36, 0.18);
+}
+
+
+/* ===================== LEAVES ===================== */
+
+.theme-reward-card-preview[data-theme="leaves"] {
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(34, 197, 94, 0.25),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            #10251b,
+            #0b1712 65%,
+            #0b0f19
+        );
+
+    border-color:
+        rgba(34, 197, 94, 0.35);
+
+    box-shadow:
+        0 25px 55px rgba(0, 0, 0, 0.45),
+        0 0 35px rgba(34, 197, 94, 0.15);
+}
+
+
+/* ===================== ICE ===================== */
+
+.theme-reward-card-preview[data-theme="ice"] {
+    background:
+        radial-gradient(
+            circle at 50% 10%,
+            rgba(125, 211, 252, 0.30),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            #102536,
+            #0b1825 65%,
+            #0b0f19
+        );
+
+    border-color:
+        rgba(125, 211, 252, 0.4);
+
+    box-shadow:
+        0 25px 55px rgba(0, 0, 0, 0.45),
+        0 0 35px rgba(56, 189, 248, 0.18);
+}
+
+
+/* ===================== AURORA ===================== */
+
+.theme-reward-card-preview[data-theme="aurora"] {
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(34, 197, 94, 0.25),
+            transparent 42%
+        ),
+        radial-gradient(
+            circle at 80% 70%,
+            rgba(139, 92, 246, 0.28),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            #101c2d,
+            #111329 65%,
+            #0b0f19
+        );
+
+    border-color:
+        rgba(139, 92, 246, 0.4);
+
+    box-shadow:
+        0 25px 55px rgba(0, 0, 0, 0.45),
+        0 0 40px rgba(139, 92, 246, 0.2);
+}
+
+
+/* ===================== VOID ===================== */
+
+.theme-reward-card-preview[data-theme="void"] {
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(139, 92, 246, 0.28),
+            transparent 55%
+        ),
+        linear-gradient(
+            145deg,
+            #19102b,
+            #0d0a16 70%,
+            #07070d
+        );
+
+    border-color:
+        rgba(167, 139, 250, 0.4);
+
+    box-shadow:
+        0 25px 55px rgba(0, 0, 0, 0.55),
+        0 0 40px rgba(139, 92, 246, 0.22);
+}
+
+
+/* ===================== FLAME ===================== */
+
+.theme-reward-card-preview[data-theme="flame"] {
+    background:
+        radial-gradient(
+            circle at 50% 85%,
+            rgba(249, 115, 22, 0.32),
+            transparent 50%
+        ),
+        linear-gradient(
+            145deg,
+            #32170d,
+            #1b100c 65%,
+            #0b0f19
+        );
+
+    border-color:
+        rgba(249, 115, 22, 0.4);
+
+    box-shadow:
+        0 25px 55px rgba(0, 0, 0, 0.45),
+        0 0 40px rgba(249, 115, 22, 0.2);
+}
+
+
+/* ===================== OCEAN ===================== */
+
+.theme-reward-card-preview[data-theme="ocean"] {
+    background:
+        radial-gradient(
+            circle at 30% 20%,
+            rgba(45, 212, 191, 0.25),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            #0b2730,
+            #0a1720 65%,
+            #0b0f19
+        );
+
+    border-color:
+        rgba(45, 212, 191, 0.4);
+
+    box-shadow:
+        0 25px 55px rgba(0, 0, 0, 0.45),
+        0 0 40px rgba(45, 212, 191, 0.18);
+}
+
+/* ================================
+   ИНВЕНТАРЬ ТЕМ ПРОФИЛЯ
+================================ */
+
+.student-profile-theme-inventory {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+
+/* ================================
+   КАРТОЧКА ТЕМЫ
+================================ */
+
+.student-profile-theme-item {
+  position: relative;
+  overflow: hidden;
+
+  padding: 12px;
+
+  border-radius: 18px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.07);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.015)
+    );
+
+  box-shadow:
+    0 10px 30px
+      rgba(0, 0, 0, 0.14);
+
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.student-profile-theme-item:hover {
+  transform: translateY(-3px);
+
+  border-color:
+    rgba(139, 92, 246, 0.28);
+
+  box-shadow:
+    0 16px 36px
+      rgba(0, 0, 0, 0.20),
+    0 0 24px
+      rgba(139, 92, 246, 0.06);
+}
+
+
+/* ================================
+   ВЫБРАННАЯ ТЕМА
+================================ */
+
+.student-profile-theme-item.selected {
+  border-color:
+    rgba(59, 130, 246, 0.65);
+
+  box-shadow:
+    0 0 0 1px
+      rgba(59, 130, 246, 0.18),
+    0 12px 35px
+      rgba(59, 130, 246, 0.12),
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.06);
+}
+
+
+/* ================================
+   ПРЕВЬЮ ТЕМЫ
+================================ */
+
+.student-profile-theme-preview {
+  position: relative;
+
+  min-height: 130px;
+
+  padding: 18px;
+
+  display: flex;
+  align-items: flex-end;
+
+  overflow: hidden;
+
+  border-radius: 14px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.08);
+
+  background:
+    linear-gradient(
+      145deg,
+      #1d2940,
+      #111827
+    );
+
+  box-shadow:
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.06);
+}
+
+
+/* ================================
+   ТЕМАТИЧЕСКИЕ ПРЕВЬЮ
+================================ */
+
+.student-profile-theme-item[data-theme="gold"]
+.student-profile-theme-preview {
+  background:
+    radial-gradient(
+      circle at 15% 25%,
+      rgba(251, 191, 36, 0.20),
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      #3b2d12,
+      #17130c
+    );
+}
+
+.student-profile-theme-item[data-theme="aurora"]
+.student-profile-theme-preview {
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(34, 197, 94, 0.20),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 85% 75%,
+      rgba(139, 92, 246, 0.24),
+      transparent 48%
+    ),
+    linear-gradient(
+      145deg,
+      #10202d,
+      #15152d
+    );
+}
+
+.student-profile-theme-item[data-theme="ocean"]
+.student-profile-theme-preview {
+  background:
+    radial-gradient(
+      circle at 15% 25%,
+      rgba(45, 212, 191, 0.22),
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      #0c3038,
+      #0a1c27
+    );
+}
+
+.student-profile-theme-item[data-theme="ice"]
+.student-profile-theme-preview {
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(125, 211, 252, 0.22),
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      #17344b,
+      #101d2d
+    );
+}
+
+.student-profile-theme-item[data-theme="leaves"]
+.student-profile-theme-preview {
+  background:
+    radial-gradient(
+      circle at 20% 25%,
+      rgba(34, 197, 94, 0.20),
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      #173322,
+      #101d17
+    );
+}
+
+.student-profile-theme-item[data-theme="void"]
+.student-profile-theme-preview {
+  background:
+    radial-gradient(
+      circle at 75% 25%,
+      rgba(139, 92, 246, 0.25),
+      transparent 48%
+    ),
+    linear-gradient(
+      145deg,
+      #24163a,
+      #100d1d
+    );
+}
+
+.student-profile-theme-item[data-theme="flame"]
+.student-profile-theme-preview {
+  background:
+    radial-gradient(
+      circle at 20% 25%,
+      rgba(249, 115, 22, 0.25),
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      #422014,
+      #1d110d
+    );
+}
+
+
+/* ================================
+   СВЕЧЕНИЕ
+================================ */
+
+.student-profile-theme-preview-glow {
+  position: absolute;
+
+  width: 120px;
+  height: 120px;
+
+  right: -45px;
+  top: -55px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(139, 92, 246, 0.18);
+
+  filter: blur(25px);
+
+  pointer-events: none;
+}
+
+
+/* ================================
+   КОНТЕНТ ПРЕВЬЮ
+================================ */
+
+.student-profile-theme-preview-content {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+}
+
+.student-profile-theme-preview-avatar {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 8px;
+
+  border-radius: 12px;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.10);
+
+  font-size: 21px;
+}
+
+.student-profile-theme-preview-name {
+  font-size: 13px;
+  font-weight: 800;
+
+  color: #fff;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-profile-theme-preview-score {
+  margin-top: 3px;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  color:
+    rgba(255, 255, 255, 0.52);
+}
+
+
+/* ================================
+   ИНФОРМАЦИЯ О ТЕМЕ
+================================ */
+
+.student-profile-theme-item-info {
+  padding:
+    13px 2px 11px;
+}
+
+.student-profile-theme-item-info strong {
+  display: block;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  color:
+    var(--text-primary);
+
+  line-height: 1.25;
+}
+
+.student-profile-theme-item-info span {
+  display: block;
+
+  margin-top: 4px;
+
+  font-size: 11px;
+  line-height: 1.4;
+
+  color:
+    var(--text-secondary);
+}
+
+
+/* ================================
+   КНОПКА
+================================ */
+
+.student-profile-theme-equip {
+  width: 100%;
+
+  padding: 9px 12px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.08);
+
+  border-radius: 11px;
+
+  background:
+    rgba(255, 255, 255, 0.045);
+
+  color:
+    var(--text-primary);
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.student-profile-theme-equip:hover {
+  background:
+    rgba(59, 130, 246, 0.14);
+
+  border-color:
+    rgba(59, 130, 246, 0.35);
+}
+
+.student-profile-theme-equip:active {
+  transform: scale(0.97);
+}
+
+
+/* ================================
+   ТЕМА НАДЕТА
+================================ */
+
+.student-profile-theme-item.selected
+.student-profile-theme-equip {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.20),
+      rgba(139, 92, 246, 0.14)
+    );
+
+  border-color:
+    rgba(59, 130, 246, 0.38);
+
+  color: #dbeafe;
+}
+
+
+/* ================================
+   ПУСТОЙ ИНВЕНТАРЬ
+================================ */
+
+.student-profile-theme-empty {
+  grid-column: 1 / -1;
+
+  min-height: 180px;
+
+  padding: 28px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  border-radius: 18px;
+
+  border: 1px dashed
+    rgba(255, 255, 255, 0.10);
+
+  background:
+    rgba(255, 255, 255, 0.018);
+}
+
+.student-profile-theme-empty-icon {
+  margin-bottom: 10px;
+
+  font-size: 34px;
+
+  opacity: 0.75;
+}
+
+.student-profile-theme-empty strong {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.student-profile-theme-empty span {
+  max-width: 330px;
+
+  margin-top: 5px;
+
+  font-size: 11px;
+  line-height: 1.5;
+
+  color: var(--text-secondary);
+}
+
+
+/* ================================
+   МОБИЛЬНАЯ ВЕРСИЯ
+================================ */
+
+@media (max-width: 700px) {
+
+  .student-profile-theme-inventory {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+/* ================================
+   КНОПКА ПРОДОЛЖИТЬ — ФИКС
+================================ */
+
+#student-profile-theme-chest-close {
+  position: relative;
+  z-index: 50;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: min(260px, 80%);
+
+  min-height: 48px;
+
+  margin: 22px auto 0;
+
+  padding: 12px 24px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.14);
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.95),
+      rgba(139, 92, 246, 0.95)
+    );
+
+  color: #fff;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 30px
+      rgba(59, 130, 246, 0.25),
+    0 0 24px
+      rgba(139, 92, 246, 0.14);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+}
+
+#student-profile-theme-chest-close:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.08);
+
+  box-shadow:
+    0 14px 35px
+      rgba(59, 130, 246, 0.32),
+    0 0 30px
+      rgba(139, 92, 246, 0.20);
+}
+
+#student-profile-theme-chest-close:active {
+  transform: scale(0.97);
+}
+
+/* hidden должен реально скрывать кнопку */
+#student-profile-theme-chest-close.hidden {
+  display: none !important;
+}
+
+#student-profile-theme-chest-close {
+  position: absolute !important;
+
+  left: 50% !important;
+  bottom: 24px !important;
+
+  margin: 0 !important;
+
+  transform: translateX(-50%) !important;
+
+  z-index: 1000 !important;
+
+  pointer-events: auto !important;
+}
+
+.student-profile-card[data-theme="gold"] {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(251, 191, 36, 0.22), transparent 45%),
+    linear-gradient(145deg, #3b2a0b, #17120a 65%, #111827);
+}
+
+.student-profile-card[data-theme="leaves"] {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(34, 197, 94, 0.22), transparent 45%),
+    linear-gradient(145deg, #10251b, #0b1712 65%, #111827);
+}
+
+.student-profile-card[data-theme="ice"] {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(125, 211, 252, 0.24), transparent 45%),
+    linear-gradient(145deg, #102536, #0b1825 65%, #111827);
+}
+
+.student-profile-card[data-theme="aurora"] {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(34, 197, 94, 0.20), transparent 42%),
+    radial-gradient(circle at 85% 70%, rgba(139, 92, 246, 0.22), transparent 45%),
+    linear-gradient(145deg, #101c2d, #111329 65%, #111827);
+}
+
+.student-profile-card[data-theme="void"] {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(139, 92, 246, 0.24), transparent 50%),
+    linear-gradient(145deg, #19102b, #0d0a16 70%, #111827);
+}
+
+.student-profile-card[data-theme="flame"] {
+  background:
+    radial-gradient(circle at 50% 80%, rgba(249, 115, 22, 0.26), transparent 48%),
+    linear-gradient(145deg, #32170d, #1b100c 65%, #111827);
+}
+
+.student-profile-card[data-theme="ocean"] {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(45, 212, 191, 0.22), transparent 45%),
+    linear-gradient(145deg, #0b2730, #0a1720 65%, #111827);
+}
+
+/* =========================
+   КАСТОМНЫЙ ЭМОДЗИ
+   ========================= */
+
+.student-profile-custom-emoji {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.student-profile-custom-emoji input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+
+  outline: none;
+
+  background: rgba(8, 12, 24, 0.65);
+  color: #f8fafc;
+
+  font-family: inherit;
+  font-size: 20px;
+  text-align: center;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.student-profile-custom-emoji input::placeholder {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.student-profile-custom-emoji input:focus {
+  border-color: rgba(59, 130, 246, 0.65);
+  background: rgba(10, 16, 32, 0.9);
+
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.10),
+    0 0 20px rgba(59, 130, 246, 0.08);
+}
+
+.student-profile-custom-emoji button {
+  height: 44px;
+  padding: 0 17px;
+
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.22),
+      rgba(139, 92, 246, 0.18)
+    );
+
+  color: #dbeafe;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.student-profile-custom-emoji button:hover {
+  transform: translateY(-1px);
+
+  border-color: rgba(59, 130, 246, 0.55);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.32),
+      rgba(139, 92, 246, 0.28)
+    );
+
+  box-shadow:
+    0 8px 24px rgba(59, 130, 246, 0.12);
+}
+
+.student-profile-custom-emoji button:active {
+  transform: translateY(0) scale(0.97);
 }
