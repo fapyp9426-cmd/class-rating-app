@@ -4,8 +4,6 @@ export const TITLES = [
   { id: 'chickenguner', name: 'чикенганер', color: '#ef4444' },
   { id: 'strong', name: 'мощь', color: '#f59e0b' },
   { id: 'krutoy', name: 'крутой', color: '#8b5cf6' },
-  { id: 'zdrot', name: 'zдрот', color: '#22c55e' },
-  { id: 'eggcurly', name: 'яйкодрявый', color: '#facc15' },
   { id: 'oak_grove', name: 'дубовая роща', color: '#16a34a' },
   { id: 'again_25', name: 'опять 25', color: '#3b82f6' },
   { id: 'studied_forgot', name: 'я учил,но забыл', color: '#94a3b8' },
