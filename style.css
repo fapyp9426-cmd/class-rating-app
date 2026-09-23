@@ -8541,3 +8541,226 @@ body:has(.birthday-next.is-today) #season-fx-container .rain-drop {
 .student-profile-custom-emoji button:active {
   transform: translateY(0) scale(0.97);
 }
+
+/* ============================================================
+   ПРОФИЛЬ — МОБИЛЬНАЯ ВЕРСИЯ (ФИНАЛЬНЫЕ ПРАВКИ)
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+  /* Общие отступы страницы профиля */
+  .student-profile-page {
+    padding: 20px 12px calc(110px + env(safe-area-inset-bottom));
+    align-items: flex-start;
+  }
+
+  .student-profile-layout {
+    gap: 16px;
+  }
+
+  /* ===================== КАРТОЧКА ПРЕВЬЮ ===================== */
+
+  .student-profile-card {
+    min-height: 220px;
+    padding: 22px;
+    border-radius: 20px;
+  }
+
+  .student-profile-card-emoji {
+    font-size: 44px;
+    margin-bottom: 10px;
+  }
+
+  .student-profile-card-name {
+    font-size: 21px;
+  }
+
+  .student-profile-card-title {
+    font-size: 13px;
+  }
+
+  .student-profile-card-score {
+    margin-top: 14px;
+    font-size: 13px;
+  }
+
+  .student-profile-preview-caption {
+    font-size: 10px;
+  }
+
+  /* ===================== СУНДУКИ ===================== */
+
+  .student-profile-chests {
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .student-profile-section-heading {
+    margin-bottom: 14px;
+  }
+
+  .student-profile-section-heading h2 {
+    font-size: 17px;
+  }
+
+  .student-profile-section-heading p {
+    font-size: 11px;
+  }
+
+  /* ===================== ПАНЕЛЬ НАСТРОЕК ===================== */
+
+  .student-profile-settings {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .student-profile-setting {
+    padding: 16px 0;
+  }
+
+  .student-profile-setting-info strong {
+    font-size: 13px;
+  }
+
+  .student-profile-setting-info span {
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+
+  /* Эмодзи-сетка — ровные квадраты, не разъезжаются */
+  .student-profile-emojis {
+    gap: 6px;
+  }
+
+  .student-profile-emoji-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
+    border-radius: 10px;
+  }
+
+  /* Кастомный эмодзи — под мобилку в столбик, чтобы не сжималось */
+  .student-profile-custom-emoji {
+    flex-wrap: wrap;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .student-profile-custom-emoji input {
+    height: 42px;
+    font-size: 18px;
+    flex: 1 1 100%;
+  }
+
+  .student-profile-custom-emoji button {
+    flex: 1 1 100%;
+    height: 42px;
+  }
+
+  /* Селектор титула — на всю ширину, без "прилипания" вправо */
+  .student-profile-title-selector {
+    min-width: 0;
+    max-width: none;
+    width: 100%;
+  }
+
+  /* Инвентарь тем — карточки компактнее, превью не растягивается */
+  .student-profile-theme-inventory {
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .student-profile-theme-item {
+    padding: 10px;
+    border-radius: 15px;
+  }
+
+  .student-profile-theme-preview {
+    min-height: 100px;
+    padding: 14px;
+  }
+
+  .student-profile-theme-preview-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 17px;
+    margin-bottom: 6px;
+  }
+
+  .student-profile-theme-preview-name {
+    font-size: 12px;
+  }
+
+  .student-profile-theme-preview-score {
+    font-size: 10px;
+  }
+
+  .student-profile-theme-item-info {
+    padding: 10px 2px 8px;
+  }
+
+  .student-profile-theme-item-info strong {
+    font-size: 13px;
+  }
+
+  .student-profile-theme-item-info span {
+    font-size: 10px;
+  }
+
+  .student-profile-theme-equip {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  /* Кнопки "Сохранить / Выйти" — не выглядят зажатыми */
+  .student-profile-actions {
+    gap: 8px;
+  }
+
+  .student-profile-actions .student-profile-secondary-btn {
+    flex: 0 0 90px;
+  }
+}
+
+/* Совсем маленькие экраны */
+@media (max-width: 380px) {
+
+  .student-profile-page {
+    padding: 16px 10px calc(100px + env(safe-area-inset-bottom));
+  }
+
+  .student-profile-card {
+    padding: 18px;
+    min-height: 200px;
+  }
+
+  .student-profile-card-emoji {
+    font-size: 38px;
+  }
+
+  .student-profile-card-name {
+    font-size: 19px;
+  }
+
+  .student-profile-emoji-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 17px;
+  }
+
+  .student-profile-theme-preview {
+    min-height: 90px;
+    padding: 12px;
+  }
+
+  .student-profile-actions {
+    flex-direction: column;
+  }
+
+  .student-profile-actions .student-profile-secondary-btn,
+  .student-profile-actions .student-profile-primary-btn {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+}
