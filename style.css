@@ -315,88 +315,349 @@ body.winter-active .winter-frost {
 .btn-lg { padding: 14px 20px; font-size: 16px; }
 .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
 
-/* Подиум */
-.podium-section { margin-bottom: 24px; }
+/* ============================================================
+   НОВЫЙ ПОДИУМ TOP-3
+   ============================================================ */
+
+.podium-section {
+  margin-bottom: 24px;
+}
 
 .podium {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
   align-items: end;
-  overflow: hidden;
+  gap: 12px;
+
+  width: 100%;
+  overflow: visible;
 }
 
 .podium-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
-  padding: 16px 8px;
-  text-align: center;
   position: relative;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
+
   min-width: 0;
+  width: 100%;
+  height: 230px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 18px 12px 14px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.055),
+      rgba(255, 255, 255, 0.018)
+    ),
+    var(--card-bg);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
+
+/* Лёгкий внутренний блик */
+
+.podium-card::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255, 255, 255, 0.08),
+      transparent 55%
+    );
+
+  pointer-events: none;
+}
+
+/* Наведение */
+
+.podium-card:hover {
+  transform: translateY(-4px);
+}
+
+/* ============================================================
+   МЕСТА
+   ============================================================ */
 
 .podium-card.place-1 {
   order: 2;
-  border-color: var(--gold);
-  background: linear-gradient(180deg, rgba(251, 191, 36, 0.12) 0%, var(--card-bg) 100%);
-  animation: pulse-gold 2.4s ease-in-out infinite;
-}
 
-@keyframes pulse-gold {
-  0%, 100% { box-shadow: 0 0 18px var(--gold-glow); }
-  50% { box-shadow: 0 0 32px var(--gold-glow); }
+  height: 255px;
+
+  border-color: rgba(251, 191, 36, 0.45);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(251, 191, 36, 0.13),
+      rgba(251, 191, 36, 0.025) 55%,
+      var(--card-bg)
+    );
+
+  box-shadow:
+    0 12px 35px rgba(251, 191, 36, 0.12);
 }
 
 .podium-card.place-2 {
   order: 1;
-  border-color: var(--silver);
-  background: linear-gradient(180deg, rgba(203, 213, 225, 0.10) 0%, var(--card-bg) 100%);
-  box-shadow: 0 0 18px var(--silver-glow);
+
+  border-color: rgba(203, 213, 225, 0.28);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(203, 213, 225, 0.09),
+      rgba(203, 213, 225, 0.015) 55%,
+      var(--card-bg)
+    );
+
+  box-shadow:
+    0 10px 28px rgba(203, 213, 225, 0.07);
 }
 
 .podium-card.place-3 {
   order: 3;
-  border-color: var(--bronze);
-  background: linear-gradient(180deg, rgba(217, 119, 87, 0.10) 0%, var(--card-bg) 100%);
-  box-shadow: 0 0 18px var(--bronze-glow);
+
+  border-color: rgba(217, 119, 87, 0.32);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(217, 119, 87, 0.09),
+      rgba(217, 119, 87, 0.015) 55%,
+      var(--card-bg)
+    );
+
+  box-shadow:
+    0 10px 28px rgba(217, 119, 87, 0.07);
 }
 
-.crown {
-  font-size: 24px;
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%);
+/* ============================================================
+   НОМЕР МЕСТА
+   ============================================================ */
+
+.podium-place {
+  position: relative;
+  z-index: 2;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 10px;
+
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: var(--text-secondary);
+
+  font-size: 12px;
+  font-weight: 800;
 }
 
-.avatar { font-size: 32px; margin-bottom: 4px; }
-.avatar-lg { font-size: 38px; }
+.place-1 .podium-place {
+  color: #fbbf24;
 
-.podium .name {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.25);
+}
+
+.place-2 .podium-place {
+  color: #cbd5e1;
+
+  background: rgba(203, 213, 225, 0.1);
+  border-color: rgba(203, 213, 225, 0.2);
+}
+
+.place-3 .podium-place {
+  color: #d97757;
+
+  background: rgba(217, 119, 87, 0.1);
+  border-color: rgba(217, 119, 87, 0.2);
+}
+
+/* ============================================================
+   АВАТАР
+   ============================================================ */
+
+.podium-avatar-wrap {
+  position: relative;
+  z-index: 2;
+
+  width: 68px;
+  height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 10px;
+
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.podium-avatar {
+  font-size: 38px;
+  line-height: 1;
+
+  user-select: none;
+}
+
+/* Золотой аватар */
+
+.place-1 .podium-avatar-wrap {
+  width: 74px;
+  height: 74px;
+
+  border-color: rgba(251, 191, 36, 0.28);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(251, 191, 36, 0.14),
+      rgba(251, 191, 36, 0.025)
+    );
+}
+
+.place-1 .podium-avatar {
+  font-size: 42px;
+}
+
+/* ============================================================
+   ИМЯ
+   ============================================================ */
+
+.podium-student-name {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  color: var(--text-primary);
   font-size: 14px;
-  font-weight: 700;
+  line-height: 18px;
+  font-weight: 800;
+  text-align: center;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* ============================================================
+   ТИТУЛ
+   ============================================================ */
+
+.podium-student-title {
+  position: relative;
+  z-index: 2;
+
+  max-width: 90%;
+
+  margin-top: 4px;
+  padding: 3px 8px;
+
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.13),
+      rgba(139, 92, 246, 0.15)
+    );
+
+  border: 1px solid rgba(139, 92, 246, 0.28);
+
+  color: #a78bfa;
+
+  font-size: 9px;
+  line-height: 12px;
+  font-weight: 800;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  box-shadow:
+    0 4px 14px rgba(139, 92, 246, 0.06);
 }
 
-.score-badge {
-  display: inline-block;
-  margin-top: 6px;
-  padding: 4px 10px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 800;
+/* ============================================================
+   БАЛЛЫ
+   ============================================================ */
+
+.podium-score {
+  position: relative;
+  z-index: 2;
+
+  margin-top: auto;
+
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+
+  padding-top: 10px;
+
+  color: var(--text-secondary);
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.podium-score span {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.place-1 .podium-score span {
   color: var(--gold);
 }
 
-.podium-card.place-2 .score-badge { color: var(--silver); }
-.podium-card.place-3 .score-badge { color: var(--bronze); }
+.place-2 .podium-score span {
+  color: var(--silver);
+}
+
+.place-3 .podium-score span {
+  color: var(--bronze);
+}
+
+.podium-score small {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
 
 /* Поиск */
 .controls {
@@ -512,6 +773,107 @@ body.winter-active .winter-frost {
 .rank-num { font-weight: 800; font-size: 15px; color: var(--text-secondary); width: 24px; }
 .student-card .name { font-weight: 700; font-size: 16px; }
 .student-card .score { font-weight: 800; font-size: 17px; color: var(--accent-blue); }
+
+/* ===================== ТИТУЛ УЧЕНИКА ===================== */
+
+.student-title {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 7px;
+  padding: 3px 7px;
+
+  border: 1px solid rgba(139, 92, 246, 0.28);
+  border-radius: 7px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.14),
+    rgba(139, 92, 246, 0.14)
+  );
+
+  color: #a78bfa;
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+
+  vertical-align: middle;
+  white-space: nowrap;
+
+  box-shadow:
+    0 0 12px rgba(139, 92, 246, 0.08);
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+/* ===================== ПОДИУМ — ИМЯ И ТИТУЛ ===================== */
+
+.podium-name {
+  font-size: 14px;
+  font-weight: 700;
+
+  width: 100%;
+  max-width: 100%;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.podium-title {
+  display: inline-flex;
+  align-items: center;
+
+  margin-top: 4px;
+  padding: 2px 6px;
+
+  border: 1px solid rgba(139, 92, 246, 0.28);
+  border-radius: 7px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.14),
+    rgba(139, 92, 246, 0.14)
+  );
+
+  color: #a78bfa;
+
+  font-size: 9px;
+  line-height: 1.2;
+  font-weight: 800;
+
+  white-space: nowrap;
+
+  box-shadow:
+    0 0 12px rgba(139, 92, 246, 0.08);
+}
+/* Титул в подиуме — отдельной строкой */
+
+.podium .student-title {
+  display: block;
+  width: fit-content;
+
+  margin: 4px auto 0;
+  padding: 2px 6px;
+
+  font-size: 9px;
+}
+
+.student-title:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.2),
+    rgba(139, 92, 246, 0.2)
+  );
+
+  box-shadow:
+    0 0 16px rgba(139, 92, 246, 0.16);
+}
 
 .last-reason-tag { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
 
@@ -4095,6 +4457,693 @@ body:has(.birthday-next.is-today) #season-fx-container .rain-drop {
     }
 }
 
+/* ============================================================
+   ПРОФИЛЬ
+   ============================================================ */
+
+.student-profile-page {
+    width: 100%;
+    min-height: 100%;
+    padding: 36px 24px 120px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ============================================================
+   ГЛАВНЫЙ ЭКРАН
+   ============================================================ */
+
+.student-profile-login-view {
+    width: 100%;
+}
+
+.student-profile-welcome {
+    width: min(460px, 100%);
+
+    margin: 0 auto;
+
+    padding: 38px 34px;
+
+    text-align: center;
+
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(59, 130, 246, .07),
+            rgba(139, 92, 246, .04)
+        ),
+        var(--card-bg);
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, .16);
+}
+
+.student-profile-welcome-icon {
+    width: 72px;
+    height: 72px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background:
+        rgba(59, 130, 246, .10);
+
+    border: 1px solid rgba(59, 130, 246, .14);
+
+    font-size: 32px;
+}
+
+.student-profile-welcome h1 {
+    margin: 0;
+
+    color: var(--text-primary);
+
+    font-size: 27px;
+    font-weight: 800;
+
+    letter-spacing: -.03em;
+}
+
+.student-profile-welcome p {
+    max-width: 340px;
+
+    margin: 12px auto 24px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   КНОПКА
+   ============================================================ */
+
+.student-profile-primary-btn,
+.student-profile-secondary-btn {
+    min-height: 46px;
+
+    padding: 0 18px;
+
+    border: 0;
+    border-radius: 13px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform .15s ease,
+        filter .15s ease,
+        background .15s ease;
+}
+
+.student-profile-primary-btn {
+    background: #3b82f6;
+    color: #fff;
+
+    box-shadow:
+        0 8px 24px rgba(59, 130, 246, .18);
+}
+
+.student-profile-primary-btn:hover {
+    filter: brightness(1.07);
+}
+
+.student-profile-primary-btn:active,
+.student-profile-secondary-btn:active {
+    transform: translateY(1px);
+}
+
+
+/* ============================================================
+   ОКНО ВХОДА
+   ============================================================ */
+
+.student-profile-login-modal {
+    position: fixed;
+    inset: 0;
+
+    z-index: 9500;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+.student-profile-login-modal.hidden {
+    display: none;
+}
+
+.student-profile-login-backdrop {
+    position: absolute;
+    inset: 0;
+
+    background:
+        rgba(5, 8, 15, .72);
+
+    backdrop-filter:
+        blur(8px);
+}
+
+.student-profile-login-dialog {
+    position: relative;
+    z-index: 1;
+
+    width: min(400px, 100%);
+
+    padding: 30px;
+
+    border: 1px solid var(--card-border);
+    border-radius: 22px;
+
+    background:
+        var(--card-bg);
+
+    box-shadow:
+        0 30px 90px rgba(0, 0, 0, .38);
+}
+
+.student-profile-login-close {
+    position: absolute;
+
+    top: 14px;
+    right: 14px;
+
+    width: 34px;
+    height: 34px;
+
+    border: 0;
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, .06);
+
+    color: var(--text-secondary);
+
+    font-size: 23px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.student-profile-login-close:hover {
+    background:
+        rgba(255, 255, 255, .10);
+
+    color: var(--text-primary);
+}
+
+.student-profile-login-icon {
+    width: 54px;
+    height: 54px;
+
+    margin-bottom: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background:
+        rgba(59, 130, 246, .10);
+
+    font-size: 26px;
+}
+
+.student-profile-login-kicker {
+    margin-bottom: 6px;
+
+    color: #3b82f6;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: .13em;
+}
+
+.student-profile-login-dialog h2 {
+    margin: 0;
+
+    color: var(--text-primary);
+
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.student-profile-login-dialog > p {
+    margin: 8px 0 22px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   ФОРМА
+   ============================================================ */
+
+.student-profile-field {
+    margin-bottom: 15px;
+}
+
+.student-profile-field label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--text-primary);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.student-profile-field input {
+    width: 100%;
+
+    min-height: 46px;
+
+    padding: 0 13px;
+
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+
+    outline: none;
+
+    background:
+        var(--bg-secondary, #0f1522);
+
+    color: var(--text-primary);
+
+    font-family: inherit;
+    font-size: 14px;
+
+    transition:
+        border-color .15s ease,
+        box-shadow .15s ease;
+}
+
+.student-profile-field input:focus {
+    border-color: #3b82f6;
+
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, .12);
+}
+
+.student-profile-field input::placeholder {
+    color: var(--text-secondary);
+    opacity: .6;
+}
+
+.student-profile-login-form
+.student-profile-primary-btn {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.student-profile-error {
+    margin-bottom: 12px;
+
+    color: #fca5a5;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.student-profile-error.hidden {
+    display: none;
+}
+
+
+/* ============================================================
+   ПОСЛЕ ВХОДА
+   ============================================================ */
+
+.student-profile-user-view {
+    width: 100%;
+}
+
+.student-profile-layout {
+    width: min(1000px, 100%);
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(300px, .9fr)
+        minmax(340px, 1.1fr);
+
+    gap: 22px;
+}
+
+
+/* ============================================================
+   КАРТОЧКА
+   ============================================================ */
+
+.student-profile-preview {
+    align-self: start;
+
+    position: sticky;
+    top: 24px;
+}
+
+.student-profile-card {
+    position: relative;
+
+    min-height: 300px;
+
+    padding: 30px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    overflow: hidden;
+
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,.08);
+
+    background:
+        linear-gradient(
+            145deg,
+            #1d2940,
+            #111827
+        );
+
+    box-shadow:
+        0 22px 60px rgba(0,0,0,.24);
+}
+
+.student-profile-card[data-theme="blue"] {
+    background:
+        linear-gradient(
+            145deg,
+            #16396c,
+            #111827
+        );
+}
+
+.student-profile-card[data-theme="purple"] {
+    background:
+        linear-gradient(
+            145deg,
+            #39226b,
+            #111827
+        );
+}
+
+.student-profile-card[data-theme="gold"] {
+    background:
+        linear-gradient(
+            145deg,
+            #5b4720,
+            #111827
+        );
+}
+
+.student-profile-card-emoji {
+    margin-bottom: 14px;
+
+    font-size: 56px;
+    line-height: 1;
+}
+
+.student-profile-card-name {
+    color: #fff;
+
+    font-size: 27px;
+    font-weight: 900;
+
+    letter-spacing: -.03em;
+}
+
+.student-profile-card-title {
+    margin-top: 6px;
+
+    color: #aebbd0;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.student-profile-card-score {
+    margin-top: 20px;
+
+    color: #edf2fa;
+
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.student-profile-preview-caption {
+    margin-top: 9px;
+
+    color: var(--text-secondary);
+
+    font-size: 11px;
+    text-align: center;
+}
+
+
+/* ============================================================
+   НАСТРОЙКИ
+   ============================================================ */
+
+.student-profile-settings {
+    padding: 25px;
+
+    border: 1px solid var(--card-border);
+    border-radius: 22px;
+
+    background:
+        var(--card-bg);
+}
+
+.student-profile-section-heading {
+    margin-bottom: 20px;
+}
+
+.student-profile-section-kicker {
+    margin-bottom: 6px;
+
+    color: #3b82f6;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: .13em;
+}
+
+.student-profile-section-heading h2 {
+    margin: 0;
+
+    color: var(--text-primary);
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.student-profile-section-heading p {
+    margin: 7px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+
+/* ============================================================
+   НАСТРОЙКИ ЭМОДЗИ
+   ============================================================ */
+
+.student-profile-setting {
+    padding: 19px 0;
+
+    border-top:
+        1px solid rgba(255,255,255,.06);
+}
+
+.student-profile-setting:first-of-type {
+    padding-top: 0;
+    border-top: 0;
+}
+
+.student-profile-setting-info strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--text-primary);
+
+    font-size: 14px;
+}
+
+.student-profile-setting-info span {
+    display: block;
+
+    margin-bottom: 12px;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+.student-profile-emojis {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.student-profile-emoji-btn {
+    width: 43px;
+    height: 43px;
+
+    border: 1px solid var(--card-border);
+    border-radius: 11px;
+
+    background:
+        var(--bg-secondary, #0f1522);
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    transition:
+        transform .12s ease,
+        border-color .12s ease,
+        background .12s ease;
+}
+
+.student-profile-emoji-btn:hover {
+    transform: translateY(-1px);
+}
+
+.student-profile-emoji-btn.active {
+    border-color: #3b82f6;
+
+    background:
+        rgba(59,130,246,.12);
+}
+
+
+/* ============================================================
+   SELECT
+   ============================================================ */
+
+.student-profile-select {
+    width: 100%;
+
+    min-height: 45px;
+
+    padding: 0 12px;
+
+    border:
+        1px solid var(--card-border);
+
+    border-radius: 11px;
+
+    background:
+        var(--bg-secondary, #0f1522);
+
+    color: var(--text-primary);
+
+    outline: none;
+
+    font-family: inherit;
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   СОХРАНЕНИЕ
+   ============================================================ */
+
+.student-profile-save-status {
+    min-height: 18px;
+
+    margin-top: 7px;
+
+    color: #6ee7b7;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.student-profile-actions {
+    display: flex;
+    gap: 9px;
+
+    margin-top: 10px;
+}
+
+.student-profile-actions
+.student-profile-primary-btn {
+    flex: 1;
+}
+
+.student-profile-actions
+.student-profile-secondary-btn {
+    flex: 0 0 100px;
+}
+
+.student-profile-secondary-btn {
+    background:
+        rgba(255,255,255,.07);
+
+    color:
+        var(--text-primary);
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    .student-profile-page {
+        padding:
+            24px 14px
+            calc(100px + env(safe-area-inset-bottom));
+    }
+
+    .student-profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .student-profile-preview {
+        position: static;
+    }
+
+    .student-profile-welcome {
+        padding: 32px 24px;
+    }
+
+    .student-profile-login-dialog {
+        padding: 26px 22px;
+    }
+}
+
 /* ===================== ЗИМНИЕ ЧАСТИЦЫ ===================== */
 
 .falling-snow {
@@ -4142,3 +5191,712 @@ body:has(.birthday-next.is-today) #season-fx-container .rain-drop {
   z-index: 1000;
 }
 
+/* ============================================================
+   СУНДУКИ ПРОФИЛЯ
+   ============================================================ */
+
+.student-profile-chests {
+  margin-top: 24px;
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.035),
+      rgba(255, 255, 255, 0.012)
+    ),
+    var(--card-bg);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.student-profile-chest-list {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(190px, 1fr)
+  );
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.student-profile-chest {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 92px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(59, 130, 246, 0.09),
+      rgba(139, 92, 246, 0.055)
+    ),
+    rgba(255, 255, 255, 0.025);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.student-profile-chest::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 20% 0%,
+      rgba(255, 255, 255, 0.09),
+      transparent 50%
+    );
+  pointer-events: none;
+}
+
+.student-profile-chest:hover {
+  transform: translateY(-2px);
+  border-color: rgba(59, 130, 246, 0.28);
+  box-shadow:
+    0 10px 25px rgba(59, 130, 246, 0.08);
+}
+
+.student-profile-chest-icon {
+  position: relative;
+  z-index: 1;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(59, 130, 246, 0.16),
+      rgba(139, 92, 246, 0.14)
+    );
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  font-size: 30px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.student-profile-chest-info {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.student-profile-chest-info strong {
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 17px;
+  font-weight: 800;
+}
+
+.student-profile-chest-info span {
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   МОБИЛЬНЫЕ
+   ============================================================ */
+
+@media (max-width: 650px) {
+
+  .student-profile-chests {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 17px;
+  }
+
+  .student-profile-chest-list {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .student-profile-chest {
+    min-height: 82px;
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .student-profile-chest-icon {
+    width: 52px;
+    height: 52px;
+    flex-basis: 52px;
+    border-radius: 14px;
+    font-size: 27px;
+  }
+
+}
+/* ============================================================
+   СУНДУК — МОДАЛЬНОЕ ОКНО НАГРАДЫ
+   ============================================================ */
+
+.student-profile-chest-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  opacity: 1;
+  visibility: visible;
+
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+}
+
+.student-profile-chest-modal.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+
+/* ==================== BACKDROP ==================== */
+
+.student-profile-chest-modal-backdrop {
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(59, 130, 246, 0.08),
+      rgba(5, 8, 16, 0.82) 48%,
+      rgba(3, 5, 10, 0.94)
+    );
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+
+/* ==================== DIALOG ==================== */
+
+.student-profile-chest-dialog {
+  position: relative;
+  z-index: 1;
+
+  width: min(520px, calc(100vw - 32px));
+  min-height: 500px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 42px 30px 32px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 28px;
+
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(59, 130, 246, 0.12),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.055),
+      rgba(255, 255, 255, 0.018)
+    ),
+    #111827;
+
+  box-shadow:
+    0 35px 100px rgba(0, 0, 0, 0.55),
+    0 0 80px rgba(59, 130, 246, 0.08);
+
+  animation:
+    chest-dialog-in 0.35s ease both;
+}
+
+
+@keyframes chest-dialog-in {
+
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+}
+
+
+/* ==================== GLOW ==================== */
+
+.student-profile-chest-glow {
+  position: absolute;
+
+  width: 280px;
+  height: 280px;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(59, 130, 246, 0.20) 0%,
+      rgba(139, 92, 246, 0.10) 35%,
+      transparent 70%
+    );
+
+  filter: blur(12px);
+
+  pointer-events: none;
+
+  animation:
+    chest-glow-pulse 2.4s ease-in-out infinite;
+}
+
+
+@keyframes chest-glow-pulse {
+
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+}
+
+
+/* ==================== CHEST ==================== */
+
+.student-profile-chest-animation {
+  position: relative;
+  z-index: 2;
+
+  width: 150px;
+  height: 150px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 24px;
+
+  font-size: 92px;
+  line-height: 1;
+
+  filter:
+    drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45))
+    drop-shadow(0 0 24px rgba(59, 130, 246, 0.20));
+
+  transform-origin: center bottom;
+
+  animation:
+    chest-idle 1.8s ease-in-out infinite;
+}
+
+
+@keyframes chest-idle {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(-1deg) scale(1.025);
+  }
+
+}
+
+
+/* Когда JS добавит этот класс — сундук начинает трястись */
+
+.student-profile-chest-animation.is-shaking {
+  animation:
+    chest-shake 0.65s ease-in-out both;
+}
+
+
+@keyframes chest-shake {
+
+  0% {
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+
+  12% {
+    transform: translateX(-7px) rotate(-4deg) scale(1.03);
+  }
+
+  24% {
+    transform: translateX(7px) rotate(4deg) scale(1.04);
+  }
+
+  36% {
+    transform: translateX(-9px) rotate(-5deg) scale(1.05);
+  }
+
+  48% {
+    transform: translateX(9px) rotate(5deg) scale(1.05);
+  }
+
+  60% {
+    transform: translateX(-5px) rotate(-3deg) scale(1.03);
+  }
+
+  72% {
+    transform: translateX(5px) rotate(3deg) scale(1.02);
+  }
+
+  100% {
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+
+}
+
+
+/* ==================== STATUS ==================== */
+
+.student-profile-chest-status {
+  position: relative;
+  z-index: 2;
+
+  min-height: 24px;
+
+  margin-bottom: 24px;
+
+  color: var(--text-secondary, #94a3b8);
+
+  font-size: 14px;
+  font-weight: 700;
+
+  text-align: center;
+
+  letter-spacing: 0.02em;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* ==================== REWARD ==================== */
+
+.student-profile-chest-reward {
+  position: relative;
+  z-index: 3;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-top: 4px;
+
+  text-align: center;
+
+  animation:
+    chest-reward-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+
+.student-profile-chest-reward.hidden {
+  display: none;
+}
+
+
+.student-profile-chest-reward-kicker {
+  margin-bottom: 8px;
+
+  color: #60a5fa;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 0.16em;
+}
+
+
+.student-profile-chest-reward-title {
+  color: #ffffff;
+
+  font-size: clamp(28px, 7vw, 42px);
+  font-weight: 800;
+
+  line-height: 1.1;
+
+  text-shadow:
+    0 0 20px rgba(96, 165, 250, 0.35),
+    0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+
+.student-profile-chest-reward-subtitle {
+  margin-top: 10px;
+
+  color: var(--text-secondary, #94a3b8);
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+@keyframes chest-reward-in {
+
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.82);
+    filter: blur(8px);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.04);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+
+}
+
+
+/* ==================== CLOSE BUTTON ==================== */
+
+.student-profile-chest-close {
+  position: relative;
+  z-index: 4;
+
+  min-width: 190px;
+
+  margin-top: 28px;
+  padding: 13px 22px;
+
+  border: 1px solid rgba(96, 165, 250, 0.25);
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #6366f1
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 30px rgba(59, 130, 246, 0.25);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+
+  animation:
+    chest-button-in 0.5s 0.15s ease both;
+}
+
+
+.student-profile-chest-close.hidden {
+  display: none;
+}
+
+
+.student-profile-chest-close:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 14px 35px rgba(59, 130, 246, 0.35);
+
+  filter: brightness(1.08);
+}
+
+
+.student-profile-chest-close:active {
+  transform: translateY(0) scale(0.97);
+}
+
+
+@keyframes chest-button-in {
+
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* ============================================================
+   АДАПТАЦИЯ ПОД ТЕЛЕФОН
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+  .student-profile-chest-modal {
+    padding: 14px;
+  }
+
+  .student-profile-chest-dialog {
+    width: calc(100vw - 28px);
+    min-height: 460px;
+
+    padding:
+      32px 20px 26px;
+
+    border-radius: 24px;
+  }
+
+  .student-profile-chest-animation {
+    width: 125px;
+    height: 125px;
+
+    font-size: 76px;
+  }
+
+  .student-profile-chest-glow {
+    width: 230px;
+    height: 230px;
+  }
+
+  .student-profile-chest-status {
+    font-size: 13px;
+  }
+
+  .student-profile-chest-reward-title {
+    font-size: 32px;
+  }
+
+}
+
+
+/* ============================================================
+   УМЕНЬШЕННАЯ АНИМАЦИЯ
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .student-profile-chest-dialog,
+  .student-profile-chest-glow,
+  .student-profile-chest-animation,
+  .student-profile-chest-reward,
+  .student-profile-chest-close {
+    animation: none !important;
+  }
+
+}
+/* ============================================================
+   СУНДУК — ВСЕ ТИТУЛЫ СОБРАНЫ
+   ============================================================ */
+
+.student-profile-chest-info {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 4px;
+  text-align: center;
+  animation:
+    chest-info-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.student-profile-chest-info.hidden {
+  display: none;
+}
+
+.student-profile-chest-info-kicker {
+  margin-bottom: 9px;
+  color: #60a5fa;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.student-profile-chest-info-title {
+  max-width: 420px;
+  color: #ffffff;
+  font-size: clamp(24px, 6vw, 34px);
+  font-weight: 800;
+  line-height: 1.15;
+  text-shadow:
+    0 0 20px rgba(96, 165, 250, 0.28),
+    0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.student-profile-chest-info-subtitle {
+  max-width: 390px;
+  margin-top: 12px;
+  color: var(--text-secondary, #94a3b8);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+@keyframes chest-info-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    filter: blur(7px);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1.02);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}

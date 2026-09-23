@@ -2,10 +2,15 @@
 
 import {
     studentsCol,
-    onSnapshot,
-    updateDoc,
-    doc
+    onSnapshot
 } from "./firebase.js";
+
+import {
+    getStudentEmoji,
+    getStudentTitle,
+    initStudentProfilesSync
+} from "./studentProfiles.js";
+
 
 // =====================================================
 // ДАТЫ РОЖДЕНИЯ
@@ -48,6 +53,7 @@ const birthdayDates = {
     "SID_STUDENT_BIRTHDAY": "1959-09-16"
 };
 
+
 // =====================================================
 // МЕСЯЦЫ
 // =====================================================
@@ -67,6 +73,7 @@ const MONTHS = [
     "декабря"
 ];
 
+
 // =====================================================
 // ДАТЫ
 // =====================================================
@@ -74,7 +81,8 @@ const MONTHS = [
 function parseBirthday(value) {
     if (!value) return null;
 
-    const [year, month, day] = value.split("-").map(Number);
+    const [year, month, day] =
+        value.split("-").map(Number);
 
     if (!year || !month || !day) {
         return null;
@@ -87,6 +95,7 @@ function parseBirthday(value) {
     };
 }
 
+
 function isLeapYear(year) {
     return (
         year % 4 === 0 &&
@@ -94,10 +103,13 @@ function isLeapYear(year) {
     );
 }
 
-function getBirthdayDateForYear(birthday, year) {
+
+function getBirthdayDateForYear(
+    birthday,
+    year
+) {
     let day = birthday.day;
 
-    // 29 февраля → 28 февраля в невисокосный год
     if (
         birthday.month === 2 &&
         birthday.day === 29 &&
@@ -113,72 +125,102 @@ function getBirthdayDateForYear(birthday, year) {
     );
 }
 
-function getNextBirthdayDate(birthday, today = new Date()) {
-    const currentYear = today.getFullYear();
 
-    let next = getBirthdayDateForYear(
-        birthday,
-        currentYear
-    );
+function getNextBirthdayDate(
+    birthday,
+    today = new Date()
+) {
+    const currentYear =
+        today.getFullYear();
 
-    const todayWithoutTime = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate()
-    );
-
-    if (next < todayWithoutTime) {
-        next = getBirthdayDateForYear(
+    let next =
+        getBirthdayDateForYear(
             birthday,
-            currentYear + 1
+            currentYear
         );
+
+    const todayWithoutTime =
+        new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate()
+        );
+
+    if (
+        next < todayWithoutTime
+    ) {
+        next =
+            getBirthdayDateForYear(
+                birthday,
+                currentYear + 1
+            );
     }
 
     return next;
 }
 
-function daysBetween(from, to) {
-    const a = new Date(
-        from.getFullYear(),
-        from.getMonth(),
-        from.getDate()
-    );
 
-    const b = new Date(
-        to.getFullYear(),
-        to.getMonth(),
-        to.getDate()
-    );
+function daysBetween(
+    from,
+    to
+) {
+    const a =
+        new Date(
+            from.getFullYear(),
+            from.getMonth(),
+            from.getDate()
+        );
 
-    const diff = b - a;
+    const b =
+        new Date(
+            to.getFullYear(),
+            to.getMonth(),
+            to.getDate()
+        );
 
     return Math.round(
-        diff / (1000 * 60 * 60 * 24)
+        (b - a) /
+        (1000 * 60 * 60 * 24)
     );
 }
 
-function isBirthdayToday(birthday, today = new Date()) {
+
+function isBirthdayToday(
+    birthday,
+    today = new Date()
+) {
     if (!birthday) return false;
 
     const monthMatches =
-        birthday.month === today.getMonth() + 1;
+        birthday.month ===
+        today.getMonth() + 1;
 
     let dayMatches =
-        birthday.day === today.getDate();
+        birthday.day ===
+        today.getDate();
 
-    // 29 февраля → 28 февраля в невисокосный год
     if (
         birthday.month === 2 &&
         birthday.day === 29 &&
-        !isLeapYear(today.getFullYear())
+        !isLeapYear(
+            today.getFullYear()
+        )
     ) {
-        dayMatches = today.getDate() === 28;
+        dayMatches =
+            today.getDate() === 28;
     }
 
-    return monthMatches && dayMatches;
+    return (
+        monthMatches &&
+        dayMatches
+    );
 }
 
-function getAge(birthday, today = new Date()) {
+
+function getAge(
+    birthday,
+    today = new Date()
+) {
     let age =
         today.getFullYear() -
         birthday.year;
@@ -189,22 +231,29 @@ function getAge(birthday, today = new Date()) {
             today.getFullYear()
         );
 
-    if (today < birthdayThisYear) {
+    if (
+        today < birthdayThisYear
+    ) {
         age--;
     }
 
     return age;
 }
 
+
 // =====================================================
 // ФОРМАТИРОВАНИЕ
 // =====================================================
 
-function formatBirthdayDate(birthday) {
+function formatBirthdayDate(
+    birthday
+) {
     return `${birthday.day} ${MONTHS[birthday.month - 1]}`;
 }
 
+
 function formatDaysLeft(days) {
+
     if (days === 0) {
         return "Сегодня 🎂";
     }
@@ -223,25 +272,34 @@ function formatDaysLeft(days) {
     return `через ${days} дней`;
 }
 
+
 // =====================================================
-// ПОДГОТОВКА ДАННЫХ
+// ПОДГОТОВКА
 // =====================================================
 
-function prepareBirthdays(students) {
-    const today = new Date();
+function prepareBirthdays(
+    students
+) {
+    const today =
+        new Date();
 
     return students
         .map(student => {
+
             const birthdayValue =
                 student.birthday ||
-                birthdayDates[student.name];
+                birthdayDates[
+                    student.name
+                ];
 
             if (!birthdayValue) {
                 return null;
             }
 
             const birthday =
-                parseBirthday(birthdayValue);
+                parseBirthday(
+                    birthdayValue
+                );
 
             if (!birthday) {
                 return null;
@@ -262,16 +320,30 @@ function prepareBirthdays(students) {
             return {
                 ...student,
 
-                birthday: birthdayValue,
-                birthdayParsed: birthday,
+                birthday:
+                    birthdayValue,
+
+                birthdayParsed:
+                    birthday,
+
                 nextBirthday,
+
                 daysLeft
             };
         })
+
         .filter(Boolean)
+
         .sort((a, b) => {
-            if (a.daysLeft !== b.daysLeft) {
-                return a.daysLeft - b.daysLeft;
+
+            if (
+                a.daysLeft !==
+                b.daysLeft
+            ) {
+                return (
+                    a.daysLeft -
+                    b.daysLeft
+                );
             }
 
             return a.name.localeCompare(
@@ -281,11 +353,15 @@ function prepareBirthdays(students) {
         });
 }
 
+
 // =====================================================
 // ГЛАВНАЯ КАРТОЧКА
 // =====================================================
 
-function renderNextBirthday(birthday) {
+function renderNextBirthday(
+    birthday
+) {
+
     const card =
         document.getElementById(
             "birthday-next"
@@ -311,6 +387,7 @@ function renderNextBirthday(birthday) {
             "birthday-next-countdown"
         );
 
+
     if (
         !card ||
         !avatar ||
@@ -321,23 +398,31 @@ function renderNextBirthday(birthday) {
         return;
     }
 
+
     const isToday =
         isBirthdayToday(
             birthday.birthdayParsed
         );
 
+
     avatar.textContent =
-        birthday.avatar || "🙂";
+        getStudentEmoji(
+            birthday
+        );
+
 
     name.textContent =
         birthday.name;
+
 
     card.classList.toggle(
         "is-today",
         isToday
     );
 
+
     if (isToday) {
+
         const label =
             card.querySelector(
                 ".birthday-next-label"
@@ -359,6 +444,7 @@ function renderNextBirthday(birthday) {
         return;
     }
 
+
     const label =
         card.querySelector(
             ".birthday-next-label"
@@ -368,6 +454,7 @@ function renderNextBirthday(birthday) {
         label.textContent =
             "СЛЕДУЮЩИЙ ДЕНЬ РОЖДЕНИЯ";
     }
+
 
     date.textContent =
         formatBirthdayDate(
@@ -380,11 +467,15 @@ function renderNextBirthday(birthday) {
         );
 }
 
+
 // =====================================================
 // СПИСОК
 // =====================================================
 
-function renderBirthdayList(birthdays) {
+function renderBirthdayList(
+    birthdays
+) {
+
     const container =
         document.getElementById(
             "birthdays-list"
@@ -394,108 +485,194 @@ function renderBirthdayList(birthdays) {
         return;
     }
 
+
     container.innerHTML = "";
 
-    birthdays.forEach(birthday => {
-        const row =
-            document.createElement("div");
 
-        row.className =
-            "birthday-row";
+    birthdays.forEach(
+        birthday => {
 
-        const avatar =
-            document.createElement("div");
+            const row =
+                document.createElement(
+                    "div"
+                );
 
-        avatar.className =
-            "birthday-row-avatar";
+            row.className =
+                "birthday-row";
 
-        avatar.textContent =
-            birthday.avatar || "🙂";
 
-        const info =
-            document.createElement("div");
+            const avatar =
+                document.createElement(
+                    "div"
+                );
 
-        info.className =
-            "birthday-row-info";
+            avatar.className =
+                "birthday-row-avatar";
 
-        const studentName =
-            document.createElement("div");
+            avatar.textContent =
+                getStudentEmoji(
+                    birthday
+                );
 
-        studentName.className =
-            "birthday-row-name";
 
-        studentName.textContent =
-            birthday.name;
+            const info =
+                document.createElement(
+                    "div"
+                );
 
-        const studentDate =
-            document.createElement("div");
+            info.className =
+                "birthday-row-info";
 
-        studentDate.className =
-            "birthday-row-date";
 
-        studentDate.textContent =
-            formatBirthdayDate(
-                birthday.birthdayParsed
-            );
+            const studentName =
+                document.createElement(
+                    "div"
+                );
 
-        info.appendChild(studentName);
-        info.appendChild(studentDate);
+            studentName.className =
+                "birthday-row-name";
 
-        const countdown =
-            document.createElement("div");
+            studentName.textContent =
+                birthday.name;
 
-        countdown.className =
-            "birthday-row-countdown";
+                const studentTitle =
+    getStudentTitle(
+        birthday
+    );
 
-        countdown.textContent =
-            formatDaysLeft(
-                birthday.daysLeft
-            );
+if (studentTitle) {
 
-        row.appendChild(avatar);
-        row.appendChild(info);
-        row.appendChild(countdown);
+    const title =
+        document.createElement(
+            "span"
+        );
 
-        container.appendChild(row);
-    });
+    title.className =
+        "student-title";
+
+    title.textContent =
+        studentTitle;
+
+    studentName.appendChild(
+        title
+    );
 }
+
+
+            const studentDate =
+                document.createElement(
+                    "div"
+                );
+
+            studentDate.className =
+                "birthday-row-date";
+
+            studentDate.textContent =
+                formatBirthdayDate(
+                    birthday.birthdayParsed
+                );
+
+
+            info.appendChild(
+                studentName
+            );
+
+            info.appendChild(
+                studentDate
+            );
+
+
+            const countdown =
+                document.createElement(
+                    "div"
+                );
+
+            countdown.className =
+                "birthday-row-countdown";
+
+            countdown.textContent =
+                formatDaysLeft(
+                    birthday.daysLeft
+                );
+
+
+            row.appendChild(
+                avatar
+            );
+
+            row.appendChild(
+                info
+            );
+
+            row.appendChild(
+                countdown
+            );
+
+
+            container.appendChild(
+                row
+            );
+        }
+    );
+}
+
 
 // =====================================================
 // FIREBASE
 // =====================================================
 
+let currentStudents = [];
+
+
+function renderBirthdays() {
+
+    const birthdays =
+        prepareBirthdays(
+            currentStudents
+        );
+
+    if (
+        !birthdays.length
+    ) {
+        console.warn(
+            "Дни рождения: подходящих данных пока нет."
+        );
+
+        return;
+    }
+
+    renderNextBirthday(
+        birthdays[0]
+    );
+
+    renderBirthdayList(
+        birthdays
+    );
+}
+
+
 function loadBirthdaysFromFirebase() {
+
     onSnapshot(
         studentsCol,
+
         snapshot => {
-            const students =
+
+            currentStudents =
                 snapshot.docs.map(
                     studentDoc => ({
-                        id: studentDoc.id,
+                        id:
+                            studentDoc.id,
+
                         ...studentDoc.data()
                     })
                 );
 
-            const birthdays =
-                prepareBirthdays(students);
-
-            if (!birthdays.length) {
-                console.warn(
-                    "Дни рождения: подходящих данных пока нет."
-                );
-
-                return;
-            }
-
-            renderNextBirthday(
-                birthdays[0]
-            );
-
-            renderBirthdayList(
-                birthdays
-            );
+            renderBirthdays();
         },
+
         error => {
+
             console.error(
                 "Ошибка загрузки дней рождения:",
                 error
@@ -504,18 +681,31 @@ function loadBirthdaysFromFirebase() {
     );
 }
 
+
 // =====================================================
 // INIT
 // =====================================================
 
 function initBirthdays() {
+
     loadBirthdaysFromFirebase();
+
+    // Когда ученик меняет emoji
+    // в profiles, дни рождения
+    // перерисуются автоматически.
+    initStudentProfilesSync(
+        () => {
+            renderBirthdays();
+        }
+    );
 }
+
 
 document.addEventListener(
     "DOMContentLoaded",
     initBirthdays
 );
+
 
 // =====================================================
 // /BIRTHDAYS

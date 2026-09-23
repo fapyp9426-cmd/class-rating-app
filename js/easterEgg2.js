@@ -757,20 +757,6 @@ function chickenGunEffect(
     );
 
 
-    // Лёгкая вспышка
-    hit.classList.add(
-        'is-active'
-    );
-
-    setTimeout(() => {
-
-        hit.classList.remove(
-            'is-active'
-        );
-
-    }, 120);
-
-
     // Частицы
     const particles = [
         '🔥',

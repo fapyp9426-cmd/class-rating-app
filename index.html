@@ -446,6 +446,475 @@
       Пока специально оставляем пустым.
     -->
   </section>
+<!-- ============================================================
+     ПРОФИЛЬ
+     ============================================================ -->
+
+<section
+    id="app-page-profile"
+    class="app-page"
+    data-page="profile"
+    aria-hidden="true"
+>
+
+    <div class="student-profile-page">
+
+
+        <!-- ==================== НЕ ВОШЁЛ ==================== -->
+
+        <div
+            id="student-profile-login-view"
+            class="student-profile-login-view"
+        >
+
+            <div class="student-profile-welcome">
+
+                <div class="student-profile-welcome-icon">
+                    👤
+                </div>
+
+                <h1>
+                    Войдите в профиль
+                </h1>
+
+                <p>
+                    Чтобы отредактировать свою карточку,
+                    выбрать эмодзи, титул и оформление.
+                </p>
+
+                <button
+                    id="profile-login-btn"
+                    class="student-profile-primary-btn"
+                    type="button"
+                >
+                    Войти
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================== ОКНО ВХОДА ==================== -->
+
+        <div
+            id="student-profile-login-modal"
+            class="student-profile-login-modal hidden"
+        >
+
+            <div
+                class="student-profile-login-backdrop"
+                id="student-profile-login-backdrop"
+            ></div>
+
+
+            <div class="student-profile-login-dialog">
+
+                <button
+                    id="student-profile-login-close"
+                    class="student-profile-login-close"
+                    type="button"
+                    aria-label="Закрыть"
+                >
+                    ×
+                </button>
+
+
+                <div class="student-profile-login-icon">
+                    👤
+                </div>
+
+                <div class="student-profile-login-kicker">
+                    ЛИЧНЫЙ ПРОФИЛЬ
+                </div>
+
+                <h2>
+                    Войти
+                </h2>
+
+                <p>
+                    Введи своё имя и пароль.
+                </p>
+
+
+                <form
+                    id="student-profile-login-form"
+                    class="student-profile-login-form"
+                >
+
+                    <div class="student-profile-field">
+
+                        <label
+                            for="student-profile-name"
+                        >
+                            Имя
+                        </label>
+
+                        <input
+                            id="student-profile-name"
+                            type="text"
+                            placeholder=" Введите свое: Фамилия Имя"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="student-profile-field">
+
+                        <label
+                            for="student-profile-password"
+                        >
+                            Пароль
+                        </label>
+
+                        <input
+                            id="student-profile-password"
+                            type="password"
+                            placeholder="Введите пароль"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div
+                        id="student-profile-login-error"
+                        class="student-profile-error hidden"
+                    ></div>
+
+
+                    <button
+                        type="submit"
+                        class="student-profile-primary-btn"
+                    >
+                        Войти в профиль
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================== ПРОФИЛЬ ПОСЛЕ ВХОДА ==================== -->
+
+        <div
+            id="student-profile-user-view"
+            class="student-profile-user-view hidden"
+        >
+
+            <div class="student-profile-layout">
+
+                <section class="student-profile-preview">
+
+                    <div
+                        id="student-profile-card"
+                        class="student-profile-card"
+                        data-theme="default"
+                    >
+
+                        <div
+                            id="student-profile-card-emoji"
+                            class="student-profile-card-emoji"
+                        >
+                            😀
+                        </div>
+
+                        <div
+                            id="student-profile-card-name"
+                            class="student-profile-card-name"
+                        >
+                            —
+                        </div>
+
+                        <div
+                            id="student-profile-card-title"
+                            class="student-profile-card-title"
+                        >
+                            Новичок
+                        </div>
+
+                        <div
+                            id="student-profile-card-score"
+                            class="student-profile-card-score"
+                        >
+                            🏆 0 баллов
+                        </div>
+
+                    </div>
+                    <div class="student-profile-preview-caption">
+                        Твоя карточка
+                    </div>
+
+
+                    <!-- СУНДУКИ -->
+
+                    <section class="student-profile-chests">
+
+                        <div class="student-profile-section-heading">
+
+                            <div class="student-profile-section-kicker">
+                                НАГРАДЫ
+                            </div>
+
+                            <h2>
+                                Сундуки
+                            </h2>
+
+                            <p>
+                                Открой сундук и получи случайную награду.
+                            </p>
+
+                        </div>
+
+
+                        <div class="student-profile-chest-list">
+
+                            <div class="student-profile-chest">
+
+                                <div class="student-profile-chest-icon">
+                                    🎁
+                                </div>
+
+                                <div class="student-profile-chest-info">
+
+                                    <strong>
+                                        Сундук титулов
+                                    </strong>
+
+                                   <span id="student-profile-title-chest-count">
+    0 сундуков
+</span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </section>
+
+
+                <section class="student-profile-settings">
+
+                    <div class="student-profile-section-heading">
+
+                        <div class="student-profile-section-kicker">
+                            ПЕРСОНАЛИЗАЦИЯ
+                        </div>
+
+                        <h2>
+                            Настройка профиля
+                        </h2>
+
+                        <p>
+                            Настрой внешний вид своей карточки.
+                        </p>
+
+                    </div>
+
+
+                    <!-- ЭМОДЗИ -->
+
+                    <div class="student-profile-setting">
+
+                        <div class="student-profile-setting-info">
+
+                            <strong>
+                                Эмодзи
+                            </strong>
+
+                            <span>
+                                Выбери один эмодзи.
+                            </span>
+
+                        </div>
+
+                        <div
+                            id="student-profile-emojis"
+                            class="student-profile-emojis"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- ТИТУЛ -->
+
+                    <div class="student-profile-setting">
+
+                        <div class="student-profile-setting-info">
+
+                            <strong>
+                                Титул
+                            </strong>
+
+                            <span>
+                                Отображается под именем.
+                            </span>
+
+                        </div>
+
+                        <select
+                            id="student-profile-title"
+                            class="student-profile-select"
+                        ></select>
+
+                    </div>
+
+
+                    <!-- ТЕМА -->
+
+                    <div class="student-profile-setting">
+
+                        <div class="student-profile-setting-info">
+
+                            <strong>
+                                Оформление
+                            </strong>
+
+                            <span>
+                                Выбери стиль карточки.
+                            </span>
+
+                        </div>
+
+                        <select
+                            id="student-profile-theme"
+                            class="student-profile-select"
+                        ></select>
+
+                    </div>
+
+
+                    <div
+                        id="student-profile-save-status"
+                        class="student-profile-save-status"
+                    ></div>
+
+
+                    <div class="student-profile-actions">
+
+                        <button
+                            id="student-profile-save"
+                            class="student-profile-primary-btn"
+                            type="button"
+                        >
+                            Сохранить
+                        </button>
+
+                        <button
+                            id="student-profile-logout"
+                            class="student-profile-secondary-btn"
+                            type="button"
+                        >
+                            Выйти
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ============================================================
+     / ПРОФИЛЬ
+     ============================================================ -->
+
+     <!-- ============================================================
+     АНИМАЦИЯ ОТКРЫТИЯ СУНДУКА
+     ============================================================ -->
+
+<div
+    id="student-profile-chest-modal"
+    class="student-profile-chest-modal hidden"
+    aria-hidden="true"
+>
+    <div
+        class="student-profile-chest-modal-backdrop"
+        id="student-profile-chest-modal-backdrop"
+    ></div>
+
+    <div class="student-profile-chest-dialog">
+
+        <div class="student-profile-chest-glow"></div>
+
+        <div
+            id="student-profile-chest-animation"
+            class="student-profile-chest-animation"
+        >
+            🎁
+        </div>
+
+
+        <!-- ============================================================
+     ИНФОРМАЦИЯ: ВСЕ ТИТУЛЫ СОБРАНЫ
+     ============================================================ -->
+
+<div
+    id="student-profile-chest-info"
+    class="student-profile-chest-info hidden"
+>
+    <div class="student-profile-chest-info-kicker">
+        ВСЕ ТИТУЛЫ СОБРАНЫ
+    </div>
+
+    <div class="student-profile-chest-info-title">
+        Твой сундук сохранился :)
+    </div>
+
+    <div class="student-profile-chest-info-subtitle">
+        Когда появится новый титул, ты сможешь открыть его.
+    </div>
+</div>
+
+
+<!-- ============================================================
+     НАГРАДА
+     ============================================================ -->
+
+<div
+    id="student-profile-chest-reward"
+    class="student-profile-chest-reward hidden"
+>
+    <div class="student-profile-chest-reward-kicker">
+        НОВАЯ НАГРАДА
+    </div>
+
+    <div
+        id="student-profile-chest-reward-title"
+        class="student-profile-chest-reward-title"
+    >
+        Мощь
+    </div>
+
+    <div class="student-profile-chest-reward-subtitle">
+        Титул разблокирован
+    </div>
+</div>
+
+<button
+    id="student-profile-chest-close"
+    class="student-profile-chest-close hidden"
+    type="button"
+>
+    Забрать награду
+</button>
+
+    </div>
+</div>
+
 
 <section
     id="app-page-settings"
@@ -874,13 +1343,22 @@
         <span>Дни рождения</span>
     </button>
 
-    <button class="app-nav-item" type="button" data-page="settings" aria-label="Настройки">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"/>
-            <path d="M19 13.5v-3l-2-.6a7.4 7.4 0 0 0-.7-1.7l1-1.8-2.1-2.1-1.8 1a7.4 7.4 0 0 0-1.7-.7L11.5 2h-3l-.6 2.6a7.4 7.4 0 0 0-1.7.7l-1.8-1-2.1 2.1 1 1.8a7.4 7.4 0 0 0-.7 1.7l-2 .6v3l2 .6c.2.6.4 1.2.7 1.7l-1 1.8 2.1 2.1 1.8-1c.5.3 1.1.5 1.7.7l.6 2.6h3l.6-2.6c.6-.2 1.2-.4 1.7-.7l1.8 1 2.1-2.1-1-1.8c.3-.5.5-1.1.7-1.7z"/>
-        </svg>
-        <span>Настройки</span>
-    </button>
+<button
+    class="app-nav-item"
+    type="button"
+    data-page="profile"
+    aria-label="Профиль"
+>
+    <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+    >
+        <circle cx="12" cy="8" r="3.5"/>
+        <path d="M5 21a7 7 0 0 1 14 0"/>
+    </svg>
+
+    <span>Профиль</span>
+</button>
 </nav>
 
 

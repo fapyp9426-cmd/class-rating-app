@@ -20,6 +20,9 @@ import {
   initFeed,
   updateFeedTeacherUI
 } from './feed.js';
+import {
+  initProfilePrototype
+} from './profilePrototype.js';
 
 initMaintenance();
 
@@ -73,6 +76,7 @@ initUI();
 initAutoSeason();
 initNavigation();
 initFeed();
+initProfilePrototype();
 
 // app.js подключён как type="module" — функции, вызываемые из inline onclick="..."
 // в HTML (renderManageStudentsList, setScorePreset), нужно явно повесить на window,

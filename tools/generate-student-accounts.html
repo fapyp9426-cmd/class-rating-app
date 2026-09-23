@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Генератор аккаунтов учеников</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 32px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #0b0f19;
+      color: #f8fafc;
+
+      font-family: Arial, sans-serif;
+    }
+
+    .card {
+      width: min(680px, 100%);
+
+      padding: 28px;
+
+      background: #151c2c;
+      border: 1px solid #2a3650;
+      border-radius: 20px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 26px;
+    }
+
+    p {
+      color: #9aa8bf;
+      line-height: 1.55;
+    }
+
+    .status {
+      margin: 20px 0;
+      padding: 14px;
+      border-radius: 12px;
+      background: #0f1522;
+      border: 1px solid #293650;
+      color: #cbd5e1;
+    }
+
+    .actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    button {
+      min-height: 46px;
+      padding: 0 16px;
+
+      border: 0;
+      border-radius: 12px;
+
+      color: white;
+      font: inherit;
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+    #create-missing-btn {
+      background: #3b82f6;
+    }
+
+    #reset-all-btn {
+      background: #7f1d1d;
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .progress {
+      height: 8px;
+      margin-top: 14px;
+
+      overflow: hidden;
+
+      border-radius: 999px;
+
+      background: #0d1320;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+
+      background: #3b82f6;
+
+      transition: width .15s ease;
+    }
+
+    .result {
+      margin-top: 18px;
+      padding: 14px;
+
+      border-radius: 12px;
+
+      background: #0f1522;
+      border: 1px solid #293650;
+
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+
+    .warning {
+      margin-top: 14px;
+      padding: 12px 14px;
+
+      border-radius: 12px;
+
+      background: rgba(245, 158, 11, .08);
+      border: 1px solid rgba(245, 158, 11, .25);
+
+      color: #f6d28b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .ok {
+      color: #6ee7b7;
+    }
+
+    .error {
+      color: #fca5a5;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="card">
+
+    <h1>🔐 Генератор аккаунтов учеников</h1>
+
+    <p>
+      Скрипт берёт имена и ID непосредственно из коллекции
+      <b>students</b>, создаёт записи в <b>studentAuth</b>
+      с тем же ID документа и генерирует каждому пароль.
+    </p>
+
+    <div id="status" class="status">
+      Проверяем авторизацию учителя...
+    </div>
+
+    <div class="progress">
+      <div id="progress-fill" class="progress-fill"></div>
+    </div>
+
+    <div class="actions">
+
+      <button
+        id="create-missing-btn"
+        type="button"
+        disabled
+      >
+        Создать аккаунты, которых ещё нет
+      </button>
+
+      <button
+        id="reset-all-btn"
+        type="button"
+        disabled
+      >
+        Перегенерировать пароли всем
+      </button>
+
+    </div>
+
+    <div class="warning">
+      ⚠️ Кнопка «Перегенерировать пароли всем» заменит пароли
+      уже существующих учеников. После выполнения обязательно
+      сохрани скачанный TXT-файл.
+    </div>
+
+    <div
+      id="result"
+      class="result"
+    >
+      Результат появится здесь.
+    </div>
+
+  </main>
+
+
+  <script type="module">
+
+    import {
+      auth,
+      studentsCol,
+      studentAuthCol,
+      onAuthStateChanged,
+      getDocs,
+      getDoc,
+      setDoc,
+      doc
+    } from "../js/firebase.js";
+
+
+    const statusEl =
+      document.getElementById("status");
+
+    const resultEl =
+      document.getElementById("result");
+
+    const progressFill =
+      document.getElementById("progress-fill");
+
+    const createMissingBtn =
+      document.getElementById("create-missing-btn");
+
+    const resetAllBtn =
+      document.getElementById("reset-all-btn");
+
+
+    let currentUser = null;
+    let isTeacher = false;
+
+
+    // =====================================================
+    // АВТОРИЗАЦИЯ
+    // =====================================================
+
+    function checkTeacher(user) {
+
+      currentUser = user || null;
+
+      isTeacher =
+        Boolean(
+          user &&
+          user.providerData &&
+          user.providerData.some(
+            provider =>
+              provider.providerId === "password"
+          )
+        );
+
+
+      if (isTeacher) {
+
+        statusEl.innerHTML =
+          '<span class="ok">✓ Учитель авторизован. Можно запускать генератор.</span>';
+
+        createMissingBtn.disabled = false;
+        resetAllBtn.disabled = false;
+
+      } else {
+
+        statusEl.innerHTML =
+          '<span class="error">❌ Учитель не авторизован.</span><br><br>' +
+          'Сначала войдите как учитель в основном приложении ' +
+          'в этом же браузере, затем откройте эту страницу снова.';
+
+        createMissingBtn.disabled = true;
+        resetAllBtn.disabled = true;
+      }
+    }
+
+
+    onAuthStateChanged(
+      auth,
+      checkTeacher
+    );
+
+
+    // =====================================================
+    // ГЕНЕРАЦИЯ ПАРОЛЯ
+    // =====================================================
+
+    function generatePassword(length = 9) {
+
+      // Убраны похожие символы:
+      // O/0, I/l/1.
+      const alphabet =
+        "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+
+      const random =
+        new Uint32Array(length);
+
+      crypto.getRandomValues(
+        random
+      );
+
+      let password = "";
+
+      for (
+        let i = 0;
+        i < length;
+        i++
+      ) {
+
+        password +=
+          alphabet[
+            random[i] % alphabet.length
+          ];
+      }
+
+      return password;
+    }
+
+
+    // =====================================================
+    // HASH
+    // =====================================================
+
+    function bytesToBase64(bytes) {
+
+      let binary = "";
+
+      for (
+        const byte of bytes
+      ) {
+        binary +=
+          String.fromCharCode(
+            byte
+          );
+      }
+
+      return btoa(
+        binary
+      );
+    }
+
+
+    async function createPasswordData(
+      password
+    ) {
+
+      const encoder =
+        new TextEncoder();
+
+      const passwordBytes =
+        encoder.encode(
+          password
+        );
+
+
+      const salt =
+        crypto.getRandomValues(
+          new Uint8Array(16)
+        );
+
+
+      const key =
+        await crypto.subtle.importKey(
+          "raw",
+          passwordBytes,
+          {
+            name: "PBKDF2"
+          },
+          false,
+          [
+            "deriveBits"
+          ]
+        );
+
+
+      const bits =
+        await crypto.subtle.deriveBits(
+          {
+            name: "PBKDF2",
+            salt,
+            iterations: 600000,
+            hash: "SHA-256"
+          },
+          key,
+          256
+        );
+
+
+      return {
+        passwordSalt:
+          bytesToBase64(
+            salt
+          ),
+
+        passwordHash:
+          bytesToBase64(
+            new Uint8Array(bits)
+          )
+      };
+    }
+
+
+    // =====================================================
+    // СКАЧИВАНИЕ TXT
+    // =====================================================
+
+    function downloadPasswords(
+      rows
+    ) {
+
+      const header =
+        "Рейтинг 8А — аккаунты учеников\n" +
+        "================================\n\n";
+
+      const body =
+        rows
+          .map(
+            row =>
+              `${row.name}: ${row.password}`
+          )
+          .join("\n");
+
+
+      const blob =
+        new Blob(
+          [
+            header,
+            body,
+            "\n"
+          ],
+          {
+            type:
+              "text/plain;charset=utf-8"
+          }
+        );
+
+
+      const url =
+        URL.createObjectURL(
+          blob
+        );
+
+
+      const link =
+        document.createElement(
+          "a"
+        );
+
+      link.href =
+        url;
+
+      link.download =
+        `student-passwords-${new Date().toISOString().slice(0, 10)}.txt`;
+
+      document.body.appendChild(
+        link
+      );
+
+      link.click();
+
+      link.remove();
+
+      URL.revokeObjectURL(
+        url
+      );
+    }
+
+
+    // =====================================================
+    // ОСНОВНАЯ ГЕНЕРАЦИЯ
+    // =====================================================
+
+    async function generateAccounts(
+      resetExisting
+    ) {
+
+      if (!isTeacher) {
+        throw new Error(
+          "Учитель не авторизован."
+        );
+      }
+
+
+      createMissingBtn.disabled = true;
+      resetAllBtn.disabled = true;
+
+
+      progressFill.style.width =
+        "0%";
+
+
+      resultEl.textContent =
+        "Загружаем список учеников...";
+
+
+      const snapshot =
+        await getDocs(
+          studentsCol
+        );
+
+
+      const students =
+        snapshot.docs
+          .map(
+            studentDoc => ({
+              id:
+                studentDoc.id,
+
+              ...studentDoc.data()
+            })
+          )
+          .filter(
+            student =>
+              String(
+                student.name || ""
+              ).trim()
+          )
+          .sort(
+            (a, b) =>
+              String(a.name)
+                .localeCompare(
+                  String(b.name),
+                  "ru"
+                )
+          );
+
+
+      if (!students.length) {
+        throw new Error(
+          "В коллекции students нет учеников."
+        );
+      }
+
+
+      const credentials = [];
+
+      let created = 0;
+      let skipped = 0;
+
+
+      for (
+        let i = 0;
+        i < students.length;
+        i++
+      ) {
+
+        const student =
+          students[i];
+
+
+        statusEl.textContent =
+          `Обрабатываем ${i + 1} из ${students.length}: ${student.name}`;
+
+
+        const authRef =
+          doc(
+            studentAuthCol,
+            student.id
+          );
+
+
+        const authSnapshot =
+          await getDoc(
+            authRef
+          );
+
+
+        // Если режим "создать отсутствующие"
+        // и аккаунт уже полностью настроен —
+        // оставляем его как есть.
+        if (
+          !resetExisting &&
+          authSnapshot.exists()
+        ) {
+
+          const data =
+            authSnapshot.data();
+
+
+          if (
+            data.passwordSalt &&
+            data.passwordHash
+          ) {
+
+            skipped++;
+
+            continue;
+          }
+        }
+
+
+        const password =
+          generatePassword(9);
+
+
+        const passwordData =
+          await createPasswordData(
+            password
+          );
+
+
+        await setDoc(
+          authRef,
+          {
+            studentId:
+              student.id,
+
+            ...passwordData
+          },
+          {
+            merge: true
+          }
+        );
+
+
+        credentials.push({
+          name:
+            student.name,
+
+          password,
+
+          studentId:
+            student.id
+        });
+
+
+        created++;
+
+
+        const progress =
+          Math.round(
+            ((i + 1) /
+              students.length) *
+            100
+          );
+
+        progressFill.style.width =
+          `${progress}%`;
+      }
+
+
+      // В файл попадут только аккаунты,
+      // для которых этот запуск знает пароль.
+      if (
+        credentials.length
+      ) {
+
+        downloadPasswords(
+          credentials
+        );
+      }
+
+
+      resultEl.innerHTML =
+        `✓ Готово.<br><br>` +
+        `Всего учеников: ${students.length}<br>` +
+        `Новых / обновлённых аккаунтов: ${created}<br>` +
+        `Пропущено уже настроенных: ${skipped}<br><br>` +
+        `Скачан TXT-файл с паролями для ${credentials.length} учеников.`;
+
+      statusEl.innerHTML =
+        '<span class="ok">✓ Генерация завершена.</span>';
+
+
+      createMissingBtn.disabled = false;
+      resetAllBtn.disabled = false;
+    }
+
+
+    // =====================================================
+    // КНОПКА: ТОЛЬКО ОТСУТСТВУЮЩИЕ
+    // =====================================================
+
+    createMissingBtn.addEventListener(
+      "click",
+      async () => {
+
+        try {
+
+          await generateAccounts(
+            false
+          );
+
+        } catch (error) {
+
+          console.error(
+            error
+          );
+
+          resultEl.innerHTML =
+            `<span class="error">❌ ${error.message}</span>`;
+
+          statusEl.innerHTML =
+            '<span class="error">Ошибка генерации.</span>';
+
+          createMissingBtn.disabled = false;
+          resetAllBtn.disabled = false;
+        }
+      }
+    );
+
+
+    // =====================================================
+    // КНОПКА: ПЕРЕГЕНЕРИРОВАТЬ ВСЕМ
+    // =====================================================
+
+    resetAllBtn.addEventListener(
+      "click",
+      async () => {
+
+        const confirmed =
+          confirm(
+            "Перегенерировать пароли ВСЕМ ученикам?\n\n" +
+            "Старые пароли перестанут работать.\n" +
+            "После этого будет скачан новый файл с паролями."
+          );
+
+
+        if (!confirmed) {
+          return;
+        }
+
+
+        try {
+
+          await generateAccounts(
+            true
+          );
+
+        } catch (error) {
+
+          console.error(
+            error
+          );
+
+          resultEl.innerHTML =
+            `<span class="error">❌ ${error.message}</span>`;
+
+          statusEl.innerHTML =
+            '<span class="error">Ошибка генерации.</span>';
+
+          createMissingBtn.disabled = false;
+          resetAllBtn.disabled = false;
+        }
+      }
+    );
+
+  </script>
+
+</body>
+</html>
