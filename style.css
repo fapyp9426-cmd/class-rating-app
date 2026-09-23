@@ -779,19 +779,33 @@ body.winter-active .winter-frost {
 .student-title {
   display: inline-flex;
   align-items: center;
+
   margin-left: 7px;
-  padding: 3px 7px;
+  padding: 3px 8px;
 
-  border: 1px solid rgba(139, 92, 246, 0.28);
-  border-radius: 7px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 38%,
+      transparent
+    );
 
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.14),
-    rgba(139, 92, 246, 0.14)
-  );
+  border-radius: 999px;
 
-  color: #a78bfa;
+  background:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 16%,
+      transparent
+    );
+
+  color:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 82%,
+      white
+    );
+
   font-size: 10px;
   line-height: 1.2;
   font-weight: 800;
@@ -801,45 +815,63 @@ body.winter-active .winter-frost {
   white-space: nowrap;
 
   box-shadow:
-    0 0 12px rgba(139, 92, 246, 0.08);
+    0 0 12px
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 10%,
+      transparent
+    );
 
   transition:
     border-color 0.18s ease,
     background 0.18s ease,
-    box-shadow 0.18s ease;
+    color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
 }
+
 
 /* ===================== ПОДИУМ — ИМЯ И ТИТУЛ ===================== */
 
 .podium-name {
   font-size: 14px;
   font-weight: 700;
-
   width: 100%;
   max-width: 100%;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.podium-title {
+.podium-student-title {
   display: inline-flex;
   align-items: center;
 
   margin-top: 4px;
-  padding: 2px 6px;
+  padding: 2px 7px;
 
-  border: 1px solid rgba(139, 92, 246, 0.28);
-  border-radius: 7px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 38%,
+      transparent
+    );
 
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.14),
-    rgba(139, 92, 246, 0.14)
-  );
+  border-radius: 999px;
 
-  color: #a78bfa;
+  background:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 16%,
+      transparent
+    );
+
+  color:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 82%,
+      white
+    );
 
   font-size: 9px;
   line-height: 1.2;
@@ -848,34 +880,70 @@ body.winter-active .winter-frost {
   white-space: nowrap;
 
   box-shadow:
-    0 0 12px rgba(139, 92, 246, 0.08);
+    0 0 12px
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 10%,
+      transparent
+    );
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
 }
-/* Титул в подиуме — отдельной строкой */
+
+
+/* ===================== ТИТУЛ В ПОДИУМЕ ===================== */
 
 .podium .student-title {
   display: block;
   width: fit-content;
 
   margin: 4px auto 0;
-  padding: 2px 6px;
+  padding: 2px 7px;
 
   font-size: 9px;
 }
 
-.student-title:hover {
-  border-color: rgba(139, 92, 246, 0.5);
 
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.2),
-    rgba(139, 92, 246, 0.2)
-  );
+/* ===================== ТИТУЛ — HOVER ===================== */
+
+.student-title:hover,
+.podium-title:hover {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 58%,
+      transparent
+    );
+
+  background:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 23%,
+      transparent
+    );
 
   box-shadow:
-    0 0 16px rgba(139, 92, 246, 0.16);
+    0 0 16px
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 18%,
+      transparent
+    );
+
+  transform: translateY(-1px);
 }
 
-.last-reason-tag { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+.last-reason-tag {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
 
 /* Модальные окна */
 .modal-overlay {
@@ -5899,4 +5967,447 @@ body:has(.birthday-next.is-today) #season-fx-container .rain-drop {
     transform: translateY(0) scale(1);
     filter: blur(0);
   }
+}
+
+/* ============================================================
+   ВЫБОР ТИТУЛА
+   ============================================================ */
+
+.student-profile-title-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  min-width: 190px;
+  max-width: 260px;
+
+  padding: 10px 12px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.035);
+
+  color: var(--text-primary);
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.student-profile-title-selector:hover {
+  background: rgba(255, 255, 255, 0.065);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 35%,
+      transparent
+    );
+
+  box-shadow:
+    0 0 18px
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 8%,
+      transparent
+    );
+
+  transform: translateY(-1px);
+}
+
+.student-profile-title-preview {
+  overflow: hidden;
+
+  color:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 85%,
+      white
+    );
+
+  font-size: 13px;
+  font-weight: 700;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.student-profile-title-arrow {
+  flex-shrink: 0;
+
+  color: var(--text-secondary);
+
+  font-size: 20px;
+  line-height: 1;
+
+  transition:
+    transform 0.18s ease;
+}
+
+.student-profile-title-selector:hover
+.student-profile-title-arrow {
+  transform: translateX(2px);
+}
+
+
+/* ============================================================
+   МОДАЛКА
+   ============================================================ */
+
+#title-selection-modal {
+  z-index: 10000;
+}
+
+.title-selection-modal {
+  width: min(520px, calc(100vw - 32px));
+
+  max-height: min(650px, calc(100vh - 40px));
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(21, 28, 44, 0.98),
+      rgba(11, 15, 25, 0.98)
+    );
+
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.55),
+    0 0 45px rgba(59, 130, 246, 0.08);
+
+  backdrop-filter: blur(22px);
+
+  overflow: hidden;
+
+  animation:
+    titleModalIn 0.18s ease-out;
+}
+
+@keyframes titleModalIn {
+
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+}
+
+
+/* ============================================================
+   ШАПКА
+   ============================================================ */
+
+.title-selection-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 16px;
+}
+
+.title-selection-header h3 {
+  margin: 0;
+
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.title-selection-count {
+  display: block;
+
+  margin-top: 4px;
+
+  color: var(--text-secondary);
+
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   ПОИСК
+   ============================================================ */
+
+.title-selection-search {
+  margin-bottom: 12px;
+}
+
+.title-selection-search input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 11px 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.035);
+
+  color: var(--text-primary);
+
+  font-family: inherit;
+  font-size: 13px;
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.title-selection-search input::placeholder {
+  color: var(--text-secondary);
+}
+
+.title-selection-search input:focus {
+  background: rgba(255, 255, 255, 0.055);
+
+  border-color: rgba(59, 130, 246, 0.45);
+
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.08);
+}
+
+
+/* ============================================================
+   СПИСОК
+   ============================================================ */
+
+.title-selection-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+
+  min-height: 0;
+
+  overflow-y: auto;
+
+  padding-right: 4px;
+}
+
+.title-selection-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.title-selection-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.title-selection-list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.12);
+}
+
+
+/* ============================================================
+   КАРТОЧКА ТИТУЛА
+   ============================================================ */
+
+.title-selection-item {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+
+  min-height: 42px;
+
+  padding: 9px 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 25%,
+      transparent
+    );
+
+  border-radius: 11px;
+
+  background:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 8%,
+      transparent
+    );
+
+  color:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 82%,
+      white
+    );
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 750;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease,
+    box-shadow 0.16s ease,
+    opacity 0.16s ease;
+}
+
+.title-selection-item:hover {
+  transform: translateX(2px);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 55%,
+      transparent
+    );
+
+  background:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 15%,
+      transparent
+    );
+
+  box-shadow:
+    0 0 18px
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 10%,
+      transparent
+    );
+}
+
+
+/* ============================================================
+   ВЫБРАННЫЙ
+   ============================================================ */
+
+.title-selection-item.selected {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 65%,
+      transparent
+    );
+
+  background:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 18%,
+      transparent
+    );
+
+  box-shadow:
+    inset 3px 0 0
+      var(--title-color, #8b5cf6),
+    0 0 20px
+      color-mix(
+        in srgb,
+        var(--title-color, #8b5cf6) 10%,
+        transparent
+      );
+}
+
+
+/* ============================================================
+   ЗАБЛОКИРОВАННЫЕ
+   ============================================================ */
+
+.title-selection-item.locked {
+  opacity: 0.32;
+
+  cursor: not-allowed;
+
+  filter: grayscale(0.45);
+}
+
+.title-selection-item.locked:hover {
+  transform: none;
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 25%,
+      transparent
+    );
+
+  background:
+    color-mix(
+      in srgb,
+      var(--title-color, #8b5cf6) 8%,
+      transparent
+    );
+
+  box-shadow: none;
+}
+
+.title-selection-lock {
+  flex-shrink: 0;
+
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+
+/* ============================================================
+   НАЗВАНИЕ
+   ============================================================ */
+
+.title-selection-name {
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* ============================================================
+   МОБИЛЬНАЯ ВЕРСИЯ
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+  .title-selection-modal {
+    width: calc(100vw - 24px);
+
+    max-height: calc(100vh - 24px);
+
+    padding: 16px;
+
+    border-radius: 17px;
+  }
+
+  .student-profile-title-selector {
+    min-width: 150px;
+    max-width: 190px;
+  }
+
 }

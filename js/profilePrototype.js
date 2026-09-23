@@ -13,7 +13,9 @@ import {
 
 
 import {
-  getTitleName
+  TITLES,
+  getTitleName,
+  getTitleById
 } from './rewards/titles.js';
 
 import {
@@ -636,79 +638,69 @@ function renderEmojis() {
 
 
 // ===================== РЕНДЕР ТИТУЛОВ =====================
-// ===================== РЕНДЕР ТИТУЛОВ =====================
 
 function renderTitles() {
-  const select =
+
+  const selector =
     document.getElementById(
       'student-profile-title'
     );
 
-  if (!select) return;
-
-  select.innerHTML = '';
-
-  const titles =
-    currentProfile.unlockedTitles || [];
-
-
-  // ===================== БЕЗ ТИТУЛА =====================
-
-  const noneOption =
-    document.createElement(
-      'option'
+  const preview =
+    document.getElementById(
+      'student-profile-title-preview'
     );
 
-  noneOption.value = '';
-
-  noneOption.textContent =
-    'Без титула';
-
-  noneOption.selected =
-    !currentProfile.selectedTitle;
-
-  select.appendChild(
-    noneOption
-  );
+  if (!selector || !preview) {
+    return;
+  }
 
 
-  // ===================== РАЗБЛОКИРОВАННЫЕ ТИТУЛЫ =====================
+  // ===================== ТЕКУЩИЙ ТИТУЛ =====================
 
-  titles.forEach(
-    titleId => {
+  const selectedTitle =
+    currentProfile.selectedTitle;
 
-      const option =
-        document.createElement(
-          'option'
-        );
+  if (!selectedTitle) {
 
-      option.value =
-        titleId;
+    preview.textContent =
+      'Без титула';
 
-      option.textContent =
-        getTitleName(titleId) ||
-        titleId;
+    preview.style.removeProperty(
+      '--title-color'
+    );
 
-      option.selected =
-        titleId ===
-        currentProfile.selectedTitle;
+  } else {
 
-      select.appendChild(
-        option
+    const title =
+      getTitleById(
+        selectedTitle
       );
+
+    preview.textContent =
+      title
+        ? title.name
+        : 'Без титула';
+
+    if (title) {
+
+      preview.style.setProperty(
+        '--title-color',
+        title.color
+      );
+
     }
-  );
+  }
 
 
-  // ===================== ИЗМЕНЕНИЕ =====================
+  // ===================== ОТКРЫТИЕ ОКНА =====================
 
-  select.onchange = () => {
+  selector.onclick = () => {
 
-    currentProfile.selectedTitle =
-      select.value || null;
+    openTitleSelectionModal();
 
-    renderCard();
   };
+
 }
 
 
@@ -772,6 +764,328 @@ function renderThemes() {
 
     renderCard();
   };
+}
+
+
+// ===================== ОКНО ВЫБОРА ТИТУЛА =====================
+
+function openTitleSelectionModal() {
+
+  let modal =
+    document.getElementById(
+      'title-selection-modal'
+    );
+
+  if (!modal) {
+
+    modal =
+      document.createElement(
+        'div'
+      );
+
+    modal.id =
+      'title-selection-modal';
+
+    modal.className =
+      'modal-overlay hidden no-print';
+
+    modal.innerHTML = `
+      <div class="title-selection-modal">
+
+        <div class="title-selection-header">
+
+          <div>
+            <h3>Выбор титула</h3>
+
+            <span
+              id="title-selection-count"
+              class="title-selection-count"
+            >
+              0 из ${TITLES.length} открыто
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="close-btn"
+            id="close-title-selection"
+          >
+            &times;
+          </button>
+
+        </div>
+
+
+        <div class="title-selection-search">
+
+          <input
+            id="title-selection-search"
+            type="text"
+            placeholder="Поиск титула..."
+            autocomplete="off"
+          >
+
+        </div>
+
+
+        <div
+          id="title-selection-list"
+          class="title-selection-list"
+        ></div>
+
+      </div>
+    `;
+
+    document.body.appendChild(
+      modal
+    );
+
+
+    // Закрытие
+
+    document
+      .getElementById(
+        'close-title-selection'
+      )
+      .onclick = () => {
+
+        closeTitleSelectionModal();
+
+      };
+
+
+    modal.addEventListener(
+      'click',
+      event => {
+
+        if (
+          event.target ===
+          modal
+        ) {
+
+          closeTitleSelectionModal();
+
+        }
+
+      }
+    );
+
+
+    document
+      .getElementById(
+        'title-selection-search'
+      )
+      .addEventListener(
+        'input',
+        renderTitleSelectionList
+      );
+
+  }
+
+
+  renderTitleSelectionList();
+
+  modal.classList.remove(
+    'hidden'
+  );
+
+}
+
+
+// ===================== СПИСОК ТИТУЛОВ =====================
+
+function renderTitleSelectionList() {
+
+  const list =
+    document.getElementById(
+      'title-selection-list'
+    );
+
+  const count =
+    document.getElementById(
+      'title-selection-count'
+    );
+
+  const search =
+    document.getElementById(
+      'title-selection-search'
+    );
+
+  if (
+    !list ||
+    !count
+  ) {
+    return;
+  }
+
+
+  const unlocked =
+    currentProfile.unlockedTitles || [];
+
+
+  count.textContent =
+    `${unlocked.length} из ${TITLES.length} открыто`;
+
+
+  const query =
+    search
+      ? search.value
+          .trim()
+          .toLowerCase()
+      : '';
+
+
+  list.innerHTML = '';
+
+
+  // Без титула
+
+  const none =
+    document.createElement(
+      'button'
+    );
+
+  none.className =
+    'title-selection-item' +
+    (
+      !currentProfile.selectedTitle
+        ? ' selected'
+        : ''
+    );
+
+  none.innerHTML = `
+    <span class="title-selection-name">
+      Без титула
+    </span>
+  `;
+
+  none.onclick = () => {
+
+    currentProfile.selectedTitle =
+      null;
+
+    renderCard();
+    renderTitles();
+
+    closeTitleSelectionModal();
+
+  };
+
+  list.appendChild(
+    none
+  );
+
+
+  // Все титулы
+
+  TITLES
+    .filter(title => {
+
+      if (!query) {
+        return true;
+      }
+
+      return title.name
+        .toLowerCase()
+        .includes(query);
+
+    })
+    .forEach(title => {
+
+      const isUnlocked =
+        unlocked.includes(
+          title.id
+        );
+
+      const item =
+        document.createElement(
+          'button'
+        );
+
+      item.type = 'button';
+
+      item.className =
+        'title-selection-item' +
+        (
+          isUnlocked
+            ? ''
+            : ' locked'
+        ) +
+        (
+          title.id ===
+          currentProfile.selectedTitle
+            ? ' selected'
+            : ''
+        );
+
+      item.style.setProperty(
+        '--title-color',
+        title.color
+      );
+
+
+      item.innerHTML = `
+        <span
+          class="title-selection-name"
+        >
+          ${title.name}
+        </span>
+
+        ${
+          !isUnlocked
+            ? `
+              <span class="title-selection-lock">
+                🔒
+              </span>
+            `
+            : ''
+        }
+      `;
+
+
+      if (isUnlocked) {
+
+        item.onclick = () => {
+
+          currentProfile.selectedTitle =
+            title.id;
+
+          renderCard();
+          renderTitles();
+
+          closeTitleSelectionModal();
+
+        };
+
+      }
+
+
+      list.appendChild(
+        item
+      );
+
+    });
+
+}
+
+
+// ===================== ЗАКРЫТИЕ =====================
+
+function closeTitleSelectionModal() {
+
+  const modal =
+    document.getElementById(
+      'title-selection-modal'
+    );
+
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.add(
+    'hidden'
+  );
+
 }
 
 // ===================== РЕНДЕР СУНДУКОВ =====================

@@ -5,10 +5,10 @@ import {
   onSnapshot
 } from './firebase.js';
 
-import{
-  getTitleName
+import {
+  getTitleName,
+  getTitleById
 } from './rewards/titles.js';
-
 const profilesCache = new Map();
 
 let initialized = false;
@@ -86,6 +86,34 @@ export function getStudentTitle(
   return getTitleName(
     profile.selectedTitle
   );
+}
+
+
+// ===================== ЦВЕТ ТИТУЛА =====================
+
+export function getStudentTitleColor(
+  student
+) {
+  const profile =
+    getStudentProfile(
+      student
+    );
+
+  const titleId =
+    profile.selectedTitle;
+
+  if (!titleId) {
+    return null;
+  }
+
+  const title =
+    getTitleById(
+      titleId
+    );
+
+  return title
+    ? title.color
+    : null;
 }
 
 

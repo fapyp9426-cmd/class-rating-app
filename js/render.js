@@ -16,12 +16,17 @@ import {
 import {
   getStudentEmoji,
   getStudentTitle,
+  getStudentTitleColor,
   initStudentProfilesSync
 } from './studentProfiles.js';
 
 import {
   giveTitleChest
 } from './rewards/chests.js';
+
+import {
+  getTitleById
+} from './rewards/titles.js';
 
 const podiumEl =
   document.getElementById(
@@ -133,8 +138,11 @@ export function renderPodium() {
         );
 
 
-    const title =
-      getStudentTitle(student);
+const title =
+  getStudentTitle(student);
+
+const titleColor =
+  getStudentTitleColor(student);
 
 
     card.innerHTML = `
@@ -156,15 +164,18 @@ export function renderPodium() {
         )}
       </div>
 
-      ${
-        title
-          ? `
-            <div class="podium-student-title">
-              ${escapeHtml(title)}
-            </div>
-          `
-          : ''
-      }
+${
+  title
+    ? `
+      <div
+        class="podium-student-title"
+        style="--title-color: ${titleColor || '#8b5cf6'};"
+      >
+        ${escapeHtml(title)}
+      </div>
+    `
+    : ''
+}
 
       <div class="podium-score">
         <span>
@@ -278,17 +289,20 @@ export function renderStudentsList() {
     student.name
   )}
 
-  ${
-    getStudentTitle(student)
-      ? `
-        <span class="student-title">
-          ${escapeHtml(
-            getStudentTitle(student)
-          )}
-        </span>
-      `
-      : ''
-  }
+${
+  getStudentTitle(student)
+    ? `
+      <span
+        class="student-title"
+        style="--title-color: ${getStudentTitleColor(student) || '#8b5cf6'};"
+      >
+        ${escapeHtml(
+          getStudentTitle(student)
+        )}
+      </span>
+    `
+    : ''
+}
 </div>
 
             ${
