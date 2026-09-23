@@ -18,6 +18,14 @@ export const TITLES = [
   { id: 'okak', name: 'окак' },
   { id: 'otak', name: 'отак' },
   { id: '67', name: '67' },
+  { id: 'airhead', name: 'воздухан' },
+  { id: 'skill_issue', name: 'skill issue' },
+  { id: 'w', name: 'W' },
+  { id: 'l', name: 'L' },
+  { id: 'tuff', name: 'tuff' },
+  { id: 'bro', name: 'бро' },
+  { id: '404', name: '404' },
+  { id: 'connection', name: 'связь' },
   { id: '20_0', name: '20-0' }
 ];
 
