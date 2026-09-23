@@ -1874,11 +1874,41 @@ async function handleThemeChestClick() {
 
   // ===================== ПРЕВЬЮ ТЕМЫ =====================
 
-  if (rewardPreview) {
+// ===================== ПРЕВЬЮ ТЕМЫ =====================
 
-    rewardPreview.dataset.theme =
-      theme.id;
-  }
+if (rewardPreview) {
+
+  rewardPreview.dataset.theme =
+    theme.id;
+
+rewardPreview.innerHTML = `
+  <div class="student-profile-chest-theme-preview-glow"></div>
+
+  <div class="student-profile-chest-theme-preview-content">
+
+    <div class="student-profile-chest-theme-preview-avatar">
+      ${currentProfile.emoji || '😀'}
+    </div>
+
+    <div class="student-profile-chest-theme-preview-name">
+      ${currentStudent.name || 'Твой профиль'}
+    </div>
+
+    <div class="student-profile-chest-theme-preview-title">
+      ${
+        getTitleName(
+          currentProfile.selectedTitle
+        ) || 'Без титула'
+      }
+    </div>
+
+    <div class="student-profile-chest-theme-preview-score">
+      🏆 ${Number(currentStudent.score) || 0} баллов
+    </div>
+
+  </div>
+`;
+}
 
 
   // ===================== АНИМАЦИЯ =====================

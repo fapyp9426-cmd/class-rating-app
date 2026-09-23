@@ -1678,7 +1678,14 @@
         <div
             id="student-profile-theme-chest-reward"
             class="student-profile-theme-chest-reward hidden"
+
+
         >
+
+           <div
+  id="student-profile-theme-preview"
+  class="student-profile-chest-theme-preview"
+></div>
 
             <div class="theme-reward-kicker">
                 НОВАЯ ТЕМА
@@ -1707,29 +1714,7 @@
 
   <div class="student-profile-theme-preview-glow"></div>
 
-  <div class="student-profile-theme-preview-content">
 
-    <div class="student-profile-theme-preview-avatar">
-      ${currentProfile.emoji || '😀'}
-    </div>
-
-    <div class="student-profile-theme-preview-name">
-      ${currentStudent?.name || 'Твой профиль'}
-    </div>
-
-    <div class="student-profile-theme-preview-title">
-      ${
-        getTitleName(
-          currentProfile.selectedTitle
-        ) || 'Без титула'
-      }
-    </div>
-
-    <div class="student-profile-theme-preview-score">
-      🏆 ${Number(currentStudent?.score) || 0} баллов
-    </div>
-
-  </div>
 
 </div>
 
