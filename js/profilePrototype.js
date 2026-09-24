@@ -1355,11 +1355,11 @@ function formatChestCount(
 }
 
 // ===================== ОТКРЫТИЕ СУНДУКА ТИТУЛОВ =====================
+// ===================== СУНДУК ТИТУЛОВ =====================
 
 async function handleTitleChestClick() {
 
-  // Не даём открыть сундук повторно,
-  // пока предыдущий ещё открывается.
+  // Защита от двойного тапа
   if (isTitleChestOpening) {
     return;
   }
@@ -1367,8 +1367,6 @@ async function handleTitleChestClick() {
   if (!currentStudent) {
     return;
   }
-
-    isThemeChestOpening = true;
 
   const chestCount =
     Number(
@@ -1409,6 +1407,11 @@ async function handleTitleChestClick() {
       'student-profile-chest-close'
     );
 
+  const chestButton =
+    document.getElementById(
+      'student-profile-title-chest'
+    );
+
   if (
     !modal ||
     !animation ||
@@ -1417,23 +1420,20 @@ async function handleTitleChestClick() {
     !rewardTitle ||
     !closeButton
   ) {
+
     console.error(
-      'Элементы анимации сундука не найдены.'
+      'Элементы сундука титулов не найдены.'
     );
 
     return;
   }
 
-  // =====================
-  // БЛОКИРУЕМ ПОВТОРНЫЙ КЛИК
-  // =====================
+
+  // =====================================================
+  // БЛОКИРУЕМ ПОВТОРНЫЙ ЗАПУСК
+  // =====================================================
 
   isTitleChestOpening = true;
-
-  const chestButton =
-    document.getElementById(
-      'student-profile-title-chest'
-    );
 
   if (chestButton) {
     chestButton.style.pointerEvents = 'none';
@@ -1443,23 +1443,73 @@ async function handleTitleChestClick() {
     );
   }
 
-  // =====================
-  // ОТКРЫВАЕМ МОДАЛКУ
-  // =====================
 
-  modal.classList.remove('hidden');
+  // =====================================================
+  // ФУНКЦИЯ ПОЛНОГО СБРОСА
+  // =====================================================
+
+  const resetChestState = () => {
+
+    isTitleChestOpening = false;
+
+    if (chestButton) {
+      chestButton.style.pointerEvents = '';
+      chestButton.removeAttribute(
+        'aria-disabled'
+      );
+    }
+  };
+
+
+  // =====================================================
+  // ФУНКЦИЯ ЗАКРЫТИЯ
+  // =====================================================
+
+  const closeChest = () => {
+
+    modal.classList.add(
+      'hidden'
+    );
+
+    modal.setAttribute(
+      'aria-hidden',
+      'true'
+    );
+
+    animation.classList.remove(
+      'is-shaking'
+    );
+
+    reward.classList.add(
+      'hidden'
+    );
+
+    info.classList.add(
+      'hidden'
+    );
+
+    closeButton.classList.add(
+      'hidden'
+    );
+
+    closeButton.onclick = null;
+
+    resetChestState();
+  };
+
+
+  // =====================================================
+  // НАЧАЛЬНОЕ СОСТОЯНИЕ
+  // =====================================================
+
+  modal.classList.remove(
+    'hidden'
+  );
 
   modal.setAttribute(
     'aria-hidden',
     'false'
   );
-
-  reward.classList.add('hidden');
-  info.classList.add('hidden');
-  closeButton.classList.add('hidden');
-
-  closeButton.textContent =
-    'Забрать награду';
 
   animation.classList.remove(
     'is-shaking'
@@ -1468,21 +1518,58 @@ async function handleTitleChestClick() {
   animation.textContent =
     '🎁';
 
-  // Небольшая пауза перед анимацией
+  reward.classList.add(
+    'hidden'
+  );
+
+  info.classList.add(
+    'hidden'
+  );
+
+  closeButton.classList.add(
+    'hidden'
+  );
+
+  closeButton.textContent =
+    'Забрать награду';
+
+  closeButton.onclick = null;
+
+
+  // =====================================================
+  // НЕБОЛЬШАЯ ПАУЗА
+  // =====================================================
+
   await new Promise(
     resolve =>
-      setTimeout(resolve, 250)
+      setTimeout(
+        resolve,
+        250
+      )
   );
+
+
+  // =====================================================
+  // ЗАПУСК АНИМАЦИИ
+  // =====================================================
 
   animation.classList.add(
     'is-shaking'
   );
 
-  // Ждём окончания тряски
+
   await new Promise(
     resolve =>
-      setTimeout(resolve, 700)
+      setTimeout(
+        resolve,
+        700
+      )
   );
+
+
+  // =====================================================
+  // ОТКРЫТИЕ СУНДУКА В FIREBASE
+  // =====================================================
 
   try {
 
@@ -1491,15 +1578,21 @@ async function handleTitleChestClick() {
         currentStudent.id
       );
 
-    // =====================
-    // ОШИБКА / ВСЕ ТИТУЛЫ
-    // =====================
+
+    // ===================================================
+    // НЕ УДАЛОСЬ ОТКРЫТЬ
+    // ===================================================
 
     if (!result?.success) {
 
       animation.classList.remove(
         'is-shaking'
       );
+
+
+      // -----------------------------------------------
+      // ВСЕ ТИТУЛЫ УЖЕ СОБРАНЫ
+      // -----------------------------------------------
 
       if (
         result?.reason ===
@@ -1520,45 +1613,16 @@ async function handleTitleChestClick() {
           'hidden'
         );
 
-        const closeModal = () => {
-
-          modal.classList.add(
-            'hidden'
-          );
-
-          modal.setAttribute(
-            'aria-hidden',
-            'true'
-          );
-
-          closeButton.classList.add(
-            'hidden'
-          );
-
-          closeButton.removeEventListener(
-            'click',
-            closeModal
-          );
-
-          // Разрешаем следующее открытие
-          isTitleChestOpening = false;
-
-          if (chestButton) {
-            chestButton.style.pointerEvents =
-              '';
-            chestButton.removeAttribute(
-              'aria-disabled'
-            );
-          }
-        };
-
-        closeButton.addEventListener(
-          'click',
-          closeModal
-        );
+        closeButton.onclick =
+          closeChest;
 
         return;
       }
+
+
+      // -----------------------------------------------
+      // ДРУГАЯ ОШИБКА
+      // -----------------------------------------------
 
       closeButton.textContent =
         'Закрыть';
@@ -1567,55 +1631,26 @@ async function handleTitleChestClick() {
         'hidden'
       );
 
-      const closeErrorModal = () => {
-
-        modal.classList.add(
-          'hidden'
-        );
-
-        modal.setAttribute(
-          'aria-hidden',
-          'true'
-        );
-
-        closeButton.classList.add(
-          'hidden'
-        );
-
-        closeButton.removeEventListener(
-          'click',
-          closeErrorModal
-        );
-
-        isTitleChestOpening = false;
-
-        if (chestButton) {
-          chestButton.style.pointerEvents =
-            '';
-          chestButton.removeAttribute(
-            'aria-disabled'
-          );
-        }
-      };
-
-      closeButton.addEventListener(
-        'click',
-        closeErrorModal
-      );
+      closeButton.onclick =
+        closeChest;
 
       return;
     }
 
-    // =====================
-    // ОБНОВЛЯЕМ ПРОФИЛЬ
-    // =====================
+
+    // ===================================================
+    // ОБНОВЛЯЕМ ДАННЫЕ ПРОФИЛЯ
+    // ===================================================
 
     currentProfile.chests = {
       ...currentProfile.chests,
 
       titles:
-        result.chestCount
+        Number(
+          result.chestCount
+        ) || 0
     };
+
 
     currentProfile.unlockedTitles =
       Array.isArray(
@@ -1623,6 +1658,7 @@ async function handleTitleChestClick() {
       )
         ? currentProfile.unlockedTitles
         : [];
+
 
     if (
       result.title?.id &&
@@ -1636,17 +1672,24 @@ async function handleTitleChestClick() {
       );
     }
 
+
     if (result.title?.id) {
 
       currentProfile.selectedTitle =
         result.title.id;
     }
 
+
+    // ===================================================
+    // ОБНОВЛЯЕМ ИНТЕРФЕЙС
+    // ===================================================
+
     renderProfile();
 
-    // =====================
+
+    // ===================================================
     // ПОКАЗЫВАЕМ НАГРАДУ
-    // =====================
+    // ===================================================
 
     animation.classList.remove(
       'is-shaking'
@@ -1656,7 +1699,8 @@ async function handleTitleChestClick() {
       '✨';
 
     rewardTitle.textContent =
-      result.title.name;
+      result.title?.name ||
+      'Новый титул';
 
     reward.classList.remove(
       'hidden'
@@ -1669,57 +1713,22 @@ async function handleTitleChestClick() {
       'hidden'
     );
 
-    // =====================
-    // ЗАКРЫТИЕ
-    // =====================
+    closeButton.onclick =
+      closeChest;
 
-    const closeModal = () => {
-
-      modal.classList.add(
-        'hidden'
-      );
-
-      modal.setAttribute(
-        'aria-hidden',
-        'true'
-      );
-
-      closeButton.classList.add(
-        'hidden'
-      );
-
-      closeButton.removeEventListener(
-        'click',
-        closeModal
-      );
-
-      // Разрешаем следующий сундук
-      isTitleChestOpening = false;
-
-      if (chestButton) {
-        chestButton.style.pointerEvents =
-          '';
-        chestButton.removeAttribute(
-          'aria-disabled'
-        );
-      }
-    };
-
-    closeButton.addEventListener(
-      'click',
-      closeModal
-    );
 
   } catch (error) {
 
     console.error(
-      'Ошибка открытия сундука:',
+      'Ошибка открытия сундука титулов:',
       error
     );
+
 
     animation.classList.remove(
       'is-shaking'
     );
+
 
     closeButton.textContent =
       'Закрыть';
@@ -1728,47 +1737,20 @@ async function handleTitleChestClick() {
       'hidden'
     );
 
-    const closeError = () => {
-
-      modal.classList.add(
-        'hidden'
-      );
-
-      modal.setAttribute(
-        'aria-hidden',
-        'true'
-      );
-
-      closeButton.classList.add(
-        'hidden'
-      );
-
-      closeButton.removeEventListener(
-        'click',
-        closeError
-      );
-
-      isTitleChestOpening = false;
-
-      if (chestButton) {
-        chestButton.style.pointerEvents =
-          '';
-        chestButton.removeAttribute(
-          'aria-disabled'
-        );
-      }
-    };
-
-    closeButton.addEventListener(
-      'click',
-      closeError
-    );
+    closeButton.onclick =
+      closeChest;
   }
 }
+
+
 // ===================== СУНДУК ТЕМ =====================
-// ===================== ПРЕМИАЛЬНЫЙ СУНДУК ТЕМ =====================
 
 async function handleThemeChestClick() {
+
+  // Защита от двойного тапа
+  if (isThemeChestOpening) {
+    return;
+  }
 
   if (!currentStudent) {
     return;
@@ -1779,7 +1761,6 @@ async function handleThemeChestClick() {
     Number(
       currentProfile?.chests?.themes
     ) || 0;
-
 
   if (themeCount <= 0) {
     return;
@@ -1836,6 +1817,11 @@ async function handleThemeChestClick() {
       'student-profile-theme-chest-modal-backdrop'
     );
 
+  const chestButton =
+    document.getElementById(
+      'student-profile-theme-chest'
+    );
+
 
   if (
     !modal ||
@@ -1846,14 +1832,104 @@ async function handleThemeChestClick() {
     !rewardDescription ||
     !closeButton
   ) {
+
+    console.error(
+      'Элементы сундука тем не найдены.'
+    );
+
     return;
   }
 
 
-  // ===================== СБРОС =====================
+  // =====================================================
+  // БЛОКИРУЕМ ПОВТОРНЫЙ ЗАПУСК
+  // =====================================================
+
+  isThemeChestOpening = true;
+
+  if (chestButton) {
+    chestButton.style.pointerEvents = 'none';
+    chestButton.setAttribute(
+      'aria-disabled',
+      'true'
+    );
+  }
+
+
+  // =====================================================
+  // СБРОС СОСТОЯНИЯ
+  // =====================================================
+
+  const resetChestState = () => {
+
+    isThemeChestOpening = false;
+
+    if (chestButton) {
+      chestButton.style.pointerEvents = '';
+      chestButton.removeAttribute(
+        'aria-disabled'
+      );
+    }
+  };
+
+
+  // =====================================================
+  // ЗАКРЫТИЕ
+  // =====================================================
+
+  const closeChest = () => {
+
+    modal.classList.add(
+      'hidden'
+    );
+
+    modal.setAttribute(
+      'aria-hidden',
+      'true'
+    );
+
+    dialog.classList.remove(
+      'is-opening'
+    );
+
+    animation.classList.remove(
+      'hidden'
+    );
+
+    reward.classList.add(
+      'hidden'
+    );
+
+    info?.classList.add(
+      'hidden'
+    );
+
+    closeButton.classList.add(
+      'hidden'
+    );
+
+    closeButton.onclick = null;
+
+    if (backdrop) {
+      backdrop.onclick = null;
+    }
+
+    renderProfile();
+
+    resetChestState();
+  };
+
+
+  // =====================================================
+  // НАЧАЛЬНЫЙ СБРОС
+  // =====================================================
 
   dialog.classList.remove(
     'is-opening'
+  );
+
+  animation.classList.remove(
+    'hidden'
   );
 
   reward.classList.add(
@@ -1868,12 +1944,16 @@ async function handleThemeChestClick() {
     'hidden'
   );
 
-  animation.classList.remove(
-    'hidden'
-  );
+  closeButton.onclick = null;
+
+  if (backdrop) {
+    backdrop.onclick = null;
+  }
 
 
-  // ===================== ОТКРЫВАЕМ ОКНО =====================
+  // =====================================================
+  // ОТКРЫВАЕМ МОДАЛКУ
+  // =====================================================
 
   modal.classList.remove(
     'hidden'
@@ -1885,21 +1965,55 @@ async function handleThemeChestClick() {
   );
 
 
-  // Даём браузеру применить начальное состояние
+  // =====================================================
+  // ДАЁМ БРАУЗЕРУ ПРИМЕНИТЬ НАЧАЛЬНОЕ СОСТОЯНИЕ
+  // =====================================================
 
   await new Promise(
     resolve =>
-      requestAnimationFrame(resolve)
+      requestAnimationFrame(
+        resolve
+      )
   );
 
 
-  // ===================== ПОЛУЧАЕМ НАГРАДУ =====================
+  // =====================================================
+  // ПОЛУЧАЕМ НАГРАДУ
+  // =====================================================
 
-  const result =
-    await openThemeChest(
-      currentStudent.id
+  let result;
+
+  try {
+
+    result =
+      await openThemeChest(
+        currentStudent.id
+      );
+
+  } catch (error) {
+
+    console.error(
+      'Ошибка открытия сундука тем:',
+      error
     );
 
+    closeButton.textContent =
+      'Закрыть';
+
+    closeButton.classList.remove(
+      'hidden'
+    );
+
+    closeButton.onclick =
+      closeChest;
+
+    return;
+  }
+
+
+  // =====================================================
+  // НЕ УДАЛОСЬ ОТКРЫТЬ
+  // =====================================================
 
   if (!result?.success) {
 
@@ -1922,6 +2036,10 @@ async function handleThemeChestClick() {
         'hidden'
       );
 
+      animation.classList.add(
+        'hidden'
+      );
+
       modal.classList.remove(
         'hidden'
       );
@@ -1931,41 +2049,12 @@ async function handleThemeChestClick() {
         'false'
       );
 
-      animation.classList.add(
-        'hidden'
-      );
+      closeButton.textContent =
+        'Продолжить';
 
       closeButton.classList.remove(
         'hidden'
       );
-
-      // ===================== ЗАКРЫТИЕ ОКНА =====================
-
-      const closeChest = () => {
-
-        modal.classList.add(
-          'hidden'
-        );
-
-        modal.setAttribute(
-          'aria-hidden',
-          'true'
-        );
-
-        info?.classList.add(
-          'hidden'
-        );
-
-        closeButton.classList.add(
-          'hidden'
-        );
-
-        closeButton.onclick = null;
-
-        if (backdrop) {
-          backdrop.onclick = null;
-        }
-      };
 
       closeButton.onclick =
         closeChest;
@@ -1974,22 +2063,79 @@ async function handleThemeChestClick() {
         backdrop.onclick =
           closeChest;
       }
+
+      return;
+    }
+
+
+    // Другая ошибка
+    closeButton.textContent =
+      'Закрыть';
+
+    closeButton.classList.remove(
+      'hidden'
+    );
+
+    modal.classList.remove(
+      'hidden'
+    );
+
+    modal.setAttribute(
+      'aria-hidden',
+      'false'
+    );
+
+    closeButton.onclick =
+      closeChest;
+
+    if (backdrop) {
+      backdrop.onclick =
+        closeChest;
     }
 
     return;
   }
 
 
+  // =====================================================
+  // НАГРАДА
+  // =====================================================
+
   const theme =
     result.theme;
 
-  // ===================== ОБНОВЛЯЕМ ПРОФИЛЬ =====================
+
+  if (!theme) {
+
+    console.error(
+      'Firebase вернул сундук без темы.'
+    );
+
+    closeButton.textContent =
+      'Закрыть';
+
+    closeButton.classList.remove(
+      'hidden'
+    );
+
+    closeButton.onclick =
+      closeChest;
+
+    return;
+  }
+
+
+  // =====================================================
+  // ОБНОВЛЯЕМ ПРОФИЛЬ
+  // =====================================================
 
   currentProfile.chests = {
     ...currentProfile.chests,
 
     themes:
-      result.chestCount
+      Number(
+        result.chestCount
+      ) || 0
   };
 
 
@@ -2002,7 +2148,7 @@ async function handleThemeChestClick() {
 
 
   if (
-    theme?.id &&
+    theme.id &&
     !currentProfile.unlockedCardThemes.includes(
       theme.id
     )
@@ -2018,127 +2164,119 @@ async function handleThemeChestClick() {
     theme.id;
 
 
-  // ===================== ЗАПОЛНЯЕМ НАГРАДУ =====================
+  // =====================================================
+  // ЗАПОЛНЯЕМ НАГРАДУ
+  // =====================================================
 
   rewardTitle.textContent =
-    theme.name;
+    theme.name || 'Новая тема';
 
   rewardDescription.textContent =
-    theme.description;
+    theme.description || 'Новая тема профиля';
 
 
-  // ===================== ПРЕВЬЮ ТЕМЫ =====================
+  // =====================================================
+  // ПРЕВЬЮ ТЕМЫ
+  // =====================================================
 
-// ===================== ПРЕВЬЮ ТЕМЫ =====================
+  if (rewardPreview) {
 
-if (rewardPreview) {
+    rewardPreview.dataset.theme =
+      theme.id;
 
-  rewardPreview.dataset.theme =
-    theme.id;
+    rewardPreview.innerHTML = `
+      <div class="student-profile-chest-theme-preview-glow"></div>
 
-rewardPreview.innerHTML = `
-  <div class="student-profile-chest-theme-preview-glow"></div>
+      <div class="student-profile-chest-theme-preview-content">
 
-  <div class="student-profile-chest-theme-preview-content">
+        <div class="student-profile-chest-theme-preview-avatar">
+          ${currentProfile.emoji || '😀'}
+        </div>
 
-    <div class="student-profile-chest-theme-preview-avatar">
-      ${currentProfile.emoji || '😀'}
-    </div>
+        <div class="student-profile-chest-theme-preview-name">
+          ${currentStudent.name || 'Твой профиль'}
+        </div>
 
-    <div class="student-profile-chest-theme-preview-name">
-      ${currentStudent.name || 'Твой профиль'}
-    </div>
+        <div class="student-profile-chest-theme-preview-title">
+          ${
+            getTitleName(
+              currentProfile.selectedTitle
+            ) || 'Без титула'
+          }
+        </div>
 
-    <div class="student-profile-chest-theme-preview-title">
-      ${
-        getTitleName(
-          currentProfile.selectedTitle
-        ) || 'Без титула'
-      }
-    </div>
+        <div class="student-profile-chest-theme-preview-score">
+          🏆 ${Number(currentStudent.score) || 0} баллов
+        </div>
 
-    <div class="student-profile-chest-theme-preview-score">
-      🏆 ${Number(currentStudent.score) || 0} баллов
-    </div>
-
-  </div>
-`;
-}
-
-
-  // ===================== АНИМАЦИЯ =====================
-
-  setTimeout(() => {
-
-    dialog.classList.add(
-      'is-opening'
-    );
-
-  }, 250);
+      </div>
+    `;
+  }
 
 
-  // Ждём открытия сундука
+  // =====================================================
+  // ПОКАЗЫВАЕМ АНИМАЦИЮ
+  // =====================================================
 
-  setTimeout(() => {
-
-    animation.classList.add(
-      'hidden'
-    );
-
-    reward.classList.remove(
-      'hidden'
-    );
-
-    closeButton.classList.remove(
-      'hidden'
-    );
-
-  }, 1250);
-
-
-  // ===================== ЗАКРЫТИЕ =====================
-
-const closeChest = () => {
-
-  modal.classList.add(
-    'hidden'
+  await new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        250
+      )
   );
 
-  modal.setAttribute(
-    'aria-hidden',
-    'true'
-  );
 
-  dialog.classList.remove(
+  dialog.classList.add(
     'is-opening'
   );
 
-  animation.classList.remove(
+
+  // Ждём завершения открытия.
+  // Используем timeout, а не animationend,
+  // чтобы Safari/iOS и Android не зависели
+  // от события CSS-анимации.
+
+  await new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        1000
+      )
+  );
+
+
+  // =====================================================
+  // ПОКАЗЫВАЕМ НАГРАДУ
+  // =====================================================
+
+  animation.classList.add(
     'hidden'
   );
 
-  reward.classList.add(
+  reward.classList.remove(
     'hidden'
   );
 
-  info?.classList.add(
+  closeButton.textContent =
+    'Продолжить';
+
+  closeButton.classList.remove(
     'hidden'
   );
 
-  closeButton.classList.add(
-    'hidden'
-  );
 
-  renderProfile();
+  // =====================================================
+  // ЗАКРЫТИЕ
+  // =====================================================
 
-};
+  closeButton.onclick =
+    closeChest;
 
-closeButton.onclick = closeChest;
-
-if (backdrop) {
-  backdrop.onclick = closeChest;
-}
-
+  if (backdrop) {
+    backdrop.onclick =
+      closeChest;
+  }
 }
 
 // ===================== ПОЛНЫЙ РЕНДЕР =====================

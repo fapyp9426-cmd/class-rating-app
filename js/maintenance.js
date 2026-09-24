@@ -1,6 +1,6 @@
 // ===================== ТЕХНИЧЕСКОЕ ОБСЛУЖИВАНИЕ =====================
 
-export const MAINTENANCE_MODE = true;
+export const MAINTENANCE_MODE = false;
 
 // Только: '1H', '2H', '3H'
 export const MAINTENANCE_DURATION = '1H';
