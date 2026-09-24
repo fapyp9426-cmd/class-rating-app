@@ -18,6 +18,7 @@ export const TITLES = [
 { id: 'yagodka', name: 'ягодка', color: '#ec4899' },
 { id: 'vishenko', name: 'вишенко', color: '#ef4444' },
 { id: 'cheremsha', name: 'черемша', color: '#22c55e' },
+{ id: 'tot_samiy', name: 'тот самый', color: '#f59e0b' },
   { id: 'rooster', name: 'петушок', color: '#dc2626' },
   { id: 'forest_of_hands', name: 'лес рук', color: '#10b981' },
   { id: 'okak', name: 'окак', color: '#6366f1' },
