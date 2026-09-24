@@ -53,6 +53,9 @@ let currentStudent = null;
 let currentProfile = null;
 let profileUnsubscribe = null;
 
+let isTitleChestOpening = false;
+let isThemeChestOpening = false;
+
 
 // ===================== BASE64 =====================
 
@@ -1351,11 +1354,21 @@ function formatChestCount(
   return `${count} сундуков`;
 }
 
+// ===================== ОТКРЫТИЕ СУНДУКА ТИТУЛОВ =====================
+
 async function handleTitleChestClick() {
+
+  // Не даём открыть сундук повторно,
+  // пока предыдущий ещё открывается.
+  if (isTitleChestOpening) {
+    return;
+  }
 
   if (!currentStudent) {
     return;
   }
+
+    isThemeChestOpening = true;
 
   const chestCount =
     Number(
@@ -1396,16 +1409,6 @@ async function handleTitleChestClick() {
       'student-profile-chest-close'
     );
 
-console.log('CHEST ELEMENTS:', {
-  modal: !!modal,
-  animation: !!animation,
-  info: !!info,
-  reward: !!reward,
-  rewardTitle: !!rewardTitle,
-  closeButton: !!closeButton
-});
-
-
   if (
     !modal ||
     !animation ||
@@ -1420,6 +1423,29 @@ console.log('CHEST ELEMENTS:', {
 
     return;
   }
+
+  // =====================
+  // БЛОКИРУЕМ ПОВТОРНЫЙ КЛИК
+  // =====================
+
+  isTitleChestOpening = true;
+
+  const chestButton =
+    document.getElementById(
+      'student-profile-title-chest'
+    );
+
+  if (chestButton) {
+    chestButton.style.pointerEvents = 'none';
+    chestButton.setAttribute(
+      'aria-disabled',
+      'true'
+    );
+  }
+
+  // =====================
+  // ОТКРЫВАЕМ МОДАЛКУ
+  // =====================
 
   modal.classList.remove('hidden');
 
@@ -1439,8 +1465,10 @@ console.log('CHEST ELEMENTS:', {
     'is-shaking'
   );
 
-  animation.textContent = '🎁';
+  animation.textContent =
+    '🎁';
 
+  // Небольшая пауза перед анимацией
   await new Promise(
     resolve =>
       setTimeout(resolve, 250)
@@ -1450,6 +1478,7 @@ console.log('CHEST ELEMENTS:', {
     'is-shaking'
   );
 
+  // Ждём окончания тряски
   await new Promise(
     resolve =>
       setTimeout(resolve, 700)
@@ -1462,18 +1491,23 @@ console.log('CHEST ELEMENTS:', {
         currentStudent.id
       );
 
-    if (!result.success) {
+    // =====================
+    // ОШИБКА / ВСЕ ТИТУЛЫ
+    // =====================
+
+    if (!result?.success) {
 
       animation.classList.remove(
         'is-shaking'
       );
 
       if (
-        result.reason ===
+        result?.reason ===
         'all_titles_unlocked'
       ) {
 
-        animation.textContent = '🏆';
+        animation.textContent =
+          '🏆';
 
         info.classList.remove(
           'hidden'
@@ -1497,10 +1531,25 @@ console.log('CHEST ELEMENTS:', {
             'true'
           );
 
+          closeButton.classList.add(
+            'hidden'
+          );
+
           closeButton.removeEventListener(
             'click',
             closeModal
           );
+
+          // Разрешаем следующее открытие
+          isTitleChestOpening = false;
+
+          if (chestButton) {
+            chestButton.style.pointerEvents =
+              '';
+            chestButton.removeAttribute(
+              'aria-disabled'
+            );
+          }
         };
 
         closeButton.addEventListener(
@@ -1518,15 +1567,55 @@ console.log('CHEST ELEMENTS:', {
         'hidden'
       );
 
+      const closeErrorModal = () => {
+
+        modal.classList.add(
+          'hidden'
+        );
+
+        modal.setAttribute(
+          'aria-hidden',
+          'true'
+        );
+
+        closeButton.classList.add(
+          'hidden'
+        );
+
+        closeButton.removeEventListener(
+          'click',
+          closeErrorModal
+        );
+
+        isTitleChestOpening = false;
+
+        if (chestButton) {
+          chestButton.style.pointerEvents =
+            '';
+          chestButton.removeAttribute(
+            'aria-disabled'
+          );
+        }
+      };
+
+      closeButton.addEventListener(
+        'click',
+        closeErrorModal
+      );
+
       return;
     }
 
-currentProfile.chests = {
-  ...currentProfile.chests,
+    // =====================
+    // ОБНОВЛЯЕМ ПРОФИЛЬ
+    // =====================
 
-  titles:
-    result.chestCount
-};
+    currentProfile.chests = {
+      ...currentProfile.chests,
+
+      titles:
+        result.chestCount
+    };
 
     currentProfile.unlockedTitles =
       Array.isArray(
@@ -1536,25 +1625,35 @@ currentProfile.chests = {
         : [];
 
     if (
+      result.title?.id &&
       !currentProfile.unlockedTitles.includes(
         result.title.id
       )
     ) {
+
       currentProfile.unlockedTitles.push(
         result.title.id
       );
     }
 
-    currentProfile.selectedTitle =
-      result.title.id;
+    if (result.title?.id) {
+
+      currentProfile.selectedTitle =
+        result.title.id;
+    }
 
     renderProfile();
+
+    // =====================
+    // ПОКАЗЫВАЕМ НАГРАДУ
+    // =====================
 
     animation.classList.remove(
       'is-shaking'
     );
 
-    animation.textContent = '✨';
+    animation.textContent =
+      '✨';
 
     rewardTitle.textContent =
       result.title.name;
@@ -1563,9 +1662,16 @@ currentProfile.chests = {
       'hidden'
     );
 
+    closeButton.textContent =
+      'Забрать награду';
+
     closeButton.classList.remove(
       'hidden'
     );
+
+    // =====================
+    // ЗАКРЫТИЕ
+    // =====================
 
     const closeModal = () => {
 
@@ -1578,10 +1684,25 @@ currentProfile.chests = {
         'true'
       );
 
+      closeButton.classList.add(
+        'hidden'
+      );
+
       closeButton.removeEventListener(
         'click',
         closeModal
       );
+
+      // Разрешаем следующий сундук
+      isTitleChestOpening = false;
+
+      if (chestButton) {
+        chestButton.style.pointerEvents =
+          '';
+        chestButton.removeAttribute(
+          'aria-disabled'
+        );
+      }
     };
 
     closeButton.addEventListener(
@@ -1606,10 +1727,44 @@ currentProfile.chests = {
     closeButton.classList.remove(
       'hidden'
     );
+
+    const closeError = () => {
+
+      modal.classList.add(
+        'hidden'
+      );
+
+      modal.setAttribute(
+        'aria-hidden',
+        'true'
+      );
+
+      closeButton.classList.add(
+        'hidden'
+      );
+
+      closeButton.removeEventListener(
+        'click',
+        closeError
+      );
+
+      isTitleChestOpening = false;
+
+      if (chestButton) {
+        chestButton.style.pointerEvents =
+          '';
+        chestButton.removeAttribute(
+          'aria-disabled'
+        );
+      }
+    };
+
+    closeButton.addEventListener(
+      'click',
+      closeError
+    );
   }
 }
-
-
 // ===================== СУНДУК ТЕМ =====================
 // ===================== ПРЕМИАЛЬНЫЙ СУНДУК ТЕМ =====================
 

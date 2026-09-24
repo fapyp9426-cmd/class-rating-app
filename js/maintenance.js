@@ -1,9 +1,9 @@
 // ===================== ТЕХНИЧЕСКОЕ ОБСЛУЖИВАНИЕ =====================
 
-export const MAINTENANCE_MODE = false;
+export const MAINTENANCE_MODE = true;
 
 // Только: '1H', '2H', '3H'
-export const MAINTENANCE_DURATION = '2H';
+export const MAINTENANCE_DURATION = '1H';
 
 
 // ===================== СОЗДАНИЕ ЭКРАНА =====================
@@ -36,8 +36,7 @@ function createMaintenanceScreen() {
       <div class="maintenance-description">
         Сайт временно недоступен.
         <br>
-        На сайте очень большая ошибка, которая ломает профили,
-        поэтому сайт временно недоступен!
+        Быстренький фикс ящичков, всем выдам по 5 штук(титулы)
       </div>
 
       <div class="maintenance-time-label">
