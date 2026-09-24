@@ -9551,3 +9551,948 @@ body:has(.birthday-next.is-today) #season-fx-container .rain-drop {
       transparent 48%
     );
 }
+
+/* =========================================================
+   MAINTENANCE MODE
+   ========================================================= */
+
+#maintenance-screen {
+  position: fixed !important;
+  inset: 0 !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+
+  z-index: 2147483647 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  overflow: hidden !important;
+
+  box-sizing: border-box !important;
+
+  background: #07090d !important;
+
+  color: #ffffff !important;
+
+  font-family:
+    "Plus Jakarta Sans",
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  isolation: isolate !important;
+}
+
+
+/* =========================================================
+   ЧЁРНЫЙ ФОН
+   ========================================================= */
+
+#maintenance-screen::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: -3;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(251, 191, 36, 0.08),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 20% 80%,
+      rgba(59, 130, 246, 0.05),
+      transparent 35%
+    ),
+    #07090d;
+}
+
+
+/* =========================================================
+   ЧЁРНО-ЖЁЛТЫЕ ПОЛОСЫ
+   ========================================================= */
+
+#maintenance-screen .maintenance-stripes {
+  position: absolute !important;
+
+  top: -70% !important;
+  left: -70% !important;
+
+  width: 240% !important;
+  height: 240% !important;
+
+  z-index: -2 !important;
+
+  pointer-events: none !important;
+
+  background:
+    repeating-linear-gradient(
+      135deg,
+      #fbbf24 0px,
+      #fbbf24 42px,
+      #111111 42px,
+      #111111 84px
+    ) !important;
+
+  opacity: 0.14 !important;
+
+  transform: rotate(-4deg) !important;
+
+  animation:
+    maintenanceStripesMove 9s linear infinite !important;
+}
+
+
+@keyframes maintenanceStripesMove {
+
+  0% {
+    transform:
+      translate3d(-60px, -60px, 0)
+      rotate(-4deg);
+  }
+
+  50% {
+    transform:
+      translate3d(60px, 60px, 0)
+      rotate(-4deg);
+  }
+
+  100% {
+    transform:
+      translate3d(-60px, -60px, 0)
+      rotate(-4deg);
+  }
+
+}
+
+
+/* =========================================================
+   ЗАТЕМНЯЮЩИЙ СЛОЙ
+   ========================================================= */
+
+#maintenance-screen .maintenance-overlay {
+  position: absolute !important;
+
+  inset: 0 !important;
+
+  z-index: -1 !important;
+
+  pointer-events: none !important;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(7, 9, 13, 0.48),
+      rgba(7, 9, 13, 0.90) 75%
+    ) !important;
+
+  backdrop-filter: blur(2px) !important;
+}
+
+
+/* =========================================================
+   ЦЕНТРАЛЬНАЯ КАРТОЧКА
+   ========================================================= */
+
+#maintenance-screen .maintenance-content {
+  position: relative !important;
+
+  width: min(640px, calc(100vw - 40px)) !important;
+
+  box-sizing: border-box !important;
+
+  padding: 48px 46px !important;
+
+  text-align: center !important;
+
+  border-radius: 30px !important;
+
+  border:
+    1px solid rgba(251, 191, 36, 0.24) !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25, 28, 35, 0.96),
+      rgba(10, 13, 18, 0.96)
+    ) !important;
+
+  box-shadow:
+    0 35px 100px rgba(0, 0, 0, 0.75),
+    0 0 80px rgba(251, 191, 36, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
+
+  backdrop-filter: blur(30px) !important;
+
+  animation:
+    maintenanceCardIn 0.6s
+    cubic-bezier(0.16, 1, 0.3, 1)
+    both !important;
+}
+
+
+@keyframes maintenanceCardIn {
+
+  from {
+    opacity: 0;
+    transform:
+      translateY(18px)
+      scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+}
+
+
+/* =========================================================
+   ЖЁЛТАЯ ЛИНИЯ СВЕРХУ
+   ========================================================= */
+
+#maintenance-screen .maintenance-content::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 12%;
+  right: 12%;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #fbbf24,
+      transparent
+    );
+
+  box-shadow:
+    0 0 18px rgba(251, 191, 36, 0.55);
+}
+
+
+/* =========================================================
+   ИКОНКА
+   ========================================================= */
+
+#maintenance-screen .maintenance-icon {
+  width: 82px !important;
+  height: 82px !important;
+
+  margin: 0 auto 24px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  box-sizing: border-box !important;
+
+  border-radius: 24px !important;
+
+  border:
+    1px solid rgba(251, 191, 36, 0.30) !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(251, 191, 36, 0.18),
+      rgba(251, 191, 36, 0.05)
+    ) !important;
+
+  color: #fbbf24 !important;
+
+  font-size: 42px !important;
+  line-height: 1 !important;
+
+  box-shadow:
+    0 0 45px rgba(251, 191, 36, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+
+  animation:
+    maintenanceIconPulse 2.4s ease-in-out infinite !important;
+}
+
+
+@keyframes maintenanceIconPulse {
+
+  0%,
+  100% {
+    box-shadow:
+      0 0 35px rgba(251, 191, 36, 0.10),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  50% {
+    box-shadow:
+      0 0 60px rgba(251, 191, 36, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+}
+
+
+/* =========================================================
+   ЗАГОЛОВОК
+   ========================================================= */
+
+#maintenance-screen .maintenance-title {
+  color: #ffffff !important;
+
+  font-size:
+    clamp(28px, 5vw, 44px) !important;
+
+  line-height: 1.08 !important;
+
+  font-weight: 900 !important;
+
+  letter-spacing: -1.5px !important;
+}
+
+
+/* =========================================================
+   ОПИСАНИЕ
+   ========================================================= */
+
+#maintenance-screen .maintenance-description {
+  margin-top: 17px !important;
+
+  color: #94a3b8 !important;
+
+  font-size: 15px !important;
+
+  line-height: 1.7 !important;
+}
+
+
+/* =========================================================
+   ПОДПИСЬ ВРЕМЕНИ
+   ========================================================= */
+
+#maintenance-screen .maintenance-time-label {
+  margin-top: 32px !important;
+
+  color: #64748b !important;
+
+  font-size: 11px !important;
+
+  font-weight: 800 !important;
+
+  letter-spacing: 0.16em !important;
+
+  text-transform: uppercase !important;
+}
+
+
+/* =========================================================
+   ВРЕМЯ
+   ========================================================= */
+
+#maintenance-screen .maintenance-countdown {
+  margin-top: 8px !important;
+
+  color: #fbbf24 !important;
+
+  font-size: 28px !important;
+
+  line-height: 1.2 !important;
+
+  font-weight: 900 !important;
+
+  font-variant-numeric:
+    tabular-nums !important;
+
+  text-shadow:
+    0 0 28px rgba(251, 191, 36, 0.20) !important;
+}
+
+
+/* =========================================================
+   КНОПКА
+   ========================================================= */
+
+#maintenance-screen .maintenance-reload {
+  appearance: none !important;
+
+  margin-top: 30px !important;
+
+  min-height: 52px !important;
+
+  padding:
+    0 24px !important;
+
+  box-sizing: border-box !important;
+
+  border-radius: 15px !important;
+
+  border:
+    1px solid rgba(251, 191, 36, 0.22) !important;
+
+  background:
+    rgba(255, 255, 255, 0.055) !important;
+
+  color: #ffffff !important;
+
+  font-family: inherit !important;
+
+  font-size: 14px !important;
+
+  font-weight: 800 !important;
+
+  cursor: pointer !important;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease !important;
+}
+
+
+#maintenance-screen .maintenance-reload:hover {
+  transform: translateY(-2px) !important;
+
+  background:
+    rgba(251, 191, 36, 0.12) !important;
+
+  border-color:
+    rgba(251, 191, 36, 0.42) !important;
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.30),
+    0 0 25px rgba(251, 191, 36, 0.08) !important;
+}
+
+
+#maintenance-screen .maintenance-reload:active {
+  transform: translateY(0) !important;
+}
+
+
+/* =========================================================
+   МОБИЛЬНАЯ ВЕРСИЯ
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  #maintenance-screen .maintenance-content {
+    width:
+      calc(100vw - 28px) !important;
+
+    padding:
+      36px 22px !important;
+
+    border-radius: 24px !important;
+  }
+
+  #maintenance-screen .maintenance-icon {
+    width: 68px !important;
+    height: 68px !important;
+
+    font-size: 34px !important;
+  }
+
+  #maintenance-screen .maintenance-description {
+    font-size: 14px !important;
+  }
+
+}
+
+/* =========================================================
+   DINO GAME — ТЕХНИЧЕСКИЙ ПЕРЕРЫВ
+   ========================================================= */
+
+.maintenance-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.maintenance-dino {
+  min-height: 52px;
+  padding: 0 24px;
+
+  border: 1px solid rgba(34, 197, 94, 0.30);
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(34, 197, 94, 0.18),
+      rgba(34, 197, 94, 0.07)
+    );
+
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    border-color .2s ease;
+}
+
+.maintenance-dino:hover {
+  transform: translateY(-2px);
+
+  background:
+    rgba(34, 197, 94, 0.20);
+
+  border-color:
+    rgba(34, 197, 94, 0.55);
+}
+
+
+/* =========================================================
+   ПОЛНЫЙ ЭКРАН ИГРЫ
+   ========================================================= */
+
+.maintenance-dino-screen {
+  position: absolute !important;
+
+  inset: 0 !important;
+
+  z-index: 100 !important;
+
+  display: flex;
+
+  flex-direction: column;
+
+  padding:
+    clamp(18px, 3vw, 40px);
+
+  box-sizing: border-box;
+
+  background:
+    #070b12;
+
+  opacity: 0;
+
+  visibility: hidden;
+
+  transform:
+    scale(1.04);
+
+  transition:
+    opacity .45s ease,
+    transform .55s cubic-bezier(
+      .16,
+      1,
+      .3,
+      1
+    ),
+    visibility .45s ease;
+
+  overflow: auto;
+}
+
+.maintenance-dino-screen.is-open {
+  opacity: 1;
+
+  visibility: visible;
+
+  transform:
+    scale(1);
+}
+
+
+/* фон */
+
+.dino-game-background {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: -1;
+
+  background:
+    radial-gradient(
+      circle at 80% 15%,
+      rgba(59, 130, 246, .12),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 20% 80%,
+      rgba(34, 197, 94, .08),
+      transparent 35%
+    ),
+    #070b12;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.dino-game-header {
+  width: min(1100px, 100%);
+
+  margin: 0 auto 16px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+}
+
+.dino-game-label {
+  color: #fbbf24;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: .16em;
+}
+
+.dino-game-title {
+  margin-top: 4px;
+
+  color: #fff;
+
+  font-size: clamp(24px, 4vw, 36px);
+
+  font-weight: 900;
+
+  letter-spacing: -1px;
+}
+
+.dino-close {
+  width: 46px;
+  height: 46px;
+
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 14px;
+
+  background:
+    rgba(255,255,255,.06);
+
+  color: #fff;
+
+  font-size: 28px;
+
+  cursor: pointer;
+
+  transition:
+    background .2s ease,
+    transform .2s ease;
+}
+
+.dino-close:hover {
+  background:
+    rgba(255,255,255,.12);
+
+  transform:
+    rotate(5deg);
+}
+
+
+/* =========================================================
+   HUD
+   ========================================================= */
+
+.dino-hud {
+  width: min(1100px, 100%);
+
+  margin: 0 auto 12px;
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  flex-wrap: wrap;
+}
+
+.dino-score-box {
+  min-width: 90px;
+
+  padding:
+    8px 12px;
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  border-radius: 12px;
+
+  background:
+    rgba(255,255,255,.045);
+
+  color: #64748b;
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+  letter-spacing: .08em;
+}
+
+.dino-score-box strong {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #fff;
+
+  font-size: 15px;
+
+  letter-spacing: 0;
+}
+
+
+/* =========================================================
+   GAME AREA
+   ========================================================= */
+
+.dino-game-area {
+  position: relative;
+
+  width: min(1100px, 100%);
+
+  margin: 0 auto;
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.45);
+}
+
+#dino-canvas {
+  display: block;
+
+  width: 100%;
+
+  height: auto;
+
+  background: #0b1220;
+
+  touch-action: none;
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+.dino-start-message {
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #fff;
+
+  font-size: 15px;
+
+  font-weight: 800;
+
+  text-align: center;
+
+  background:
+    rgba(7,11,18,.28);
+
+  backdrop-filter:
+    blur(3px);
+
+  pointer-events: none;
+}
+
+.dino-start-message span {
+  margin-top: 8px;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+
+  font-weight: 500;
+}
+
+.dino-start-icon {
+  margin-bottom: 10px;
+
+  font-size: 48px;
+}
+
+
+/* =========================================================
+   GAME OVER
+   ========================================================= */
+
+.dino-game-over {
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  color: #fff;
+
+  background:
+    rgba(7,11,18,.72);
+
+  backdrop-filter:
+    blur(8px);
+
+  font-size: 18px;
+
+  font-weight: 900;
+
+  text-align: center;
+}
+
+.dino-game-over.hidden,
+.dino-start-message.hidden {
+  display: none;
+}
+
+.dino-game-over strong {
+  color: #fbbf24;
+
+  font-size: 42px;
+}
+
+.dino-game-over button {
+  margin-top: 8px;
+
+  min-height: 46px;
+
+  padding: 0 20px;
+
+  border: 0;
+
+  border-radius: 13px;
+
+  background: #2563eb;
+
+  color: #fff;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   CONTROLS
+   ========================================================= */
+
+.dino-controls {
+  width: min(1100px, 100%);
+
+  margin: 12px auto 0;
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+}
+
+.dino-controls button {
+  min-height: 44px;
+
+  padding:
+    0 20px;
+
+  border:
+    1px solid rgba(255,255,255,.10);
+
+  border-radius: 12px;
+
+  background:
+    rgba(255,255,255,.06);
+
+  color: #fff;
+
+  font: inherit;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.dino-help {
+  margin-top: 9px;
+
+  text-align: center;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .maintenance-dino-screen {
+    padding: 14px;
+  }
+
+  .dino-hud {
+    justify-content: center;
+  }
+
+  .dino-score-box {
+    min-width: 75px;
+  }
+
+  .dino-help {
+    line-height: 1.5;
+  }
+
+}

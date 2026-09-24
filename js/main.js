@@ -13,7 +13,11 @@ import { editStudent, deleteStudent, setScorePreset, initStudentForms } from './
 import { initBackup } from './backup.js';
 import { initAuth } from './auth.js';
 import { initUI } from './ui.js';
-import { MAINTENANCE_MODE, initMaintenance } from './maintenance.js';
+import {
+  MAINTENANCE_MODE,
+  MAINTENANCE_DURATION,
+  initMaintenance
+} from './maintenance.js';
 import { initLoading } from './loading.js';
 import { initNavigation } from './navigation.js';
 import {
