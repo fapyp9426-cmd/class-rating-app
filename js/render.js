@@ -23,9 +23,11 @@ import {
 
 import {
   profilesCol,
+  studentsCol,
   doc,
   getDocs,
-  setDoc
+  setDoc,
+  deleteDoc
 } from './firebase.js';
 
 import {
@@ -935,5 +937,170 @@ window.giveChestFromAdmin =
 
 window.giveThemeChestFromAdmin =
   giveThemeChestFromAdmin;
+
+  // =====================================================
+// ОДНОРАЗОВАЯ МИГРАЦИЯ ПРОФИЛЕЙ
+// =====================================================
+
+async function resetAllProfilesAndCompensate() {
+
+  const confirmed = confirm(
+    '⚠️ ПОЛНЫЙ СБРОС ПРОФИЛЕЙ\n\n' +
+    'ВСЕ старые профили будут удалены.\n' +
+    'Все старые титулы, темы и сундуки будут обнулены.\n\n' +
+    'После этого каждый реальный ученик получит:\n' +
+    '• 3 сундука титулов\n' +
+    '• 0 сундуков тем\n' +
+    '• стандартный эмодзи\n' +
+    '• никаких титулов\n' +
+    '• никаких тем\n\n' +
+    'Продолжить?'
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+
+    console.log(
+      'Начинаем миграцию profiles...'
+    );
+
+
+    // ============================
+    // 1. Получаем учеников
+    // ============================
+
+    const studentsSnapshot =
+      await getDocs(studentsCol);
+
+    const students =
+      studentsSnapshot.docs.map(
+        studentDoc => ({
+          id: studentDoc.id,
+          ...studentDoc.data()
+        })
+      );
+
+    console.log(
+      `Найдено учеников: ${students.length}`
+    );
+
+
+    // ============================
+    // 2. Получаем старые профили
+    // ============================
+
+    const profilesSnapshot =
+      await getDocs(profilesCol);
+
+    console.log(
+      `Старых профилей: ${profilesSnapshot.size}`
+    );
+
+
+    // ============================
+    // 3. Удаляем ВСЕ старые профили
+    // ============================
+
+    for (
+      const profileDoc
+      of profilesSnapshot.docs
+    ) {
+
+      await deleteDoc(
+        profileDoc.ref
+      );
+
+    }
+
+    console.log(
+      'Старые профили удалены.'
+    );
+
+
+    // ============================
+    // 4. Создаём чистые профили
+    // ============================
+
+    for (
+      const student
+      of students
+    ) {
+
+      const profileRef =
+        doc(
+          profilesCol,
+          student.id
+        );
+
+
+      await setDoc(
+        profileRef,
+        {
+          studentId: student.id,
+
+          emoji:
+            student.avatar ||
+            '😀',
+
+          chests: {
+            titles: 3,
+            themes: 0
+          },
+
+          unlockedTitles: [],
+
+          unlockedCardThemes: [],
+
+          selectedTitle: null,
+
+          selectedCardTheme: null
+        }
+      );
+
+
+      console.log(
+        `Создан профиль: ${student.id}`
+      );
+
+    }
+
+
+    // ============================
+    // 5. Готово
+    // ============================
+
+    console.log(
+      'Миграция profiles завершена.'
+    );
+
+    alert(
+      '✅ ПРОФИЛИ ПОЛНОСТЬЮ СБРОШЕНЫ!\n\n' +
+      `Удалено старых профилей: ${profilesSnapshot.size}\n` +
+      `Создано новых профилей: ${students.length}\n\n` +
+      'Каждому ученику выдано 3 сундука титулов.'
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      'Ошибка миграции profiles:',
+      error
+    );
+
+    alert(
+      '❌ Ошибка миграции.\n\n' +
+      error.message
+    );
+
+  }
+}
+
+
+window.resetAllProfilesAndCompensate =
+  resetAllProfilesAndCompensate;
 
 // ===================== /РЕНДЕР =====================

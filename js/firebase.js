@@ -29,6 +29,8 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 
+// ===================== КОНФИГ =====================
+
 const firebaseConfig = {
   apiKey: "AIzaSyA3HhrwUimCKqw2CFvqcqzPY4GgFVk1B_s",
   authDomain: "class-rating-db.firebaseapp.com",
@@ -39,47 +41,81 @@ const firebaseConfig = {
 };
 
 
-const fbApp = initializeApp(firebaseConfig);
+// ===================== ИНИЦИАЛИЗАЦИЯ =====================
+
+const fbApp =
+  initializeApp(firebaseConfig);
 
 
 // ===================== AUTH =====================
 
-export const auth = getAuth(fbApp);
+export const auth =
+  getAuth(fbApp);
 
 
 // ===================== FIRESTORE =====================
 
-export const db = getFirestore(fbApp);
+export const db =
+  getFirestore(fbApp);
 
 
 // ===================== КОЛЛЕКЦИИ =====================
 
 export const studentsCol =
-  collection(db, "students");
+  collection(
+    db,
+    "students"
+  );
 
 export const historyCol =
-  collection(db, "history");
+  collection(
+    db,
+    "history"
+);
+
 
 // Авторизация учеников
-export const studentAuthCol =
-  collection(db, "studentAuth");
 
-  export const profilesCol =
-  collection(db, "profiles");
+export const studentAuthCol =
+  collection(
+    db,
+    "studentAuth"
+);
+
+
+// Профили учеников
+
+export const profilesCol =
+  collection(
+    db,
+    "profiles"
+);
+
+
+// Посты ленты
+
+export const postsCol =
+  collection(
+    db,
+    "posts"
+);
 
 
 // ===================== FIREBASE API =====================
 
-// Реэкспортируем нужные функции Firestore/Auth,
-// чтобы остальные модули импортировали всё
-// из одного места и не подключали CDN отдельно.
+// Auth
 
 export {
   signInAnonymously,
   signInWithEmailAndPassword,
   onAuthStateChanged,
-  signOut,
+  signOut
+};
 
+
+// Firestore
+
+export {
   doc,
   onSnapshot,
   setDoc,
@@ -88,18 +124,10 @@ export {
   addDoc,
   writeBatch,
   getDocs,
-  deleteField,
   getDoc,
-
+  deleteField,
   serverTimestamp
 };
-
-
-// ===================== APP FEED =====================
-
-// Посты ленты класса
-export const postsCol =
-  collection(db, "posts");
 
 
 // ===================== /FIREBASE =====================
